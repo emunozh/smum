@@ -1,0 +1,11 @@
+pandas
+numpy
+scipy
+statsmodels
+jupyter-core
+jupyter
+matplotlib
+seaborn
+Theano
+pymc3==3.0
+rpy2

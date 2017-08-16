@@ -1,0 +1,608 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AC	population/_BUK/MCMC2.py	/^    AC = Bernoulli('AC', P_elec['AC'])$/;"	v
+Aggregates	population/_BUK/GREGWT.py	/^from urbanmetabolism.population.aggregates import Aggregates$/;"	i
+Aggregates	population/_BUK/GREGWT1.1.py	/^from urbanmetabolism.population.aggregates import Aggregates$/;"	i
+Aggregates	population/_BUK/GREGWT1.2.py	/^from urbanmetabolism.population.aggregates import Aggregates$/;"	i
+Aggregates	population/_BUK/GREGWT2.py	/^from urbanmetabolism.population.aggregates import Aggregates$/;"	i
+Aggregates	population/_BUK/GREGWT3.py	/^from urbanmetabolism.population.aggregates import Aggregates$/;"	i
+Aggregates	population/_BUK/GREGWT4.py	/^from urbanmetabolism.population.aggregates import Aggregates$/;"	i
+Aggregates	population/_BUK/GREGWT_loop.py	/^from urbanmetabolism.population.aggregates import Aggregates$/;"	i
+Aggregates	population/_BUK/aggregates.py	/^class Aggregates():$/;"	c
+Aggregates	population/model.py	/^class Aggregates():$/;"	c
+Attribute	city.py	/^class Attribute(object):$/;"	c
+Bernoulli	population/_BUK/MCMC2.py	/^from pymc3 import Model, Normal, HalfNormal, Bernoulli, Beta, Bound$/;"	i
+Bernoulli	population/model.py	/^from pymc3 import Normal, HalfNormal, Bernoulli, Beta, Bound, Poisson$/;"	i
+Beta	population/_BUK/MCMC2.py	/^from pymc3 import Model, Normal, HalfNormal, Bernoulli, Beta, Bound$/;"	i
+Beta	population/_BUK/MCMC_reg.py	/^    Beta = [2.0, 1.2, 3, 4, 6]  # Coeficients$/;"	v
+Beta	population/model.py	/^from pymc3 import Normal, HalfNormal, Bernoulli, Beta, Bound, Poisson$/;"	i
+Bound	population/_BUK/MCMC2.py	/^from pymc3 import Model, Normal, HalfNormal, Bernoulli, Beta, Bound$/;"	i
+Bound	population/model.py	/^from pymc3 import Normal, HalfNormal, Bernoulli, Beta, Bound, Poisson$/;"	i
+Categorical	population/model.py	/^from pymc3 import Deterministic, Categorical$/;"	i
+CategoricalDtype	population/model.py	/^from pandas.core.dtypes.dtypes import CategoricalDtype$/;"	i
+Categorical_list	population/_BUK/aggregates.py	/^from urbanmetabolism.population.model import Categorical_list$/;"	i
+Categorical_list	population/model.py	/^Categorical_list = ['Categorical', 'Poisson', 'Bernoulli']$/;"	v
+City	city.py	/^class City(object):$/;"	c
+City	energy.py	/^    from urbanmetabolism.city import City$/;"	i
+City	materials.py	/^    from urbanmetabolism.city import City$/;"	i
+City	water.py	/^    from urbanmetabolism.city import City$/;"	i
+Cooking	population/_BUK/MCMC2.py	/^    Cooking = Bernoulli('Cooking', P_elec['Cooking'])$/;"	v
+Data	city.py	/^    class Data(Attribute):$/;"	c	class:City
+DataFrame	population/model.py	/^from rpy2.robjects import DataFrame, pandas2ri$/;"	i
+Deterministic	population/model.py	/^from pymc3 import Deterministic, Categorical$/;"	i
+EnergyFlow	energy.py	/^class EnergyFlow(Flow):$/;"	c
+EnergyStock	energy.py	/^class EnergyStock(Stock):$/;"	c
+Flow	energy.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Flow	food.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Flow	land.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Flow	materials.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Flow	streams.py	/^class Flow(Stream):$/;"	c
+Flow	waste.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Flow	water.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+FoodFlow	food.py	/^class FoodFlow(Flow):$/;"	c
+FoodStock	food.py	/^class FoodStock(Stock):$/;"	c
+HalfNormal	population/_BUK/MCMC2.py	/^from pymc3 import Model, Normal, HalfNormal, Bernoulli, Beta, Bound$/;"	i
+HalfNormal	population/model.py	/^from pymc3 import Normal, HalfNormal, Bernoulli, Beta, Bound, Poisson$/;"	i
+IOTables	tdModel.py	/^class IOTables():$/;"	c
+Income	population/_BUK/MCMC2.py	/^    Income = Beta('Income', alpha, beta)$/;"	v
+Info	city.py	/^    class Info(Attribute):$/;"	c	class:City
+IntVector	population/model.py	/^from rpy2.robjects.vectors import IntVector$/;"	i
+LandFlow	land.py	/^class LandFlow(Flow):$/;"	c
+LandStock	land.py	/^class LandStock(Stock):$/;"	c
+Lighting	population/_BUK/MCMC2.py	/^    Lighting = Bernoulli('Lighting', P_elec['Lighting'])$/;"	v
+LotkaVolterra	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^def LotkaVolterra(model_state):$/;"	f
+MaterialsFlow	materials.py	/^class MaterialsFlow(Flow):$/;"	c
+MaterialsStock	materials.py	/^class MaterialsStock(Stock):$/;"	c
+Metropolis	population/_BUK/MCMC2.py	/^from pymc3 import find_MAP, Metropolis, sample$/;"	i
+Metropolis	population/model.py	/^from pymc3 import find_MAP, Metropolis, sample, trace_to_dataframe$/;"	i
+Model	population/_BUK/MCMC2.py	/^from pymc3 import Model, Normal, HalfNormal, Bernoulli, Beta, Bound$/;"	i
+Model	population/model.py	/^from pymc3 import Model$/;"	i
+N	population/_BUK/MCMC_reg.py	/^    N = 200$/;"	v
+Normal	population/_BUK/MCMC2.py	/^from pymc3 import Model, Normal, HalfNormal, Bernoulli, Beta, Bound$/;"	i
+Normal	population/model.py	/^from pymc3 import Normal, HalfNormal, Bernoulli, Beta, Bound, Poisson$/;"	i
+OLS	population/model.py	/^from statsmodels.api import OLS, add_constant$/;"	i
+P_elec	population/_BUK/MCMC2.py	/^P_elec = (X_elec == 1).sum() \/ X_elec.shape[0]$/;"	v
+P_inc	population/_BUK/MCMC2.py	/^P_inc = (X_inc == 1).sum() \/ X_inc.shape[0]$/;"	v
+Poisson	population/model.py	/^from pymc3 import Normal, HalfNormal, Bernoulli, Beta, Bound, Poisson$/;"	i
+PopModel	population/_BUK/GREGWT.py	/^from urbanmetabolism.population.model import PopModel$/;"	i
+PopModel	population/_BUK/GREGWT1.1.py	/^from urbanmetabolism.population.model import PopModel$/;"	i
+PopModel	population/_BUK/GREGWT1.2.py	/^from urbanmetabolism.population.model import PopModel$/;"	i
+PopModel	population/_BUK/GREGWT2.py	/^from urbanmetabolism.population.model import PopModel$/;"	i
+PopModel	population/_BUK/GREGWT3.py	/^from urbanmetabolism.population.model import PopModel$/;"	i
+PopModel	population/_BUK/GREGWT4.py	/^from urbanmetabolism.population.model import PopModel$/;"	i
+PopModel	population/_BUK/GREGWT_loop.py	/^from urbanmetabolism.population.model import PopModel$/;"	i
+PopModel	population/_BUK/MCMC3.py	/^from urbanmetabolism.population.model import PopModel$/;"	i
+PopModel	population/model.py	/^class PopModel(object):$/;"	c
+PosNormal	population/_BUK/MCMC2.py	/^PosNormal = Bound(Normal, lower=0, upper=np.inf)$/;"	v
+PosNormal	population/model.py	/^PosNormal = Bound(Normal, lower=0, upper=np.inf)$/;"	v
+Rec	population/GREGWT_validation.py	/^Rec = Rec_c.T.join(Rec_s)$/;"	v
+Rec_c	population/GREGWT_validation.py	/^Rec_c = census.loc[:, [c for c in census.columns if "Education" in c]]$/;"	v
+Rec_s	population/GREGWT_validation.py	/^Rec_s = trace.loc[:, ["i_Education_cat", 'wf']].groupby("i_Education_cat").sum()$/;"	v
+Refrigeration	population/_BUK/MCMC2.py	/^    Refrigeration = Bernoulli('Refrigeration', P_elec['Refrigeration'])$/;"	v
+SQLite	population/_BUK/MCMC2.py	/^from pymc3.backends import SQLite$/;"	i
+SQLite	population/_BUK/MCMC_GML.py	/^from pymc3.backends import SQLite$/;"	i
+SQLite	population/_BUK/MCMC_reg.py	/^from pymc3.backends import SQLite$/;"	i
+SQLite	population/model.py	/^from pymc3.backends import SQLite$/;"	i
+Stock	energy.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Stock	food.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Stock	land.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Stock	materials.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Stock	streams.py	/^class Stock(Stream):$/;"	c
+Stock	waste.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Stock	water.py	/^from urbanmetabolism.streams import Flow, Stock$/;"	i
+Stream	streams.py	/^from urbanmetabolism.city import Attribute as Stream$/;"	i
+T	population/model.py	/^import theano.tensor as T$/;"	i
+TRACEFILE	population/_BUK/MCMC2.py	/^TRACEFILE = 'data\/trace_{}.sqlite'$/;"	v
+TRACEFILE	population/_BUK/MCMC_reg.py	/^TRACEFILE = 'data\/trace_{}.sqlite'$/;"	v
+TRACEFILE	population/_BUK/MCMC_reg.py	/^TRACEFILE = TRACEFILE.format(st)$/;"	v
+TV	population/_BUK/MCMC2.py	/^    TV = Bernoulli('TV', P_elec['TV'])$/;"	v
+Table	tdModel.py	/^class Table():$/;"	c
+Urban	population/_BUK/MCMC2.py	/^    Urban = Bernoulli('Urban', P_elec['Urban'])$/;"	v
+W	population/reweight_tmp.R	/^W <- Weights$final_weights$/;"	g
+WasteFlow	waste.py	/^class WasteFlow(Flow):$/;"	c
+WasteStock	waste.py	/^class WasteStock(Stock):$/;"	c
+WaterDemand	water.py	/^class WaterDemand():$/;"	c
+WaterFlow	water.py	/^class WaterFlow(Flow):$/;"	c
+WaterStock	water.py	/^class WaterStock(Stock):$/;"	c
+Weights	population/reweight.R	/^Weights <- GREGWT(data_in=simulation_data, use_ginv=TRUE)$/;"	g
+Weights	population/reweight_tmp.R	/^Weights <- GREGWT(data_in=simulation_data, use_ginv=TRUE)$/;"	g
+Weights	population/reweight_tmp2.R	/^Weights <- GREGWT(data_in=simulation_data, use_ginv=TRUE, max_iter=10000)$/;"	g
+X	population/_BUK/Regression.py	/^X = result.ix[:,1:]$/;"	v
+X_elec	population/_BUK/MCMC2.py	/^X_elec = sm.add_constant(electricity_data.ix[:,:-1])$/;"	v
+X_inc	population/_BUK/MCMC2.py	/^X_inc = sm.add_constant(income_data.loc[:, income_data.columns != 'Total_Family_Income'])$/;"	v
+X_obs	population/_BUK/Regression.py	/^X_obs = [$/;"	v
+Y_obs	population/_BUK/MCMC2.py	/^    Y_obs = PosNormal('Electricity', mu=mu, sd=sigma) #, observed=y)$/;"	v
+__init__	city.py	/^        def __init__(self, data):$/;"	m	class:City.Info
+__init__	city.py	/^    def __init__(self, name):$/;"	m	class:City
+__init__	energy.py	/^    def __init__(self, city):$/;"	m	class:EnergyFlow
+__init__	energy.py	/^    def __init__(self, city):$/;"	m	class:EnergyStock
+__init__	food.py	/^    def __init__(self, city):$/;"	m	class:FoodFlow
+__init__	food.py	/^    def __init__(self, city):$/;"	m	class:FoodStock
+__init__	land.py	/^    def __init__(self, city):$/;"	m	class:LandFlow
+__init__	land.py	/^    def __init__(self, city):$/;"	m	class:LandStock
+__init__	materials.py	/^    def __init__(self, city):$/;"	m	class:MaterialsFlow
+__init__	materials.py	/^    def __init__(self, city):$/;"	m	class:MaterialsStock
+__init__	population/_BUK/aggregates.py	/^    def __init__(self, inverse=False, verbose=False):$/;"	m	class:Aggregates
+__init__	population/model.py	/^    def __init__(self, name='noname', verbose=False, random_seed=12345):$/;"	m	class:PopModel
+__init__	population/model.py	/^    def __init__(self, verbose = False, pop_col = 'pop'):$/;"	m	class:Aggregates
+__init__	streams.py	/^    def __init__(self, flow_name, internal=False):$/;"	m	class:Flow
+__init__	tdModel.py	/^    def __init__(self, name, verbose=False):$/;"	m	class:Table
+__init__	tdModel.py	/^    def __init__(self, relative=False, verbose=False):$/;"	m	class:IOTables
+__init__	waste.py	/^    def __init__(self, city):$/;"	m	class:WasteFlow
+__init__	waste.py	/^    def __init__(self, city):$/;"	m	class:WasteStock
+__init__	water.py	/^    def __init__(self, city):$/;"	m	class:WaterStock
+_add_cat	population/model.py	/^    def _add_cat(self, to_cat):$/;"	m	class:Aggregates
+_add_initial_weights	population/model.py	/^    def _add_initial_weights(self):$/;"	m	class:PopModel
+_call_gregwt	population/model.py	/^    def _call_gregwt(self):$/;"	m	class:PopModel
+_compute_error	population/_BUK/aggregates.py	/^    def _compute_error(self, k, var, weight, year):$/;"	m	class:Aggregates
+_compute_error	population/model.py	/^    def _compute_error(self, k, var, weight, year):$/;"	m	class:Aggregates
+_compute_initial_weights	population/model.py	/^    def _compute_initial_weights(self):$/;"	m	class:PopModel
+_cut_survey	population/_BUK/aggregates.py	/^    def _cut_survey(self, drop=False):$/;"	m	class:Aggregates
+_cut_survey	population/model.py	/^    def _cut_survey(self, drop=False):$/;"	m	class:Aggregates
+_delete_files	population/model.py	/^def _delete_files(name, sufix, verbose=False):$/;"	f
+_get_breaks	population/model.py	/^def _get_breaks(census_col):$/;"	f
+_get_distribution	population/model.py	/^    def _get_distribution(self, dis, var_name, p):$/;"	m	class:PopModel
+_get_labels	population/_BUK/aggregates.py	/^    def _get_labels(self, var, cat, inv=1):$/;"	m	class:Aggregates
+_get_labels	population/model.py	/^    def _get_labels(self, var, cat, inv=1):$/;"	m	class:Aggregates
+_get_plot_var	population/model.py	/^def _get_plot_var(trace, census, skip_cols, fit_cols):$/;"	f
+_index_model	population/model.py	/^def _index_model(inx, co_mu_list):$/;"	f
+_is_inv	population/_BUK/aggregates.py	/^    def _is_inv(self, var):$/;"	m	class:Aggregates
+_is_inv	population/model.py	/^    def _is_inv(self, var):$/;"	m	class:Aggregates
+_make_categories_formula	population/model.py	/^    def _make_categories_formula(self, p, var_name):$/;"	m	class:PopModel
+_make_linear_model	population/model.py	/^    def _make_linear_model(self, constant_name, yhat_name, formula):$/;"	m	class:PopModel
+_make_regression_formula	population/model.py	/^    def _make_regression_formula(self, yhat_name, table_model,$/;"	m	class:PopModel
+_make_theano	population/model.py	/^def _make_theano(co_mu_list):$/;"	f
+_make_theano_var	population/model.py	/^def _make_theano_var(variable, var_typ):$/;"	f
+_match_keyword	population/_BUK/aggregates.py	/^    def _match_keyword(self, var):$/;"	m	class:Aggregates
+_match_keyword	population/model.py	/^    def _match_keyword(self, var):$/;"	m	class:Aggregates
+_match_labels	population/_BUK/aggregates.py	/^    def _match_labels(self, labels, cat, inv=1):$/;"	m	class:Aggregates
+_match_labels	population/model.py	/^    def _match_labels(self, labels, cat, inv=1):$/;"	m	class:Aggregates
+_plot_single_error	population/model.py	/^def _plot_single_error(survey_var, census_key, survey, census, pop,$/;"	f
+_save_trace	population/model.py	/^    def _save_trace(self):$/;"	m	class:PopModel
+_script_gregwt	population/model.py	/^def _script_gregwt(survey, census, weights_file, script):$/;"	f
+_set_census_from_file	population/model.py	/^    def _set_census_from_file(self, file_census, total_pop=False, **kwargs):$/;"	m	class:Aggregates
+_set_census_from_frame	population/model.py	/^    def _set_census_from_frame(self, frame_census, total_pop=False):$/;"	m	class:Aggregates
+_set_survey_from_file	population/model.py	/^    def _set_survey_from_file(self, file_survey,$/;"	m	class:Aggregates
+_set_survey_from_frame	population/model.py	/^    def _set_survey_from_frame(self, frame_survey,$/;"	m	class:Aggregates
+_set_tot_population	population/_BUK/aggregates.py	/^    def _set_tot_population(self, total_pop):$/;"	m	class:Aggregates
+_set_tot_population	population/model.py	/^    def _set_tot_population(self, total_pop):$/;"	m	class:Aggregates
+_survey_to_cat	population/_BUK/aggregates.py	/^    def _survey_to_cat(self):$/;"	m	class:Aggregates
+_survey_to_cat	population/model.py	/^    def _survey_to_cat(self):$/;"	m	class:Aggregates
+_survey_to_cat	population/model.py	/^    def _survey_to_cat(self, variable_name, cut_values, labels=False, prefix=False):$/;"	m	class:Aggregates
+_toR_df	population/model.py	/^def _toR_df(toR_df):$/;"	f
+_truncate	population/model.py	/^    def _truncate(self):$/;"	m	class:PopModel
+_truncate_single	population/model.py	/^    def _truncate_single(self, table_model, variable, bounds):$/;"	m	class:PopModel
+a	population/_BUK/ipf.R	/^a <- crossprod(m,m)$/;"	g
+a	population/_BUK/ipf.R	/^a <- rbind(c(1,2,3),c(3,4,5))$/;"	g
+add	tdModel.py	/^    def add(self, input, name=False, **kargs):$/;"	m	class:IOTables
+addData	city.py	/^        def addData(self, sheet, sheet_data):$/;"	m	class:City.Data
+addFlow	streams.py	/^    def addFlow(self, flow_name, internal=False):$/;"	m	class:Stock
+add_cat	population/_BUK/aggregates.py	/^    def add_cat(self, to_cat):$/;"	m	class:Aggregates
+add_constant	population/model.py	/^from statsmodels.api import OLS, add_constant$/;"	i
+add_consumption_model	population/model.py	/^    def add_consumption_model(self, yhat_name, table_model,$/;"	m	class:PopModel
+addattr	city.py	/^    def addattr(self, x, val):$/;"	m	class:Attribute
+affluence	streams.py	/^    affluence = pd.DataFrame()$/;"	v	class:Stock
+alpha	population/_BUK/MCMC2.py	/^alpha = 1.47$/;"	v
+alpha	population/_BUK/MCMC_Metropolis.py	/^alpha = 12$/;"	v
+alpha_post	population/_BUK/MCMC_Metropolis.py	/^alpha_post = 22$/;"	v
+assignVariable	streams.py	/^    def assignVariable(self, var):$/;"	m	class:Stock
+ax	population/_BUK/MCMC2.py	/^ax = g.twinx()$/;"	v
+ax	population/model.py	/^                       ax = ax3)$/;"	v
+ax3	population/model.py	/^    ax3 = sns.distplot(trace.wf, bins=bins, kde=False,$/;"	v
+b	population/_BUK/ipf.R	/^b <- diag(dim(a)[1]) - a$/;"	g
+backend	population/_BUK/MCMC2.py	/^    backend = SQLite(TRACEFILE)$/;"	v
+backend	population/_BUK/MCMC_GML.py	/^    backend = SQLite('traceGML.sqlite')$/;"	v
+ban	population/_BUK/Regression.py	/^ban = ban.ix[:, 5:]$/;"	v
+ban	population/_BUK/Regression.py	/^ban = pd.read_csv('MUN_banheiros.csv', usecols=[0,1,2,3,4,5,6], index_col=0, na_values=['-', '...'])$/;"	v
+basic_model	population/_BUK/MCMC2.py	/^basic_model = Model()$/;"	v
+basic_model	population/_BUK/MCMC_Metropolis.py	/^basic_model = pymc3.Model()$/;"	v
+beta	population/_BUK/MCMC2.py	/^beta = 2050487.25$/;"	v
+beta	population/_BUK/MCMC_Metropolis.py	/^beta = 12$/;"	v
+beta0	population/_BUK/MCMC_reg.py	/^    beta0 = 1.0         # Intercept$/;"	v
+beta_post	population/_BUK/MCMC_Metropolis.py	/^beta_post = 52$/;"	v
+bins	population/_BUK/MCMC_Metropolis.py	/^bins=50$/;"	v
+br	population/reweight_tmp.R	/^br <- c(2,4,6,8,10,20,22,24,33)$/;"	g
+bse_elec	population/_BUK/MCMC2.py	/^bse_elec = model_results_elec.bse.to_dict()$/;"	v
+bse_inc	population/_BUK/MCMC2.py	/^bse_inc = model_results_inc.bse.to_dict()$/;"	v
+c_AC	population/_BUK/MCMC2.py	/^    c_AC = Normal('c_AC', mu=params_elec['AC'], sd=bse_elec['AC'])$/;"	v
+c_Cooking	population/_BUK/MCMC2.py	/^    c_Cooking = Normal('c_Cooking', mu=params_elec['Cooking'], sd=bse_elec['Cooking'])$/;"	v
+c_Income	population/_BUK/MCMC2.py	/^    c_Income = Normal('c_Income', mu=params_elec['Income'], sd=bse_elec['Income'])$/;"	v
+c_Lighting	population/_BUK/MCMC2.py	/^    c_Lighting = Normal('c_Lighting', mu=params_elec['Lighting'], sd=bse_elec['Lighting'])$/;"	v
+c_Refrigeration	population/_BUK/MCMC2.py	/^    c_Refrigeration = Normal('c_Refrigeration', mu=params_elec['Refrigeration'], sd=bse_elec['Refrigeration'])$/;"	v
+c_TV	population/_BUK/MCMC2.py	/^    c_TV = Normal('c_TV', mu=params_elec['TV'], sd=bse_elec['TV'])$/;"	v
+c_Urban	population/_BUK/MCMC2.py	/^    c_Urban = Normal('c_Urban', mu=params_elec['Urban'], sd=bse_elec['Urban'])$/;"	v
+cen_urban	population/GREGWT_validation.py	/^cen_urban = cen_urban.div(cen_urban.sum())#['Urbanity_Urban']$/;"	v
+cen_urban	population/GREGWT_validation.py	/^cen_urban = census.loc[2010,[c for c in census.columns if 'Urbanity' in c]]$/;"	v
+census	population/GREGWT_validation.py	/^census = pd.read_csv('data\/benchmarks.csv', index_col=0)$/;"	v
+census	population/_BUK/test.R	/^census <- read.csv('toR_census.csv')$/;"	g
+census	population/reweight.R	/^census <- read.csv('temp\/toR_census.csv')$/;"	g
+census	population/reweight_tmp.R	/^census <- read.csv('temp\/toR_census.csv')$/;"	g
+census	population/reweight_tmp2.R	/^census <- read.csv('temp\/toR_census.csv')$/;"	g
+col	population/_BUK/Regression.py	/^col = [$/;"	v
+color	population/model.py	/^             color='red',$/;"	v
+computeStock	streams.py	/^    def computeStock(self):$/;"	m	class:Stock
+computeVariable	streams.py	/^    def computeVariable(self, var):$/;"	m	class:Stock
+compute_k	population/_BUK/aggregates.py	/^    def compute_k(self, init_val=False,$/;"	m	class:Aggregates
+compute_k	population/model.py	/^    def compute_k(self, init_val = False,$/;"	m	class:Aggregates
+config	population/model.py	/^from theano import config, function, shared$/;"	i
+conn	population/_BUK/Regression.py	/^conn = conn.ix[:,2:]$/;"	v
+conn	population/_BUK/Regression.py	/^conn = pd.read_csv($/;"	v
+construct	tdModel.py	/^    def construct(self, a, b, relative=False):$/;"	m	class:Table
+constructFrame	city.py	/^    def constructFrame(self, xls):$/;"	m	class:City
+cut	population/GREGWT.py	/^cut = [0, 19, 26, 36, 46, 56, 66, 76, 86, 101]$/;"	v
+cut	population/_BUK/GREGWT.py	/^cut = [0, 19, 26, 36, 46, 56, 66, 76, 86, 101]$/;"	v
+cut	population/_BUK/GREGWT1.1.py	/^cut = [0, 19, 26, 36, 46, 56, 66, 76, 86, 101]$/;"	v
+cut	population/_BUK/GREGWT1.2.py	/^cut = [0, 19, 26, 36, 46, 56, 66, 76, 86, 101]$/;"	v
+cut	population/_BUK/GREGWT2.py	/^cut = [0, 19, 26, 36, 46, 56, 66, 76, 86, 101]$/;"	v
+cut	population/_BUK/GREGWT3.py	/^cut = [0, 19, 26, 36, 46, 56, 66, 76, 86, 101]$/;"	v
+cut	population/_BUK/GREGWT4.py	/^cut = [0, 19, 26, 36, 46, 56, 66, 76, 86, 101]$/;"	v
+data	population/_BUK/MCMC_GML.py	/^data = dict(x=x, y=y)$/;"	v
+data	streams.py	/^    data = pd.DataFrame()$/;"	v	class:Stock
+datetime	population/GREGWT.py	/^import datetime; print(datetime.datetime.now())$/;"	i
+datetime	population/GREGWT_validation.py	/^import datetime; print(datetime.datetime.now())$/;"	i
+datetime	population/_BUK/MCMC2.py	/^import datetime; print(datetime.datetime.now())$/;"	i
+df	data/makeTables.py	/^df = pd.read_csv('test_elec.csv', index_col=0)$/;"	v
+df	data/makeTables.py	/^df = pd.read_csv('test_inc.csv', index_col=0)$/;"	v
+df	population/_BUK/MCMC_reg.py	/^    df = simulate_linear_data(N, beta0, Beta, eps_sigma_sq, eps_mean)$/;"	v
+df	population/data/makeTables.py	/^df = pd.read_csv('test_elec.csv', index_col=0)$/;"	v
+df	population/data/makeTables.py	/^df = pd.read_csv('test_inc.csv', index_col=0)$/;"	v
+drop_col_survey	population/GREGWT.py	/^    drop_col_survey = drop_col_survey)$/;"	v
+drop_col_survey	population/GREGWT.py	/^drop_col_survey = ['e_Income', 'i_Urbanity']$/;"	v
+drop_col_survey	population/_BUK/GREGWT.py	/^drop_col_survey = ['e_Income', 'i_Urbanity']$/;"	v
+drop_col_survey	population/_BUK/GREGWT1.1.py	/^drop_col_survey = ['e_Income', 'i_Urbanity']$/;"	v
+drop_col_survey	population/_BUK/GREGWT1.2.py	/^drop_col_survey = ['e_Income', 'i_Urbanity']$/;"	v
+drop_col_survey	population/_BUK/GREGWT2.py	/^drop_col_survey = ['e_Income', 'i_Urbanity']$/;"	v
+drop_col_survey	population/_BUK/GREGWT3.py	/^drop_col_survey = ['e_Income', 'i_Urbanity']$/;"	v
+drop_col_survey	population/_BUK/GREGWT4.py	/^drop_col_survey = ['e_Income', 'i_Urbanity']$/;"	v
+drop_col_survey	population/_BUK/GREGWT_loop.py	/^drop_col_survey = ['e_Income', 'i_Urbanity']$/;"	v
+dutyp	population/_BUK/Regression.py	/^dutyp = dutyp.ix[:,2:]$/;"	v
+dutyp	population/_BUK/Regression.py	/^dutyp = pd.read_csv('MUN_duType.csv', usecols=[0,1,2,3], index_col=0, na_values=['-', '...'])$/;"	v
+elec	population/GREGWT.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+elec	population/GREGWT_validation.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+elec	population/_BUK/GREGWT.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+elec	population/_BUK/GREGWT1.1.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+elec	population/_BUK/GREGWT1.2.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+elec	population/_BUK/GREGWT2.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+elec	population/_BUK/GREGWT3.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+elec	population/_BUK/GREGWT4.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+elec	population/_BUK/GREGWT_loop.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+elec	population/_BUK/MCMC3.py	/^elec = pd.read_csv('data\/test_elec.csv', index_col=0)$/;"	v
+electricity_data	population/_BUK/MCMC2.py	/^electricity_data = pd.read_csv('data\/electricity.csv', index_col=0)$/;"	v
+emissions	streams.py	/^    emissions = list()$/;"	v	class:Flow
+eps_mean	population/_BUK/MCMC_reg.py	/^    eps_mean = 0.0$/;"	v
+eps_sigma_sq	population/_BUK/MCMC_reg.py	/^    eps_sigma_sq = 0.5$/;"	v
+err_wf	population/_BUK/GREGWT_loop.py	/^    err_wf = run_loop(elec, inc)$/;"	v
+err_wf	population/_BUK/GREGWT_loop.py	/^err_wf = run_loop(elec, inc)$/;"	v
+error_lim	population/_BUK/GREGWT_loop.py	/^error_lim = 0.1$/;"	v
+find_MAP	population/_BUK/MCMC2.py	/^from pymc3 import find_MAP, Metropolis, sample$/;"	i
+find_MAP	population/model.py	/^from pymc3 import find_MAP, Metropolis, sample, trace_to_dataframe$/;"	i
+fit_cols	population/GREGWT_validation.py	/^fit_cols = ['Income', 'Electricity']$/;"	v
+formula	population/GREGWT.py	/^formula = "e_Intercept+"+"+".join($/;"	v
+formula	population/_BUK/GREGWT.py	/^formula = "e_Intercept+"+"+".join($/;"	v
+formula	population/_BUK/GREGWT1.1.py	/^formula = "e_Intercept+"+"+".join($/;"	v
+formula	population/_BUK/GREGWT1.2.py	/^formula = "e_Intercept+"+"+".join($/;"	v
+formula	population/_BUK/GREGWT2.py	/^formula = "e_Intercept+"+"+".join($/;"	v
+formula	population/_BUK/GREGWT3.py	/^formula = "e_Intercept+"+"+".join($/;"	v
+formula	population/_BUK/GREGWT4.py	/^formula = "e_Intercept+"+"+".join($/;"	v
+formula	population/_BUK/MCMC3.py	/^                        formula=formula,$/;"	v
+formula	population/_BUK/MCMC3.py	/^formula = "e_Intercept+"+"+".join($/;"	v
+function	population/model.py	/^from theano import config, function, shared$/;"	i
+g	population/_BUK/MCMC2.py	/^g = sns.distplot(trace['Electricity'], kde=False, label="Posterior (MCMC)")$/;"	v
+getData	city.py	/^    def getData(self, excel_file='.\/data\/InputTables.xlsx'):$/;"	m	class:City
+get_error	population/_BUK/GREGWT_loop.py	/^def get_error(model, weight):$/;"	f
+glm_mcmc_inference	population/_BUK/MCMC_reg.py	/^def glm_mcmc_inference(df, iterations=5000, verbose=False):$/;"	f
+hhsize	population/_BUK/Regression.py	/^hhsize = income.sum().sum() \/ dutyp.sum().sum()$/;"	v
+identify	population/GREGWT_validation.py	/^def identify(var, sufix='e_'):$/;"	f
+importr	population/model.py	/^from rpy2.robjects.packages import importr$/;"	i
+inc	population/GREGWT.py	/^inc =  pd.read_csv('data\/test_inc.csv',  index_col=0)$/;"	v
+inc	population/GREGWT_validation.py	/^inc =  pd.read_csv('data\/test_inc.csv',  index_col=0)$/;"	v
+inc	population/_BUK/GREGWT.py	/^inc =  pd.read_csv('data\/test_inc.csv',  index_col=0)$/;"	v
+inc	population/_BUK/GREGWT1.1.py	/^inc =  pd.read_csv('data\/test_inc.csv',  index_col=0)$/;"	v
+inc	population/_BUK/GREGWT1.2.py	/^inc =  pd.read_csv('data\/test_inc.csv',  index_col=0)$/;"	v
+inc	population/_BUK/GREGWT2.py	/^inc =  pd.read_csv('data\/test_inc.csv',  index_col=0)$/;"	v
+inc	population/_BUK/GREGWT3.py	/^inc =  pd.read_csv('data\/test_inc.csv',  index_col=0)$/;"	v
+inc	population/_BUK/GREGWT4.py	/^inc =  pd.read_csv('data\/test_inc.csv',  index_col=0)$/;"	v
+inc	population/_BUK/GREGWT_loop.py	/^inc = pd.read_csv('data\/test_inc.csv', index_col=0)$/;"	v
+inc	population/_BUK/MCMC3.py	/^inc = pd.read_csv('data\/test_inc.csv', index_col=0)$/;"	v
+income	population/_BUK/Regression.py	/^income = income.div(hhsize)$/;"	v
+income	population/_BUK/Regression.py	/^income = income.ix[:,11:]$/;"	v
+income	population/_BUK/Regression.py	/^income = income.loc[:, col]$/;"	v
+income	population/_BUK/Regression.py	/^income = pd.read_csv($/;"	v
+income_data	population/_BUK/MCMC2.py	/^income_data = pd.read_csv('data\/income.csv', index_col=0)$/;"	v
+ind	population/GREGWT_validation.py	/^ind = 154678 #individuals$/;"	v
+input	streams.py	/^    input = list()$/;"	v	class:Flow
+intercept	population/_BUK/MCMC2.py	/^    intercept = Normal('intercept', mu=params_elec['const'], sd=bse_elec['const'])$/;"	v
+ipfn	tdModel.py	/^from ipfn.ipfn import ipfn$/;"	i
+iterations	population/GREGWT.py	/^    iterations = iterations,$/;"	v
+iterations	population/GREGWT.py	/^iterations = 100#000$/;"	v
+iterations	population/_BUK/GREGWT.py	/^iterations = 1000#0$/;"	v
+iterations	population/_BUK/GREGWT1.1.py	/^iterations = 1000#0$/;"	v
+iterations	population/_BUK/GREGWT1.2.py	/^iterations = 1000#0$/;"	v
+iterations	population/_BUK/GREGWT2.py	/^iterations = 1000#0$/;"	v
+iterations	population/_BUK/GREGWT3.py	/^iterations = 1000#0$/;"	v
+iterations	population/_BUK/GREGWT4.py	/^iterations = 1000#0$/;"	v
+iterations	population/_BUK/GREGWT_loop.py	/^iterations = 200$/;"	v
+iterations	population/_BUK/MCMC2.py	/^iterations = 100000$/;"	v
+iterations	population/_BUK/MCMC3.py	/^iterations = 10000$/;"	v
+iterations	population/_BUK/MCMC_GML.py	/^iterations = 2000$/;"	v
+iterations	population/_BUK/MCMC_Metropolis.py	/^iterations = 100000$/;"	v
+l	population/_BUK/ipf.R	/^l <- solve(b, (c(8,6,4))-colSums(m))$/;"	g
+l	population/_BUK/ipf.R	/^l <- solve(b, c(5,6,7))$/;"	g
+l	population/_BUK/ipf.R	/^l <- solve(b, c(8,6,4))$/;"	g
+label	population/_BUK/MCMC_Metropolis.py	/^    label="Posterior (MCMC)", color="red"$/;"	v
+label	population/_BUK/MCMC_Metropolis.py	/^    label='Posterior (Analytic)', color="green"$/;"	v
+label	population/model.py	/^                       label='Distribution of estimated new weights',$/;"	v
+label	population/model.py	/^             label='Original sample weights')$/;"	v
+labels	population/GREGWT.py	/^labels = ['age_0_18', 'age_19_25', 'age_26_35',$/;"	v
+labels	population/_BUK/GREGWT.py	/^labels = ['age_0_18', 'age_19_25', 'age_26_35',$/;"	v
+labels	population/_BUK/GREGWT1.1.py	/^labels = ['age_0_18', 'age_19_25', 'age_26_35',$/;"	v
+labels	population/_BUK/GREGWT1.2.py	/^labels = ['age_0_18', 'age_19_25', 'age_26_35',$/;"	v
+labels	population/_BUK/GREGWT2.py	/^labels = ['age_0_18', 'age_19_25', 'age_26_35',$/;"	v
+labels	population/_BUK/GREGWT3.py	/^labels = ['age_0_18', 'age_19_25', 'age_26_35',$/;"	v
+labels	population/_BUK/GREGWT4.py	/^labels = ['age_0_18', 'age_19_25', 'age_26_35',$/;"	v
+loop	population/_BUK/GREGWT.py	/^def loop(subfix, val):$/;"	f
+loop	population/_BUK/GREGWT1.1.py	/^def loop(subfix, val):$/;"	f
+loop	population/_BUK/GREGWT1.2.py	/^def loop(subfix, val):$/;"	f
+loop	population/_BUK/GREGWT2.py	/^def loop(subfix, val):$/;"	f
+loop	population/_BUK/GREGWT3.py	/^def loop(subfix, val):$/;"	f
+loop	population/_BUK/GREGWT4.py	/^def loop(subfix, val):$/;"	f
+loop_k	population/_BUK/GREGWT3.py	/^loop_k = 1$/;"	v
+loop_k	population/_BUK/GREGWT4.py	/^    loop_k = np.mean(loop_sample)$/;"	v
+loop_sample	population/_BUK/GREGWT4.py	/^loop_sample = [1]$/;"	v
+m	population/_BUK/MCMC3.py	/^m = PopModel('Sorsogon13', verbose=False)$/;"	v
+m	population/_BUK/ipf.R	/^m <- as.matrix(read.csv('m.csv'))$/;"	g
+main	energy.py	/^def main():$/;"	f
+main	food.py	/^def main():$/;"	f
+main	land.py	/^def main():$/;"	f
+main	materials.py	/^def main():$/;"	f
+main	tdModel.py	/^def main():$/;"	f
+main	waste.py	/^def main():$/;"	f
+main	water.py	/^def main():$/;"	f
+matplotlib	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^import matplotlib.pylab as plt$/;"	i
+matplotlib	population/GREGWT_validation.py	/^import matplotlib.pyplot as plt$/;"	i
+matplotlib	population/_BUK/MCMC2.py	/^import matplotlib.pyplot as plt$/;"	i
+matplotlib	population/_BUK/MCMC_GML.py	/^import matplotlib.pyplot as plt$/;"	i
+matplotlib	population/_BUK/MCMC_Metropolis.py	/^import matplotlib.pyplot as plt$/;"	i
+matplotlib	population/model.py	/^import matplotlib.pyplot as plt$/;"	i
+model	population/GREGWT.py	/^model = {"Income":      {'table_model': inc },$/;"	v
+model	population/_BUK/Regression.py	/^model = sm.OLS(y, X)$/;"	v
+model_elec	population/_BUK/MCMC2.py	/^model_elec = sm.OLS(y_elec, X_elec)$/;"	v
+model_inc	population/_BUK/MCMC2.py	/^model_inc = sm.OLS(y_inc, X_inc)$/;"	v
+model_results	population/_BUK/Regression.py	/^model_results = model.fit()$/;"	v
+model_results_elec	population/_BUK/MCMC2.py	/^model_results_elec = model_elec.fit()$/;"	v
+model_results_inc	population/_BUK/MCMC2.py	/^model_results_inc = model_inc.fit()$/;"	v
+mu	population/_BUK/MCMC2.py	/^    mu = intercept +             c_AC*AC +             c_Cooking*Cooking +             c_Income*Income +             c_Lighting*Lighting +             c_Refrigeration*Refrigeration +             c_TV*TV +             c_Urban*Urban$/;"	v
+mu	population/_BUK/MCMC2.py	/^mu = 40$/;"	v
+n	population/_BUK/MCMC_Metropolis.py	/^n = 50$/;"	v
+name	population/GREGWT.py	/^    name = 'Sorsogon_Electricity_100',$/;"	v
+name	streams.py	/^    name = "Urban Stocks"$/;"	v	class:Stock
+new_Urban	population/GREGWT_validation.py	/^new_Urban = trace.loc[:,'e_Urban'].astype('category')$/;"	v
+new_k	population/_BUK/GREGWT4.py	/^    new_k = loop('0015', loop_k)$/;"	v
+newton	population/_BUK/aggregates.py	/^from scipy.optimize import newton$/;"	i
+newton	population/model.py	/^from scipy.optimize import newton$/;"	i
+now	population/GREGWT.py	/^import datetime; print(datetime.datetime.now())$/;"	i
+now	population/GREGWT_validation.py	/^import datetime; print(datetime.datetime.now())$/;"	i
+now	population/_BUK/MCMC2.py	/^import datetime; print(datetime.datetime.now())$/;"	i
+np	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^import numpy as np$/;"	i
+np	population/GREGWT_validation.py	/^import numpy as np$/;"	i
+np	population/_BUK/GREGWT.py	/^import numpy as np$/;"	i
+np	population/_BUK/GREGWT1.1.py	/^import numpy as np$/;"	i
+np	population/_BUK/GREGWT1.2.py	/^import numpy as np$/;"	i
+np	population/_BUK/GREGWT2.py	/^import numpy as np$/;"	i
+np	population/_BUK/GREGWT3.py	/^import numpy as np$/;"	i
+np	population/_BUK/GREGWT4.py	/^import numpy as np$/;"	i
+np	population/_BUK/GREGWT_loop.py	/^import numpy as np$/;"	i
+np	population/_BUK/MCMC2.py	/^import numpy as np$/;"	i
+np	population/_BUK/MCMC_GML.py	/^import numpy as np$/;"	i
+np	population/_BUK/MCMC_Metropolis.py	/^import numpy as np$/;"	i
+np	population/_BUK/MCMC_reg.py	/^import numpy as np$/;"	i
+np	population/_BUK/Regression.py	/^import numpy as np$/;"	i
+np	population/_BUK/aggregates.py	/^import numpy as np$/;"	i
+np	population/model.py	/^import numpy as np$/;"	i
+np	tdModel.py	/^import numpy as np$/;"	i
+odeint	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^from scipy.integrate import odeint$/;"	i
+os	population/_BUK/GREGWT.py	/^import os$/;"	i
+os	population/_BUK/GREGWT1.1.py	/^import os$/;"	i
+os	population/_BUK/GREGWT1.2.py	/^import os$/;"	i
+os	population/_BUK/GREGWT2.py	/^import os$/;"	i
+os	population/_BUK/GREGWT3.py	/^import os$/;"	i
+os	population/_BUK/GREGWT4.py	/^import os$/;"	i
+os	population/_BUK/GREGWT_loop.py	/^import os$/;"	i
+os	population/_BUK/MCMC_reg.py	/^import os$/;"	i
+os	population/_BUK/aggregates.py	/^import os$/;"	i
+os	population/model.py	/^import os$/;"	i
+os	tdModel.py	/^import os$/;"	i
+output	streams.py	/^    output = list()$/;"	v	class:Flow
+pandas2ri	population/model.py	/^from rpy2.robjects import DataFrame, pandas2ri$/;"	i
+params_elec	population/_BUK/MCMC2.py	/^params_elec = model_results_elec.params.to_dict()$/;"	v
+params_inc	population/_BUK/MCMC2.py	/^params_inc = model_results_inc.params.to_dict()$/;"	v
+pd	city.py	/^import pandas as pd$/;"	i
+pd	data/makeTables.py	/^import pandas as pd$/;"	i
+pd	population/GREGWT.py	/^import pandas as pd$/;"	i
+pd	population/GREGWT_validation.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/GREGWT.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/GREGWT1.1.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/GREGWT1.2.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/GREGWT2.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/GREGWT3.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/GREGWT4.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/GREGWT_loop.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/MCMC2.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/MCMC3.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/MCMC_reg.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/Regression.py	/^import pandas as pd$/;"	i
+pd	population/_BUK/aggregates.py	/^import pandas as pd$/;"	i
+pd	population/data/makeTables.py	/^import pandas as pd$/;"	i
+pd	population/model.py	/^import pandas as pd$/;"	i
+pd	streams.py	/^import pandas as pd$/;"	i
+pd	tdModel.py	/^import pandas as pd$/;"	i
+pdf_fitted	population/_BUK/MCMC2.py	/^pdf_fitted = stats.norm.pdf(x, mu, sigma_mu)$/;"	v
+plot_error	population/GREGWT_validation.py	/^from urbanmetabolism.population.model import plot_error$/;"	i
+plot_error	population/model.py	/^def plot_error(trace, census, skip_cols, fit_cols, pop,$/;"	f
+plot_model	population/model.py	/^    def plot_model(self):$/;"	m	class:PopModel
+plot_model_test	population/model.py	/^    def plot_model_test(self, yhat_name, mu, sd):$/;"	m	class:PopModel
+plt	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^import matplotlib.pylab as plt$/;"	i
+plt	population/GREGWT_validation.py	/^import matplotlib.pyplot as plt$/;"	i
+plt	population/_BUK/MCMC2.py	/^import matplotlib.pyplot as plt$/;"	i
+plt	population/_BUK/MCMC_GML.py	/^import matplotlib.pyplot as plt$/;"	i
+plt	population/_BUK/MCMC_Metropolis.py	/^import matplotlib.pyplot as plt$/;"	i
+plt	population/model.py	/^import matplotlib.pyplot as plt$/;"	i
+pm	population/_BUK/MCMC_GML.py	/^import pymc3 as pm$/;"	i
+pm	population/_BUK/MCMC_reg.py	/^import pymc3 as pm$/;"	i
+pm	population/model.py	/^import pymc3 as pm$/;"	i
+pop	population/GREGWT_validation.py	/^pop = 32694 #households$/;"	v
+population_size	population/GREGWT.py	/^    population_size = population_size,$/;"	v
+population_size	population/GREGWT.py	/^population_size = 32694$/;"	v
+population_size	population/_BUK/GREGWT.py	/^population_size = 32694$/;"	v
+population_size	population/_BUK/GREGWT1.1.py	/^population_size = 32694$/;"	v
+population_size	population/_BUK/GREGWT1.2.py	/^population_size = 32694$/;"	v
+population_size	population/_BUK/GREGWT2.py	/^population_size = 32694$/;"	v
+population_size	population/_BUK/GREGWT3.py	/^population_size = 32694$/;"	v
+population_size	population/_BUK/GREGWT4.py	/^population_size = 32694$/;"	v
+population_size	population/_BUK/GREGWT_loop.py	/^population_size = 32694$/;"	v
+population_size	population/_BUK/MCMC3.py	/^population_size = 32694$/;"	v
+prefix	population/_BUK/MCMC3.py	/^                        prefix = 'e', #FIX won't run without prefix$/;"	v
+prefix	population/_BUK/MCMC3.py	/^                        prefix = 'i',$/;"	v
+print	population/GREGWT.py	/^import datetime; print(datetime.datetime.now())$/;"	i
+print	population/GREGWT_validation.py	/^import datetime; print(datetime.datetime.now())$/;"	i
+print	population/_BUK/MCMC2.py	/^import datetime; print(datetime.datetime.now())$/;"	i
+print_command	population/model.py	/^    def print_command(self):$/;"	m	class:PopModel
+print_error	population/_BUK/GREGWT_loop.py	/^def print_error(model):$/;"	f
+print_error	population/_BUK/aggregates.py	/^    def print_error(self, var, weight, year=2010):$/;"	m	class:Aggregates
+print_error	population/model.py	/^    def print_error(self, var, weight, year = 2010, lim = 1e-6):$/;"	m	class:Aggregates
+print_tables	tdModel.py	/^    def print_tables(self):$/;"	m	class:IOTables
+progressbar	population/_BUK/MCMC_GML.py	/^        progressbar=True)$/;"	v
+ps	population/_BUK/GREGWT.py	/^ps = 32694$/;"	v
+ps	population/_BUK/GREGWT1.1.py	/^ps = 32694$/;"	v
+ps	population/_BUK/GREGWT1.2.py	/^ps = 32694$/;"	v
+ps	population/_BUK/GREGWT2.py	/^ps = 32694$/;"	v
+ps	population/_BUK/GREGWT3.py	/^ps = 32694$/;"	v
+pymc3	population/_BUK/MCMC_Metropolis.py	/^import pymc3$/;"	i
+pytablewriter	data/makeTables.py	/^import pytablewriter$/;"	i
+pytablewriter	population/data/makeTables.py	/^import pytablewriter$/;"	i
+r	population/model.py	/^from rpy2.robjects import r$/;"	i
+read_file	tdModel.py	/^    def read_file(self, input, relative=False, **kargs):$/;"	m	class:Table
+result	population/_BUK/Regression.py	/^result = pd.concat([water, ban, dutyp, income, conn], axis=1)$/;"	v
+result	population/_BUK/Regression.py	/^result = result.dropna()$/;"	v
+result	population/_BUK/Regression.py	/^result = result.loc[inx]$/;"	v
+result	population/_BUK/Regression.py	/^result = result.replace(to_replace=np.nan, value=1)$/;"	v
+reweight	population/_BUK/aggregates.py	/^    def reweight(self, script="reweight.R", weights_file='temp\/new_weights.csv'):$/;"	m	class:Aggregates
+reweight	population/model.py	/^    def reweight(self, drop_cols, from_script=False,$/;"	m	class:Aggregates
+run_calibrated_model	population/GREGWT.py	/^from urbanmetabolism.population.model import run_calibrated_model$/;"	i
+run_calibrated_model	population/model.py	/^def run_calibrated_model(model, log_level = 0, **kwargs):$/;"	f
+run_composite_model	population/model.py	/^def run_composite_model($/;"	f
+run_gregwt	population/_BUK/GREGWT_loop.py	/^def run_gregwt(model):$/;"	f
+run_loop	population/_BUK/GREGWT_loop.py	/^def run_loop(elec, inc):$/;"	f
+run_model	population/_BUK/GREGWT.py	/^def run_model(models, sufix, ps=100, err=['w'], k=False, reweight=True):$/;"	f
+run_model	population/_BUK/GREGWT1.1.py	/^def run_model(models, sufix, ps=100, err=['w'], k=False, reweight=True):$/;"	f
+run_model	population/_BUK/GREGWT1.2.py	/^def run_model(models, sufix, ps=100, err=['w'], k=False, reweight=True):$/;"	f
+run_model	population/_BUK/GREGWT2.py	/^def run_model(models, sufix, ps=100, err=['w'], k=False, reweight=True):$/;"	f
+run_model	population/_BUK/GREGWT3.py	/^def run_model(models, sufix, ps=100, err=['w'], k=False, reweight=True):$/;"	f
+run_model	population/_BUK/GREGWT4.py	/^def run_model(models, sufix, err=['w'], k=False, reweight=True):$/;"	f
+run_model	population/model.py	/^    def run_model(self, iterations=100000, population=False, burn=False, thin=2, **kwargs):$/;"	m	class:PopModel
+run_population	population/_BUK/GREGWT_loop.py	/^def run_population(elec, inc):$/;"	f
+sample	population/_BUK/MCMC2.py	/^from pymc3 import find_MAP, Metropolis, sample$/;"	i
+sample	population/model.py	/^from pymc3 import find_MAP, Metropolis, sample, trace_to_dataframe$/;"	i
+scipy	population/_BUK/MCMC_Metropolis.py	/^import scipy.stats as stats$/;"	i
+set_census	population/model.py	/^    def set_census(self, census, total_pop = False, **kwargs):$/;"	m	class:Aggregates
+set_census_from_file	population/_BUK/aggregates.py	/^    def set_census_from_file(self, file_census, total_pop=False, **kwargs):$/;"	m	class:Aggregates
+set_census_from_frame	population/_BUK/aggregates.py	/^    def set_census_from_frame(self, frame_census, total_pop=False):$/;"	m	class:Aggregates
+set_survey	population/model.py	/^    def set_survey(self, survey,$/;"	m	class:Aggregates
+set_survey_from_file	population/_BUK/aggregates.py	/^    def set_survey_from_file(self, file_survey,$/;"	m	class:Aggregates
+set_survey_from_frame	population/_BUK/aggregates.py	/^    def set_survey_from_frame(self, frame_survey,$/;"	m	class:Aggregates
+set_table_model	population/_BUK/aggregates.py	/^    def set_table_model(self, input_table_model):$/;"	m	class:Aggregates
+set_table_model	population/model.py	/^    def set_table_model(self, input_table_model):$/;"	m	class:Aggregates
+shared	population/model.py	/^from theano import config, function, shared$/;"	i
+sigma	population/_BUK/MCMC2.py	/^    sigma = Normal('sigma', mu=sigma_mu, sd=sigma_sd)$/;"	v
+sigma_mu	population/_BUK/MCMC2.py	/^sigma_mu = 47$/;"	v
+sigma_mu_elec	population/_BUK/GREGWT_loop.py	/^sigma_mu_elec = 122.87233345193788$/;"	v
+sigma_mu_elec	population/_BUK/MCMC3.py	/^sigma_mu_elec = 122.87233345193788$/;"	v
+sigma_mu_inc	population/_BUK/GREGWT_loop.py	/^sigma_mu_inc = 168845.89$/;"	v
+sigma_mu_inc	population/_BUK/MCMC3.py	/^sigma_mu_inc = 168845.89$/;"	v
+sigma_sd	population/_BUK/GREGWT_loop.py	/^sigma_sd = 0.5$/;"	v
+sigma_sd	population/_BUK/MCMC2.py	/^sigma_sd = 0.5$/;"	v
+sigma_sd	population/_BUK/MCMC3.py	/^sigma_sd = 0.5$/;"	v
+simulate_linear_data	population/_BUK/MCMC_reg.py	/^def simulate_linear_data(N, beta0, Beta, eps_sigma_sq, eps_mean):$/;"	f
+simulation_data	population/_BUK/test.R	/^simulation_data <- prepareData($/;"	g
+simulation_data	population/reweight.R	/^simulation_data <- prepareData($/;"	g
+simulation_data	population/reweight_tmp.R	/^simulation_data <- prepareData($/;"	g
+simulation_data	population/reweight_tmp2.R	/^simulation_data <- prepareData($/;"	g
+size	population/_BUK/MCMC_GML.py	/^size = 200$/;"	v
+skip_cols	population/GREGWT_validation.py	/^skip_cols = ['w', 'wf', 'level_0', 'index']$/;"	v
+sm	population/_BUK/MCMC2.py	/^import statsmodels.api as sm$/;"	i
+sm	population/_BUK/Regression.py	/^import statsmodels.api as sm$/;"	i
+sns	population/GREGWT_validation.py	/^import seaborn as sns$/;"	i
+sns	population/_BUK/MCMC2.py	/^import seaborn as sns$/;"	i
+sns	population/model.py	/^import seaborn as sns$/;"	i
+st	population/_BUK/MCMC_reg.py	/^st = 0$/;"	v
+start	population/_BUK/MCMC2.py	/^    start = find_MAP()$/;"	v
+start	population/_BUK/MCMC_GML.py	/^    start = pm.find_MAP()$/;"	v
+start	population/_BUK/MCMC_Metropolis.py	/^    start = pymc3.find_MAP()$/;"	v
+state	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^state = odeint(LotkaVolterra, state0, time)$/;"	v
+state0	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^state0 = [0.5,0.5]$/;"	v
+stats	population/_BUK/MCMC2.py	/^from scipy import stats$/;"	i
+stats	population/_BUK/MCMC_Metropolis.py	/^import scipy.stats as stats$/;"	i
+stats	population/model.py	/^        from scipy import stats$/;"	i
+stats	population/model.py	/^from scipy import stats$/;"	i
+statsmodels	population/_BUK/MCMC2.py	/^import statsmodels.api as sm$/;"	i
+statsmodels	population/_BUK/Regression.py	/^import statsmodels.api as sm$/;"	i
+step	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^step=2$/;"	v
+step	population/_BUK/GREGWT_loop.py	/^    step = step * -1$/;"	v
+step	population/_BUK/GREGWT_loop.py	/^step = 100$/;"	v
+step	population/_BUK/MCMC2.py	/^    step = Metropolis()$/;"	v
+step	population/_BUK/MCMC_GML.py	/^    step = pm.NUTS(scaling=start) # Instantiate MCMC sampling algorithm$/;"	v
+step	population/_BUK/MCMC_Metropolis.py	/^    step = pymc3.Metropolis()$/;"	v
+storage	streams.py	/^    storage = pd.DataFrame()$/;"	v	class:Stock
+survey	population/_BUK/test.R	/^survey <- read.csv('toR_survey.csv')$/;"	g
+survey	population/reweight.R	/^survey <- read.csv('temp\/toR_survey.csv')$/;"	g
+survey	population/reweight_tmp.R	/^survey <- read.csv('temp\/toR_survey.csv')$/;"	g
+survey	population/reweight_tmp2.R	/^survey <- read.csv('temp\/toR_survey.csv')$/;"	g
+survey_to_cat	population/_BUK/aggregates.py	/^    def survey_to_cat(self, variable_name, cut_values, labels=False, prefix=False):$/;"	m	class:Aggregates
+synthetic_pop	population/_BUK/MCMC_reg.py	/^def synthetic_pop(beta0, Beta,$/;"	f
+technology	streams.py	/^    technology = pd.DataFrame()$/;"	v	class:Stock
+theano	population/model.py	/^import theano.tensor as T$/;"	i
+theta	population/_BUK/MCMC_Metropolis.py	/^    theta = pymc3.Beta("theta", alpha=alpha, beta=beta)$/;"	v
+time	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^time = np.arange(0,500,1)$/;"	v
+time	population/_BUK/MCMC_reg.py	/^from time import time$/;"	i
+to_cat	population/GREGWT.py	/^    to_cat = to_cat,$/;"	v
+to_cat	population/GREGWT.py	/^to_cat = {'i_HH_head_Age':[cut, labels]}$/;"	v
+trace	population/GREGWT_validation.py	/^trace = pd.read_csv($/;"	v
+trace	population/_BUK/MCMC2.py	/^    trace = sample(iterations, step, start, random_seed=1, progressbar=True)$/;"	v
+trace	population/_BUK/MCMC_GML.py	/^        trace=backend,$/;"	v
+trace	population/_BUK/MCMC_GML.py	/^    trace = pm.sample($/;"	v
+trace	population/_BUK/MCMC_Metropolis.py	/^    trace = pymc3.sample(iterations, step, start, random_seed=1, progressbar=True)$/;"	v
+trace	population/_BUK/MCMC_reg.py	/^    trace = glm_mcmc_inference(df, iterations=5000)$/;"	v
+trace_path	population/_BUK/MCMC_reg.py	/^    trace_path = os.path.join(os.getcwd(), TRACEFILE.format(st))$/;"	v
+trace_path	population/_BUK/MCMC_reg.py	/^trace_path = os.path.join(os.getcwd(), TRACEFILE.format(st))$/;"	v
+trace_to_dataframe	population/model.py	/^from pymc3 import find_MAP, Metropolis, sample, trace_to_dataframe$/;"	i
+trace_val	population/GREGWT_validation.py	/^trace_val = new_Urban.value_counts()[1] \/ new_Urban.shape[0]$/;"	v
+traceplot	population/_BUK/MCMC2.py	/^from pymc3 import traceplot$/;"	i
+traceplot	population/model.py	/^        from pymc3 import traceplot$/;"	i
+true_intercept	population/_BUK/MCMC_GML.py	/^true_intercept = 1$/;"	v
+true_regression_line	population/_BUK/MCMC_GML.py	/^true_regression_line = true_intercept + true_slope * x$/;"	v
+true_slope	population/_BUK/MCMC_GML.py	/^true_slope = 2$/;"	v
+tt	_BUK/_Snip_DynamicSystems/lotkavolterra.py	/^tt = plt.title("%4.2f sec" % 0.00)$/;"	v
+update	tdModel.py	/^    def update(self, b, dimension=1):$/;"	m	class:Table
+update_model	population/_BUK/GREGWT_loop.py	/^def update_model(elec, inc):$/;"	f
+usecols	population/_BUK/Regression.py	/^    usecols=[0,1,3,4,5,6,7,8,9,10,11,12,14], $/;"	v
+usecols	population/_BUK/Regression.py	/^    usecols=[0,2,3,4],$/;"	v
+va	population/model.py	/^             va='top',$/;"	v
+var	population/GREGWT_validation.py	/^var = 'TV'$/;"	v
+verbose	population/_BUK/GREGWT_loop.py	/^verbose = False$/;"	v
+warnings	population/model.py	/^import warnings$/;"	i
+water	population/_BUK/Regression.py	/^water = pd.read_csv('MUN_water.csv', usecols=[0,6], index_col=0, na_values=['-', '...'])$/;"	v
+writer	data/makeTables.py	/^writer = pytablewriter.RstGridTableWriter()$/;"	v
+writer	population/data/makeTables.py	/^writer = pytablewriter.RstGridTableWriter()$/;"	v
+x	population/_BUK/MCMC2.py	/^x = np.arange(0,350)$/;"	v
+x	population/_BUK/MCMC_GML.py	/^x = np.linspace(0, 1, size)$/;"	v
+x	population/_BUK/MCMC_Metropolis.py	/^x = np.linspace(0, 1, 100)$/;"	v
+y	population/_BUK/MCMC_GML.py	/^y = true_regression_line + np.random.normal(scale=.5, size=size)$/;"	v
+y	population/_BUK/MCMC_Metropolis.py	/^    y = pymc3.Binomial("y", n=n, p=theta, observed=z)$/;"	v
+y	population/_BUK/Regression.py	/^y = result.ix[:,0]$/;"	v
+y_elec	population/_BUK/MCMC2.py	/^y_elec = electricity_data.loc[:,'Electricity']$/;"	v
+y_inc	population/_BUK/MCMC2.py	/^y_inc = income_data.loc[:,'Total_Family_Income']$/;"	v
+z	population/_BUK/MCMC_Metropolis.py	/^z = 10$/;"	v
