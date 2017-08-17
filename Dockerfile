@@ -22,7 +22,9 @@ COPY urbanmetabolism/ ./urbanmetabolism
 
 RUN ln -s urbanmetabolism/data data
 
-EXPOSE 8888
+COPY GREGWT_0.7.3.tar.gz ./
+RUN R CMD INSTALL GREGWT_0.7.3.tar.gz
+#EXPOSE 8888
 
 #CMD [ "python", "./test.py" ]
 #RUN ipython3 notebook --port 80
