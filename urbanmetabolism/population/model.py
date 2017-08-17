@@ -946,7 +946,7 @@ class PopModel(object):
             # step = pm.NUTS(scaling=means)
 
             # use SQLite as a backend
-            # backend = SQLite(self.tracefile)
+            backend = SQLite(self.tracefile)
 
             # Calculate the trace
             self.trace = sample(
@@ -954,15 +954,13 @@ class PopModel(object):
                 # step,
                 # start=means,
                 # step, start,
-                # trace=backend,
+                trace=backend,
                 random_seed=self.random_seed,
                 **kwargs
             )
 
         # Transform data to DataFrame
-        print(burn)
-        print(thin)
-        self.trace = self.trace[burn::thin]
+        self.trace = self.trace[int(burn)::int(thin)]
         self.df_trace = trace_to_dataframe(self.trace)
         new_col = [col.replace('__0', '') for col in self.df_trace.columns]
         self.df_trace.columns = new_col
