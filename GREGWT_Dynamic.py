@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # Dynamic Model (GREGWT)
-# 
+#
 # UN Environment
 
 # In[1]:
@@ -21,7 +21,7 @@ from urbanmetabolism.population.model import _make_flat_model
 
 # In[3]:
 
-iterations = 100000
+iterations = 10#0000
 year = 2016
 census_file = 'data/benchmarks_projected_wbias.csv'
 model_name = 'Sorsogon_Electricity_Water_wbias_projected_dynamic'
