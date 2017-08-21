@@ -11,6 +11,7 @@ Sun 18 Jun 2017 12:16:21 AM CEST
 import os
 import warnings
 import copy
+import json
 warnings.filterwarnings('ignore')
 
 # pymc3 libraries
@@ -94,8 +95,6 @@ def _toR_df(toR_df):
 
 def _script_gregwt(survey, census, weights_file, script):
     """Run GREGWT directly from an R script"""
-    survey.to_csv('temp/toR_survey.csv')
-    census.to_csv('temp/toR_census.csv')
     res = os.system("Rscript {}".format(script))
     if res != 0:
         raise ValueError("cannot run script: {}".format(script))
@@ -168,11 +167,20 @@ def _delete_files(name, sufix, verbose=False):
 
 
 def _project_survey_resample(
-    trace, census, model_in, err,
+    census, model_in, err,
     k_iter,
+    resample_years = list(),
     **kwargs):
     """Project reweighted survey."""
-    for year in census.index:
+    if 'name' in kwargs:
+        model_name = kwargs['name']
+    else:
+        print("No model name provided!")
+        model_name = 'noname'
+    trace_dic = dict()
+    if len(resample_years) == 0:
+        resample_years = census.index.tolist()
+    for year in resample_years:
         print("resampling for year {}".format(year))
         sufix = "resample_{}".format(year)
         model = _make_flat_model(model_in, year)
@@ -182,48 +190,99 @@ def _project_survey_resample(
             err = err,
             k = k_iter,
             **kwargs)
-        trace.loc[:, year] = reweighted_survey.loc[:, err]
-    return(trace)
+        trace_dic[year] = reweighted_survey
+        reweighted_survey.to_csv("./data/survey_{}_{}.csv".format(model_name, year))
+    return(trace_dic)
+
+
+def _merge_data(reweighted_survey, inx, v, group = False, groupby = False):
+    values = dict()
+    cap = dict()
+    for i in inx:
+        file_survey = reweighted_survey + "_{}.csv".format(i)
+        survey_temp = pd.read_csv(file_survey, index_col=0)
+        cap_i = survey_temp.wf.sum()
+        if group:
+            val = survey_temp.loc[:, [v, 'wf']].fillna(group).groupby(v).size()
+        else:
+            survey_temp.loc[:, v] = survey_temp.loc[:, v].mul(survey_temp.loc[:, 'wf'])
+            if not groupby:
+                val = survey_temp.loc[:, v].sum()
+            else:
+                val = survey_temp.loc[:, [v, groupby]].groupby(groupby).sum()
+                val.columns = [i]
+        values[i] = val
+        cap[i] = cap_i
+    if group:
+        s = pd.concat([it for k, it in values.items()], axis=1)
+        s.columns = names=values.keys()
+        s = s.fillna(1)
+    elif groupby:
+        values_cat = list()
+        for key, df in values.items():
+            values_cat.append(df)
+        s = pd.concat(values_cat, axis=1)
+        s = s.T
+    else:
+        s = pd.Series(values, name=v)
+        s.index.name = 'year'
+    c = pd.Series(cap, name='pop')
+    c.index.name = 'year'
+    return(s, c)
 
 
 def plot_data_projection(reweighted_survey, var, iterations,
+                         groupby = False,
                          start_year = 2010, end_year = 2030, benchmark_year = False):
     """Plot projected data as total sum and as per capita."""
     if not isinstance(var, list):
         raise TypeError('expected type {} for variable var, got {}'.format(type(list), type(var)))
-    inx = [str(i) for i in range(start_year, end_year)]
-    for v in var:
-        data = reweighted_survey.loc[:, inx].mul(
-            reweighted_survey.loc[:, v], axis=0)
-        cap = reweighted_survey.loc[:, inx].sum()
-        _plot_data_projection_single(data, v, iterations, cap, benchmark_year)
+    inx = [str(i) for i in range(start_year, end_year+1)]
+    fig, AX = plt.subplots(3,1, figsize=(10,7), sharex=True)
+    for v, ax in zip(var, AX):
+        if isinstance(reweighted_survey, pd.DataFrame):
+            data = reweighted_survey.loc[:, inx].mul(
+                reweighted_survey.loc[:, v], axis=0).sum()
+            cap = reweighted_survey.loc[:, inx].sum()
+        else:
+            data, cap = _merge_data(reweighted_survey, inx, v, groupby = groupby)
+        _plot_data_projection_single(ax, data, v, cap, benchmark_year, iterations, groupby)
+    plt.savefig('FIGURES/projected_{}.png'.format(iterations), dpi=300)
     return(data)
 
 
-def _plot_data_projection_single(data, var, iterations, cap, benchmark_year):
+def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations, groupby):
     """Plot projected data."""
-    fig, ax1 = plt.subplots(figsize=(10,2))
-
-    data.sum().plot(ax = ax1, label='total')
+    if groupby:
+        kind = 'area'
+        alpha = 0.6
+    else:
+        kind= 'line'
+        alpha = 1
+    data.plot(ax = ax1, kind=kind, alpha=alpha)
     ax1.set_xlabel('simulation year')
-    if benchmark_year:
-        ax1.set_ylabel('Total {}'.format(var))
-        x = data.columns.tolist().index(str(benchmark_year))
-        y = data.sum().loc[str(benchmark_year)]
-        #ax1.arrow(x, 0, 0, y, head_width=1, head_length=1, fc='r', ec='r')
-        ax1.vlines(x, 0, y, color='r')
-        ax1.text(x+0.2, y/2, 'benchmark', color='r')
+    ax1.set_ylabel('Total {}'.format(var))
+    if benchmark_year and not groupby:
+        min = data.min()
+        x = data.index.tolist().index(str(benchmark_year))
+        y = data.loc[str(benchmark_year)]
+        ax1.vlines(x, data.min(), y+(y-min), color='r')
+        ax1.text(
+            x+0.2,
+            y+(y-min),
+            'benchmark', color='r')
     ax1.legend(loc=2)
 
     ax2 = ax1.twinx()
 
-    per_husehold = data.sum().div(cap)
+    per_husehold = data.div(cap, axis=0)
+    if groupby:
+        per_husehold = per_husehold.sum(axis=1)
     per_husehold.plot(style='k--', ax = ax2, label='per household\nsd={:0.2f}'.format(per_husehold.std()))
-    ax2.set_title('{} projection $(n = {})$'.format(var, iterations))
+    ax2.set_title('{} projection (n = {})'.format(var, iterations))
     ax2.set_ylabel('{}\nHouseholds'.format(var))
     ax2.legend(loc=1)
 
-    plt.savefig('FIGURES/projected_{}.png'.format(var), dpi=300)
 
 def _project_survey_reweight(trace, census, model_i, err, max_iter = 100):
     """Project reweighted survey."""
@@ -254,6 +313,38 @@ def _project_survey_reweight(trace, census, model_i, err, max_iter = 100):
     trace_out = trace.join(a)
 
     return(trace_out)
+
+
+def print_cross_tab(a, b, year, file_name):
+    """Print cross tabulation data."""
+    data = pd.read_csv(file_name.format(year), index_col = 0)
+
+    if b.split('_')[-1] == 'Level':
+        data.loc[:, b] = pd.cut(
+            data.loc[:, b.split('_')[0]], 5,
+            labels=['High', 'mid-High', 'Middle', 'mid-Low', 'Low'])
+
+    if a.split('_')[-1] == 'Level':
+        data.loc[:, a] = pd.cut(
+            data.loc[:, a.split('_')[0]], 5,
+            labels=['High', 'mid-High', 'Middle', 'mid-Low', 'Low'])
+
+    data_cross = pd.crosstab(data.loc[:, a], data.loc[:, b], data.wf, aggfunc = sum)
+    data_cross_per = data_cross.div(data_cross.sum(axis=1),axis=0)
+    fig, ax = plt.subplots(figsize=(10,5))
+    data_cross_per.plot.bar(stacked=True, ax=ax)
+    ax.set_ylabel('Share [%]')
+    ax.set_title('Share of <{}> by <{}> for year {}'.format(a, b, year));
+    plt.tight_layout()
+    plt.savefig("FIGURES/{}_{}_{}.png".format(a, b, year), dpi=300)
+
+    data_cross = np.round(data_cross, 2)
+    print(data_cross)
+    excel_file = 'data/{}_{}_{}.xlsx'.format(a, b, year)
+    writer = pd.ExcelWriter(excel_file)
+    data_cross.to_excel(writer, 'Sheet1')
+    writer.save()
+    print("data saved as: {}".format(excel_file))
 
 
 def plot_projected_weights(trace_out, iterations):
@@ -296,7 +387,12 @@ def _make_flat_model(model, year):
     return(model_out)
 
 
-def run_calibrated_model(model_in, log_level = 0, err = 'wf', project = 'reweight', **kwargs):
+def run_calibrated_model(model_in,
+                         log_level = 0,
+                         err = 'wf',
+                         project = 'reweight',
+                         resample_years = list(),
+                         **kwargs):
     """Run and calibrate model with all required iterations.
 
     Args:
@@ -331,6 +427,7 @@ def run_calibrated_model(model_in, log_level = 0, err = 'wf', project = 'reweigh
                 iterations = 100000)
 
     """
+    pm._log.setLevel(log_level)
     if 'name' in kwargs:
         model_name = kwargs['name']
     else:
@@ -363,7 +460,6 @@ def run_calibrated_model(model_in, log_level = 0, err = 'wf', project = 'reweigh
             print("#"*30)
             print(model[mod]['table_model'])
 
-    pm._log.setLevel(log_level)
     k_iter = {i:1 for i in model}
     n_models = len(model.keys()) + 1
     for e, variable in enumerate(model):
@@ -393,6 +489,9 @@ def run_calibrated_model(model_in, log_level = 0, err = 'wf', project = 'reweigh
     for md in k_out:
         print('\t{1:0.4E}  {0:}'.format(md, 1 - k_out[md]))
 
+    with open('temp/kfactors.json', 'w') as kfile:
+        kfile.write(json.dumps(k_iter))
+
     census_file = kwargs['census_file']
     census = pd.read_csv(census_file, index_col=0)
     if census.shape[0] > 1 and project == 'reweight':
@@ -400,18 +499,20 @@ def run_calibrated_model(model_in, log_level = 0, err = 'wf', project = 'reweigh
             census.shape[0]))
         out_reweighted_survey = _project_survey_reweight(
             reweighted_survey, census, model, err)
+        out_reweighted_survey = out_reweighted_survey.set_index('index')
+        out_reweighted_survey.to_csv("./data/survey_{}.csv".format(model_name))
     elif census.shape[0] > 1 and project == 'resample':
         print("Projecting sample survey for {} steps via resample".format(
             census.shape[0]))
         out_reweighted_survey = _project_survey_resample(
-            reweighted_survey, census, model_in, err,
-            k_iter, **kwargs)
+            census, model_in, err,
+            k_iter,
+            resample_years = list(),
+            **kwargs)
     else:
         out_reweighted_survey = reweighted_survey
 
-    out_reweighted_survey = out_reweighted_survey.set_index('index')
-    out_reweighted_survey.to_csv("./data/survey_{}.csv".format(model_name))
-    return(reweighted_survey)
+    return(out_reweighted_survey)
 
 
 def run_composite_model(
@@ -1156,7 +1257,6 @@ class Aggregates():
         return(error)
 
 
-
     def reweight(self, drop_cols, from_script=False, year = 2010,
                  max_iter = 100,
                  weights_file='temp/new_weights.csv', script="reweight.R"):
@@ -1177,8 +1277,10 @@ class Aggregates():
         inx_cols_survey = [col for col in self.survey.columns if col not in drop_cols and col not in 'level_0']
         inx_cols_census = [col for col in self.census.columns if col not in drop_cols]
         toR_survey = self.survey.loc[:, inx_cols_survey]
+        toR_survey.to_csv('temp/toR_survey.csv')
         toR_census = self.census.loc[[year], inx_cols_census]
         toR_census.insert(0, 'area', toR_census.index)
+        toR_census.to_csv('temp/toR_census.csv')
 
         if from_script:
             new_weights = _script_gregwt(toR_survey, toR_census,
@@ -1226,8 +1328,20 @@ class Aggregates():
         labels = labels[::inv]
         if self.verbose:
             print('to labels: ', labels)
-        labels = [labels[int(i)] for i in cat]
-        return(labels)
+        try:
+            labels_out = [labels[int(i)] for i in cat]
+        except:
+            labels_out = list()
+            for c in cat:
+                this_lab = [l for l in labels if str(c) in l.split('_')]
+                if len(this_lab) > 1:
+                    print("Error: found more than one label for: ", c)
+                else:
+                    this_lab = this_lab[0]
+                labels_out.append(this_lab)
+            if self.verbose:
+                print('new labels: ', labels_out)
+        return(labels_out)
 
     def _get_labels(self, var, cat, inv=1):
         """Get labels for survey variables."""
@@ -1441,13 +1555,14 @@ def _plot_single_error(survey_var, census_key, survey, census, pop,
                        weight = 'wf',
                        save_all = False, year = 2010, raw = False):
     """Plot error distrinution for single variable"""
-    Rec_s = survey.loc[:, [survey_var, weight]].groupby(survey_var).sum()
+    Rec_s = survey.loc[:, [survey_var, str(weight)]].groupby(survey_var).sum()
     Rec_c = census.loc[[year], [c for c in census.columns if census_key in c]]
-    Rec = Rec_c.T.join(Rec_s)
+    # Rec = Rec_c.T.join(Rec_s)
+    Rec = pd.concat([Rec_c.T, Rec_s], axis=1)
     if raw:
         return(Rec)
-    Rec_0 = Rec.loc[Rec.wf.isnull()]
-    diff = (Rec.loc[:, weight] - Rec.loc[:, year]).div(pop).mul(100)
+    Rec_0 = Rec.loc[Rec.loc[:, str(weight)].isnull()]
+    diff = (Rec.loc[:, str(weight)] - Rec.loc[:, year]).div(pop).mul(100)
     diff_0 = (Rec_0.loc[:, year]).div(pop).mul(-100)
     if save_all:
         ax = diff.plot(kind='bar')
@@ -1475,6 +1590,7 @@ def plot_error(trace_in, census_in, iterations,
                pop = False,
                skip = list(),
                fit_col = list(),
+               weight = 'wf',
                plot_name = False, wbins = 50,
                wspace = 0.2, hspace = 0.9, top = 0.91,
                year = 2010, save_all = False):
@@ -1485,6 +1601,7 @@ def plot_error(trace_in, census_in, iterations,
         trace = trace_in
     else:
         raise TypeError('trace must either be a valid file on disc of a pandas DataFrame')
+    trace = trace.loc[trace.loc[:, weight].notnull()]
 
     if isinstance(census_in, str) and os.path.isfile(census_in):
         census = pd.read_csv(census_in, index_col = 0)
@@ -1519,7 +1636,9 @@ def plot_error(trace_in, census_in, iterations,
     Diff = list()
     Diff_0 = list()
     for pv in plot_variables:
-        Rec, Rec_0 = _plot_single_error(pv, plot_variables[pv], trace, census, pop, save_all=save_all, year=year)
+        Rec, Rec_0 = _plot_single_error(
+            pv, plot_variables[pv], trace, census, pop,
+            save_all=save_all, year=year, weight = weight)
         Diff.append(Rec)
         Diff_0.append(Rec_0)
     Diff = pd.concat(Diff)
@@ -1527,14 +1646,13 @@ def plot_error(trace_in, census_in, iterations,
     fit_error = list()
     fit_error_abs = list()
     for col in fit_cols:
-        Rec_s = trace.loc[:, col].mul(trace.wf).sum()
+        Rec_s = trace.loc[:, col].mul(trace.loc[:, weight]).sum()
         Rec_c = census.loc[year, col]
         Rec = (Rec_s - Rec_c) / Rec_c * 100
         fit_error.append(Rec)
         fit_error_abs.append(abs(Rec_s - Rec_c))
 
     fig, ((ax, ax1), (ax2, ax3)) = plt.subplots(2, 2, figsize=(15, 10))
-    #TODO fix location of title
     fig.suptitle("Sampling error (year = {}, n = {})".format(year, iterations), fontsize="x-large")
     x = Diff.index.get_indexer_for(Diff_0.index)
     Diff.plot(kind='bar', label="PSAE", ax=ax, color =  sn_blue)
@@ -1578,7 +1696,9 @@ def plot_error(trace_in, census_in, iterations,
     rec = list()
     for pv in plot_variables:
         rec.append(
-            _plot_single_error(pv, plot_variables[pv], trace, census, pop, raw=True, year=year))
+            _plot_single_error(pv, plot_variables[pv],
+                               trace, census, pop, raw=True, year=year,
+                               weight = weight))
     REC = pd.concat(rec)
     REC.columns = ['Observed', 'Simulated']
     TAE = abs((REC.Observed - REC.Simulated).mean())
@@ -1605,8 +1725,8 @@ TAE: {:0.2E}, PSAE: {:0.2E}%
     ax2.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
     ax2.ticklabel_format(axis='x', style='sci', scilimits=(-2,2))
 
-    val, bins = np.histogram(trace.wf, bins = wbins)
-    sns.distplot(trace.wf,
+    val, bins = np.histogram(trace.loc[:, weight], bins = wbins)
+    sns.distplot(trace.loc[:, weight],
                  bins = bins, kde = False,
                  label = 'Distribution of estimated new weights',
                  color = sn_blue,
@@ -1617,7 +1737,7 @@ TAE: {:0.2E}, PSAE: {:0.2E}%
              (0, val.max()), '--', color = sn_red, alpha = 1,
              label='Original sample weight')
     ax3.set_ylim(0, val.max())
-    ax3.set_xlim(trace.wf.max()/100*-1, trace.wf.max())
+    ax3.set_xlim(trace.loc[:, weight].max()/100*-1, trace.loc[:, weight].max())
     ax3.text(trace.w.mean(), val.max()/2,
              " <-- $d = {:0.2f}$".format(trace.w.mean()),
              color = sn_red,
