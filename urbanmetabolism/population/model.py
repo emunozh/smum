@@ -653,6 +653,79 @@ def _index_model(inx, co_mu_list):
     return(res)
 
 
+def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduction, atol = 1):
+    """Reduce consumption levels given a penetration rate and sampling rules."""
+    # read data
+    data = pd.read_csv(file_name.format(year), index_col=0)
+    data = data.loc[data.wf > 0]
+    data.loc[:, 'w'] = 1
+    data.loc[:, 'sw'] = 1
+    del data['index']
+    data.insert(0, 'real_index', data.index)
+
+    # Compute sampling probability weights
+    max_value = 1
+    old_rule = 'unnamed'
+    for rule, value in sampling_rules.items():
+        if rule.split('=')[0] != old_rule:
+            max_value += value
+        old_rule = rule.split('=')[0]
+        inx = data.query(rule).index
+        data.loc[inx, 'sw'] += value
+
+    if data.sw.max() == max_value:
+        print('weights: OK')
+    else:
+        print('weights: max design p = {}, max reall p = {}'.format(
+            max_value, data.sw.max()))
+
+    # Expand data
+    a = list()
+    for i, row in data.iterrows():
+        n = int(np.round(row['wf']))
+        for j in range(n):
+            a.append(row)
+    temp_exp = pd.DataFrame(a)
+    if temp_exp.w.sum() == np.round(data.wf).sum():
+        print('expand: OK')
+    else:
+        print('expand: Fail')
+
+    # get sample
+    #n_samples = temp_exp.shape[0] * penetration_rate
+    data_sample = temp_exp.sample(frac=penetration_rate, replace=False, weights=temp_exp.sw)
+    if np.allclose(data_sample.w.sum(), data.wf.sum() * penetration_rate, atol=atol):
+        print('sampling: OK, with absolute tolerance = {}'.format(atol))
+    else:
+        print('sampling: Fail')
+
+    # sample reduction
+    col_group = [i for i in data_sample.columns if i != 'w']
+    new_weights = data_sample.groupby(col_group).sum()
+
+    new_index = new_weights.index
+    for a in col_group:
+        if a != 'real_index':
+            new_weights.loc[:, a] = new_index.get_level_values(1).tolist()
+            new_index = new_index.droplevel(1)
+    new_weights.index = new_index
+
+    if np.allclose(new_weights.w.sum(), data.wf.sum() * penetration_rate, atol=atol):
+        print('reduction: OK, with absolute tolerance = {}'.format(atol))
+    else:
+        print('reduction: Fail')
+
+    # modify original sample
+    for variable, reduction_factor in reduction.items():
+        old_val = data.loc[:, 'Electricity'].mul(data.wf).sum()
+        data.loc[new_weights.index, variable] *= reduction_factor
+        new_val = data.loc[:, 'Electricity'].mul(data.wf).sum()
+        print("{:0.2%} reduction for {} with {}% efficiency rate".format(
+            new_val / old_val, variable, reduction_factor))
+
+    return(data)
+
+
 #####################
 ## Table model
 #####################
