@@ -232,12 +232,19 @@ def _merge_data(reweighted_survey, inx, v, group = False, groupby = False):
 
 
 def plot_data_projection(reweighted_survey, var, iterations,
-                         groupby = False,
+                         groupby = False, pr = False, scenario_name = 'scenario 1',
                          start_year = 2010, end_year = 2030, benchmark_year = False):
     """Plot projected data as total sum and as per capita."""
+    inx = [str(i) for i in range(start_year, end_year+1)]
     if not isinstance(var, list):
         raise TypeError('expected type {} for variable var, got {}'.format(type(list), type(var)))
-    inx = [str(i) for i in range(start_year, end_year+1)]
+    if not isinstance(pr, bool):
+        pr = [i for i in pr]
+    if isinstance(pr, list):
+        # year_sample = str(year) + "_{}_{:0.2f}".format(scenario_name, penetration_rate)
+        inx_pr = ["{}_{}_{:0.2f}".format(year, scenario_name, pr) for year, pr in zip(inx, pr)]
+    else:
+        inx_pr = False
     fig, AX = plt.subplots(3,1, figsize=(10,7), sharex=True)
     for v, ax in zip(var, AX):
         if isinstance(reweighted_survey, pd.DataFrame):
@@ -246,20 +253,28 @@ def plot_data_projection(reweighted_survey, var, iterations,
             cap = reweighted_survey.loc[:, inx].sum()
         else:
             data, cap = _merge_data(reweighted_survey, inx, v, groupby = groupby)
-        _plot_data_projection_single(ax, data, v, cap, benchmark_year, iterations, groupby)
+            if isinstance(pr, list):
+                data_pr, _ = _merge_data(reweighted_survey, inx_pr, v, groupby = groupby)
+            else:
+                data_pr = False
+        _plot_data_projection_single(ax, data, v, cap, benchmark_year, iterations, groupby, data_pr=data_pr, scenario_name = scenario_name)
     plt.savefig('FIGURES/projected_{}.png'.format(iterations), dpi=300)
     return(data)
 
 
-def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations, groupby):
+def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations, groupby, data_pr = False, scenario_name = 'scenario 1'):
     """Plot projected data."""
     if groupby:
         kind = 'area'
         alpha = 0.6
+        if isinstance(data_pr, bool):
+            data.plot(ax = ax1, kind=kind, alpha=alpha)
     else:
         kind= 'line'
         alpha = 1
-    data.plot(ax = ax1, kind=kind, alpha=alpha)
+        data.plot(ax = ax1, kind=kind, alpha=alpha)
+    if not isinstance(data_pr, bool):
+        data_pr.plot(ax = ax1, kind=kind, alpha=alpha, label=scenario_name)
     ax1.set_xlabel('simulation year')
     ax1.set_ylabel('Total {}'.format(var))
     if benchmark_year and not groupby:
@@ -653,11 +668,14 @@ def _index_model(inx, co_mu_list):
     return(res)
 
 
-def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduction, atol = 1):
+def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduction,
+                       atol = 1, verbose = False, scenario_name = "scenario 1"):
     """Reduce consumption levels given a penetration rate and sampling rules."""
     # read data
     data = pd.read_csv(file_name.format(year), index_col=0)
     data = data.loc[data.wf > 0]
+    if verbose:
+        print("\tfile with {:0.0f} households".format(data.wf.sum()))
     data.loc[:, 'w'] = 1
     data.loc[:, 'sw'] = 1
     del data['index']
@@ -673,11 +691,12 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
         inx = data.query(rule).index
         data.loc[inx, 'sw'] += value
 
-    if data.sw.max() == max_value:
-        print('weights: OK')
-    else:
-        print('weights: max design p = {}, max reall p = {}'.format(
-            max_value, data.sw.max()))
+    if verbose:
+        if data.sw.max() == max_value:
+            print('weights: OK')
+        else:
+            print('weights: max design p = {}, max reall p = {}'.format(
+                max_value, data.sw.max()))
 
     # Expand data
     a = list()
@@ -686,21 +705,32 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
         for j in range(n):
             a.append(row)
     temp_exp = pd.DataFrame(a)
-    if temp_exp.w.sum() == np.round(data.wf).sum():
-        print('expand: OK')
-    else:
-        print('expand: Fail')
+    if verbose:
+        print("\tfile with {} households".format(temp_exp.w.sum()))
+
+    if verbose:
+        if temp_exp.w.sum() == np.round(data.wf).sum():
+            print('expand: OK')
+        else:
+            print('expand: Fail')
 
     # get sample
-    #n_samples = temp_exp.shape[0] * penetration_rate
     data_sample = temp_exp.sample(frac=penetration_rate, replace=False, weights=temp_exp.sw)
-    if np.allclose(data_sample.w.sum(), data.wf.sum() * penetration_rate, atol=atol):
-        print('sampling: OK, with absolute tolerance = {}'.format(atol))
-    else:
-        print('sampling: Fail')
+
+    if verbose:
+        if np.allclose(data_sample.w.sum(), data.wf.sum() * penetration_rate, atol=atol):
+            print('sampling: OK, with absolute tolerance = {}'.format(atol))
+        else:
+            print('sampling: Fail')
+
+    # reduce consumption values
+    for variable, reduction_factor in reduction.items():
+        data_sample.loc[:, variable] -= data_sample.loc[:, variable].mul(reduction_factor)
 
     # sample reduction
-    col_group = [i for i in data_sample.columns if i != 'w']
+    col_group = [i for i in data_sample.columns if i not in ['w', 'sw', 'wf']]
+    del data_sample['sw']
+    del data_sample['wf']
     new_weights = data_sample.groupby(col_group).sum()
 
     new_index = new_weights.index
@@ -710,20 +740,40 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
             new_index = new_index.droplevel(1)
     new_weights.index = new_index
 
-    if np.allclose(new_weights.w.sum(), data.wf.sum() * penetration_rate, atol=atol):
-        print('reduction: OK, with absolute tolerance = {}'.format(atol))
-    else:
-        print('reduction: Fail')
+    if verbose:
+        if np.allclose(new_weights.w.sum(), data.wf.sum() * penetration_rate, atol=atol):
+            print('reduction: OK, with absolute tolerance = {}'.format(atol))
+        else:
+            print('reduction: Fail')
 
-    # modify original sample
-    for variable, reduction_factor in reduction.items():
-        old_val = data.loc[:, 'Electricity'].mul(data.wf).sum()
-        data.loc[new_weights.index, variable] *= reduction_factor
-        new_val = data.loc[:, 'Electricity'].mul(data.wf).sum()
-        print("{:0.2%} reduction for {} with {}% efficiency rate".format(
-            new_val / old_val, variable, reduction_factor))
+    if verbose:
+        print("\tfile with {:0.0f} selected households".format(new_weights.w.sum()))
 
-    return(data)
+    old_values = dict()
+    for variable, _ in reduction.items():
+        old_val = data.loc[:, variable].mul(data.wf).sum()
+        old_values[variable] = old_val
+
+    data.loc[:, 'wf'] = data.loc[:, 'wf'].sub(new_weights.loc[:, 'w'], fill_value=0)
+    new_weights.loc[:, 'wf'] = new_weights.loc[:, 'w']
+    data_out = pd.concat([data, new_weights])
+
+    # reduce consumption values
+    for variable, _ in reduction.items():
+        old_val = old_values[variable]
+        new_val = data_out.loc[:, variable].mul(data_out.wf).sum()
+        print("{:05.2f}% {:^15} reduction; efficiency rate {:05.2f}%; year {:04.0f} and penetration rate {:05.2f}".format(
+            (1 - (new_val / old_val)) * 100,
+            variable, reduction_factor * 100, year, penetration_rate))
+
+    if verbose:
+        print("\tfile with {:0.0f} households".format(data_out.wf.sum()))
+
+    year_sample = str(year) + "_{}_{:0.2f}".format(scenario_name, penetration_rate)
+    data_out.to_csv(file_name.format(year_sample))
+
+    # return(data_out)
+    return(data_out)
 
 
 #####################
