@@ -70,6 +70,8 @@ class Table():
 
     def update(self, b, dimension=1):
         """Update inputs of matrix `m` given the outputs `b`"""
+        if self.verbose:
+            print("updating table")
         m = self.values
 
         # a = np.dot(m.T, m)
@@ -136,27 +138,27 @@ class IOTables():
 
     def print_tables(self):
         """Print table names"""
-        for n in self.tables:
-            print(n)
+        l = 7
+        for i, table in self.tables.items():
+            n = table.values.shape[1]
+            print('='*l*n)
+            print('{:^{}}'.format(i, l*n))
+            print('-'*l*n)
+            # print(type(self.tables))
+            print(np.round(table.values, 2))
+            print('='*l*n)
 
 
 def main():
-    io = IOTable()
+    io = IOTables(relative=True, verbose=True)
     a = np.array([5., 8., 7.])
     b = np.array([9., 6., 4., 1.])
-    m = io.construct(a, b)
+    io.add([a, b], name='test')
+    io.print_tables()
+
     b_o = b
-    m_p = io.updateMatrix(b_o)
-    print('#'*30)
-    # print(m_p.sum(0))
-    # print(m_p.sum(1))
-    print('marginal  sums')
-    print(m_p)
-    print(sum(b/b.sum()))
-    print(sum(b))
-    print(sum(m_p))
-    print(sum(m_p) - sum(b))
-    print(sum(a))
+    io.tables['test'].update(b_o)
+    io.print_tables()
 
 if __name__ == "__main__":
     main()
