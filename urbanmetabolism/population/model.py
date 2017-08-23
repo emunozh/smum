@@ -776,6 +776,68 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
     return(data_out)
 
 
+def _to_str(x):
+    if type(x) == str:
+        y = x.split(",")
+        y = [np.round(float(i), 2) for i in y]
+        y_out = "{}, ..., {}".format(y[0], y[-1])
+        return(y_out)
+    elif isinstance(x, float):
+        return(np.round(x, 2))
+    elif isinstance(x, int):
+        return(int(x))
+    else:
+        return(np.nan)
+
+
+def _format_table_model(tm, year, var):
+    df = tm.models[var].loc[[year], :, :].to_frame().unstack()
+    df.columns = df.columns.droplevel(0)
+    df.columns.name = ''
+    df.index.name = ''
+
+    skip = [i for i in df.loc[:, 'dis'] if 'Categorical' in i]
+    select_a = [i not in skip for i in df.loc[:, 'dis']]
+    select_b = [i in skip for i in df.loc[:, 'dis']]
+    inx = [c for c in df.columns if c != 'dis']
+    a = df.loc[select_a, inx].astype(float)
+    b = df.loc[select_b, inx]
+    c = df.loc[:, ['dis']]
+
+    for i in b.index:
+        g = b.loc[i].apply(lambda x: _to_str(x))
+        a = a.append(g)
+
+    if a.shape[1] < 5:
+        a = a.join(c)
+    else:
+        a.insert(5, 'dis', c)
+
+    return(a)
+
+
+def _to_excel(df, year, var, writer, **kwargs):
+
+    # Convert the dataframe to an XlsxWriter Excel object.
+    df.to_excel(writer, sheet_name=str(year), **kwargs)
+
+    # Get the xlsxwriter workbook and worksheet objects.
+    workbook  = writer.book
+    worksheet = writer.sheets[str(year)]
+
+    # Add some cell formats.
+    format_name = workbook.add_format({'num_format': '@'})
+    format_variable = workbook.add_format({'num_format': '#,##0.00'})
+    format_variable_2 = workbook.add_format({'num_format': '#,##0'})
+    format_dis = workbook.add_format({'num_format': '@'})
+
+    # Set the column width and format.
+    worksheet.set_column('A:A', 20, format_name)
+    worksheet.set_column('B:F', 10, format_variable)
+    worksheet.set_column('G:G', 16, format_dis)
+    worksheet.set_column('H:I', 10, format_variable_2)
+
+
 #####################
 ## Table model
 #####################
@@ -799,6 +861,29 @@ class TableModel(object):
         self.formulas = dict()
         self.skip = ['cat', 'Intercept']
         self.verbose = verbose
+
+    def to_excel(self, var=False, year=False, **kwargs):
+        """Save table model as excel file."""
+        if isinstance(var, str):
+            var = [var]
+        else:
+            var = [i for i in self.models.keys()]
+        if not isinstance(year, bool):
+            year = [year]
+        for v in var:
+            # Create a Pandas Excel writer using XlsxWriter as the engine.
+            file_name = "data/tableModel_{}.xlsx".format(v)
+            writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
+            print('creating', file_name)
+            if isinstance(year, bool):
+                year = self.models[v].axes[0].tolist()
+            for y in year:
+                df = _format_table_model(self, y, v)
+                _to_excel(df, y, v, writer, **kwargs)
+
+            # Close the Pandas Excel writer and output the Excel file.
+            writer.save()
+
 
     def make_model(self):
         """prepare model for simulation."""
@@ -1143,8 +1228,7 @@ class PopModel(object):
             )
 
     def run_model(self, iterations=100000, population=False, burn=False, thin=2, **kwargs):
-        """Run the model.
-        """
+        """Run the model."""
         if not burn:
             burn = iterations * 0.01
         if not population:
