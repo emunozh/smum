@@ -334,15 +334,23 @@ def print_cross_tab(a, b, year, file_name):
     """Print cross tabulation data."""
     data = pd.read_csv(file_name.format(year), index_col = 0)
 
+    lables_cat =  [
+        'Low',
+        'mid-Low',
+        'Middle',
+        'mid-High',
+        'High'
+    ]
+
     if b.split('_')[-1] == 'Level':
-        data.loc[:, b] = pd.cut(
+        data.loc[:, b] = pd.qcut(
             data.loc[:, b.split('_')[0]], 5,
-            labels=['High', 'mid-High', 'Middle', 'mid-Low', 'Low'])
+            labels = lables_cat)
 
     if a.split('_')[-1] == 'Level':
-        data.loc[:, a] = pd.cut(
+        data.loc[:, a] = pd.qcut(
             data.loc[:, a.split('_')[0]], 5,
-            labels=['High', 'mid-High', 'Middle', 'mid-Low', 'Low'])
+            labels = lables_cat)
 
     data_cross = pd.crosstab(data.loc[:, a], data.loc[:, b], data.wf, aggfunc = sum)
     data_cross_per = data_cross.div(data_cross.sum(axis=1),axis=0)
@@ -759,7 +767,7 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
     data_out = pd.concat([data, new_weights])
 
     # reduce consumption values
-    for variable, _ in reduction.items():
+    for variable, reduction_factor in reduction.items():
         old_val = old_values[variable]
         new_val = data_out.loc[:, variable].mul(data_out.wf).sum()
         print("{:05.2f}% {:^15} reduction; efficiency rate {:05.2f}%; year {:04.0f} and penetration rate {:05.2f}".format(
