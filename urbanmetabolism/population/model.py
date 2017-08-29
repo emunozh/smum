@@ -55,14 +55,14 @@ from rpy2.robjects.packages import importr
 #####################
 
 PosNormal = Bound(Normal, lower=0, upper=np.inf)
-Categorical_list = ['Categorical', 'Poisson', 'Bernoulli']
+CATEGORICAL_LIST = ['Categorical', 'Poisson', 'Bernoulli']
 
 
 #####################
 ## Global functions
 #####################
 
-def _get_breaks(census_col):
+def _get_breaks(census_col, verbose = False):
     """Compute census breaks"""
     old_var_name = None
     breaks = list()
@@ -70,6 +70,7 @@ def _get_breaks(census_col):
         var_name = col.split('_')[0]
         if var_name != old_var_name:
             if e-1 > 0:
+                if verbose: print("adding {} as break".format(var_name))
                 breaks.append(e-1)
             old_var_name = var_name
     breaks = breaks[:-1]
@@ -119,15 +120,35 @@ def _gregwt(
     else:
         cic = 1
     toR_census, census_col = _toR_df(toR_census)
-    breaks_r = _get_breaks(census_col)
+    if verbose:
+        print("census cols: ", census_col)
+    breaks_r_in = _get_breaks(census_col, verbose=verbose)
+    if len(breaks_r_in) == 0:
+        breaks_r = False
+        # sic = 2
+        # sic_pos = 0
+        convert = False
+    else:
+        breaks_r = breaks_r_in
+        convert = True
+        # sic_pos = 0
+    if verbose:
+        print("breaks: ", breaks_r)
     toR_survey, _ = _toR_df(toR_survey)
-    align_r = DataFrame({pop_col: IntVector((1, len(breaks_r)+2))})
+    if isinstance(breaks_r, bool):
+        align_r = False
+    else:
+        align_r = DataFrame({pop_col: IntVector((1, len(breaks_r)+2))})
+    if verbose:
+        print("align: ", align_r)
     census_cat_r = IntVector([i for i in range(cic, toR_census.ncol)])
+    if verbose:
+        print("census cat: ", census_cat_r)
+        print("census col names: ", toR_census.colnames)
     survey_cat_r = IntVector([i for i in range(sic, toR_survey.ncol)])
     if verbose:
-        print(survey_cat_r)
-        print(toR_survey.colnames)
-        print(toR_census.colnames)
+        print("survey cat: ", survey_cat_r)
+        print("survey col names: ", toR_survey.colnames)
 
     gregwt = importr('GREGWT')
 
@@ -137,6 +158,7 @@ def _gregwt(
         align = align_r,
         breaks = breaks_r,
         survey_weights = 'w',
+        convert = convert,
         pop_total_col = pop_col,
         census_categories = census_cat_r,
         survey_categories = survey_cat_r)
@@ -892,7 +914,6 @@ class TableModel(object):
             # Close the Pandas Excel writer and output the Excel file.
             writer.save()
 
-
     def make_model(self):
         """prepare model for simulation."""
         model_out = dict()
@@ -920,6 +941,19 @@ class TableModel(object):
         if self.verbose:
             print('adding {} model'.format(name), end=' ')
         table = pd.read_csv(table, index_col=index_col, **kwargs)
+
+        # add prefix to table index based on table name
+        new_index = list()
+        for i in table.index:
+            prefix = i.split('_')[0]
+            if len(prefix) > 1:
+                prefix = name[0].lower() + "_"
+                j = prefix + i
+                new_index.append(j)
+            else:
+                new_index.append(i)
+        table.index = new_index
+
         self.models[name] = table
         if self.dynamic:
             if self.verbose: print("as dynamic model.")
@@ -1075,6 +1109,8 @@ class PopModel(object):
 
     def _get_distribution(self, dis, var_name, p):
         """Get distribution."""
+        if ';' in dis:
+            dis = dis.split(";")[-1]
         if self.verbose:
             print('computing for distribution: ', dis)
         if 'None' in dis:
@@ -1111,7 +1147,7 @@ class PopModel(object):
             estimators = list()
             for i in table_model.index:
                 if i not in exclusion:
-                    if table_model.loc[i, 'dis'] in Categorical_list:
+                    if table_model.loc[i, 'dis'] in CATEGORICAL_LIST:
                         estimators.append("C({})".format(i))
                     else:
                         estimators.append(i)
@@ -1176,6 +1212,9 @@ class PopModel(object):
                 dis_split = dis.split(';')
                 dis = dis_split[-1].strip()
                 index_var_name = dis_split[-2] + '_' + "_".join(var_name.split('_')[1:])
+                if self.verbose:
+                    print("Index_var_name: ", index_var_name)
+                    print("var_name: ", var_name)
             except:
                 index_var_name = False
             if var_name != constant_name:
@@ -1474,14 +1513,15 @@ class Aggregates():
 
     def reweight(self, drop_cols, from_script=False, year = 2010,
                  max_iter = 100,
-                 weights_file='temp/new_weights.csv', script="reweight.R"):
+                 weights_file='temp/new_weights.csv', script="reweight.R",
+                 **kwargs):
         """Reweight survey using GREGWT.
 
         Args:
             drop_cols (list): list of columns to drop previous to the reweight.
             from_script (:obj:`bool`, optional): runs the reweight from a script.
-            script (:obj:`str`, optionsl): script to run for the reweighting of
-                the sample survey. `from_script` nees to be set to `True`. Defaults to `'reweight.R'`
+            script (:obj:`str`, optional): script to run for the reweighting of
+                the sample survey. `from_script` needs to be set to `True`. Defaults to `'reweight.R'`
             weights_file (:obj:`str`, optional) file to store the new weights.
                 Only required if reweight is run from script.
                 Defaults to `'temp/new_weights.csv'`
@@ -1498,11 +1538,14 @@ class Aggregates():
         toR_census.to_csv('temp/toR_census.csv')
 
         if from_script:
+            if self.verbose: print("calling gregwt via script")
             new_weights = _script_gregwt(toR_survey, toR_census,
                                          weights_file, script)
         else:
+            if self.verbose: print("calling gregwt")
             new_weights = _gregwt(toR_survey, toR_census,
-                                  verbose = self.verbose, max_iter = max_iter)
+                                  verbose = self.verbose, max_iter = max_iter,
+                                  **kwargs)
 
         if from_script:
             if new_weights.shape[0] == self.survey.shape[0]:
@@ -1589,6 +1632,38 @@ class Aggregates():
             right=False,
             labels=labels)
 
+    def _construct_categories(self, var):
+        """Construct survey categories for variable 'var'."""
+        if self.verbose:
+            print('\t|Distribution defined as categorical')
+        inv = self._is_inv(var)
+        self.survey.loc[:, var] = self.survey.loc[:, var].astype('category')
+        cat = self.survey.loc[:, var].cat.categories
+        if len(cat) > 1:
+            labels = self._get_labels(var, cat, inv=inv)
+            self.survey.loc[:, var] = self.survey.loc[:, var].cat.rename_categories(labels)
+        else:
+            if self.verbose:
+                print("\t\t|Single category, won't use variable: ", var)
+            self.survey = self.survey.loc[:, [i for i in self.survey.columns if i != var]]
+            columns_delete = self._match_keyword(var)
+            self.census = self.census.loc[:,[i for i in self.census.columns if i not in columns_delete]]
+
+    def _construct_new_distribution(self, var, dis):
+        """Construct survey with specific distribution."""
+
+        #TODO expand function to compute values given a distribution name
+        # (scipy distribution name) and mu and sigma from table model
+
+        if dis == 'Deterministic':
+            if self.verbose:
+                print('\t|Computing values deterministically')
+                self.survey.loc[:, var] = self.coefficients.loc[:, "c_" + var]
+        else:
+            if self.verbose:
+                print('\t|Unimplemented distribution, returning as categorical')
+            self._construct_categories(var)
+
     def _survey_to_cat(self):
         """Convert survey values to categorical values."""
         for var in self.survey.columns:
@@ -1601,22 +1676,17 @@ class Aggregates():
             except:
                 if self.verbose:
                     print('Fail!, no defined distribution.')
-                dis = ''
-            if dis in Categorical_list:
+                dis = 'Unknown'
+            if dis in CATEGORICAL_LIST:
+                self._construct_categories(var)
+            elif ";" in dis:
                 if self.verbose:
-                    print('\t|Distribution defined as categorical')
-                inv = self._is_inv(var)
-                self.survey.loc[:, var] = self.survey.loc[:, var].astype('category')
-                cat = self.survey.loc[:, var].cat.categories
-                if len(cat) > 1:
-                    labels = self._get_labels(var, cat, inv=inv)
-                    self.survey.loc[:, var] = self.survey.loc[:, var].cat.rename_categories(labels)
-                else:
+                    print("\t|Warning: distribution <{}> of var <{}> has multiple distributions".format(dis, var))
+                dis_to_use = dis.split(";")[0]
+                if dis_to_use != "None" and dis_to_use != None:
                     if self.verbose:
-                        print("\t\t|Single category, won't use variable: ", var)
-                    self.survey = self.survey.loc[:, [i for i in self.survey.columns if i != var]]
-                    columns_delete = self._match_keyword(var)
-                    self.census = self.census.loc[:,[i for i in self.census.columns if i not in columns_delete]]
+                        print("\t|Will use distribution <{}>".format(dis_to_use))
+                    self._construct_new_distribution(var, dis_to_use)
             else:
                 if self.verbose:
                     print("\t|Warning: distribution <{}> of var <{}> not defined as categorical".format(dis, var))
@@ -1644,6 +1714,7 @@ class Aggregates():
         """drop unwanted columns from survey"""
         inx_data = [c for c in self.survey.columns if\
                     ('c_' not in c) and \
+                    ('index' not in c) and \
                     ('sigma' not in c) and \
                     ('Intercept' not in c)]
         if drop:
@@ -1655,7 +1726,7 @@ class Aggregates():
         self.survey = self.survey.loc[:, inx_data]
         if self.verbose: print("_cut_survey:"); print(self.survey.columns)
         self._survey_to_cat()
-        if self.verbose: print("_cut_survey:"); print(self.survey.columns)
+        if self.verbose: print("_cut_survey after to_cat:"); print(self.survey.columns)
 
     def set_survey(self, survey,
                    inverse = False, drop = False, to_cat = False, **kwargs):

@@ -22,8 +22,8 @@ COPY urbanmetabolism/ ./urbanmetabolism
 
 RUN ln -s urbanmetabolism/data data
 
-COPY GREGWT_0.7.3.tar.gz ./
-RUN R CMD INSTALL GREGWT_0.7.3.tar.gz
+COPY GREGWT_0.7.4.tar.gz ./
+RUN R CMD INSTALL GREGWT_0.7.4.tar.gz
 #EXPOSE 8888
 
 #CMD [ "python", "./test.py" ]
