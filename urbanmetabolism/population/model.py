@@ -255,6 +255,8 @@ def _merge_data(reweighted_survey, inx, v, group = False, groupby = False):
 
 def plot_data_projection(reweighted_survey, var, iterations,
                          groupby = False, pr = False, scenario_name = 'scenario 1',
+                         col_num = 1, col_width = 10, aspect_ratio = 4,
+                         unit = 'household',
                          start_year = 2010, end_year = 2030, benchmark_year = False):
     """Plot projected data as total sum and as per capita."""
     inx = [str(i) for i in range(start_year, end_year+1)]
@@ -267,7 +269,13 @@ def plot_data_projection(reweighted_survey, var, iterations,
         inx_pr = ["{}_{}_{:0.2f}".format(year, scenario_name, pr) for year, pr in zip(inx, pr)]
     else:
         inx_pr = False
-    fig, AX = plt.subplots(3,1, figsize=(10,7), sharex=True)
+    plot_num = int(len(var) / col_num)
+    row_height = int(col_width / aspect_ratio * plot_num)
+    fig, ax = plt.subplots(plot_num, col_num, figsize=(col_width, row_height), sharex=True)
+    if isinstance(ax, np.ndarray):
+        AX = ax
+    else:
+        AX = [ax]
     for v, ax in zip(var, AX):
         if isinstance(reweighted_survey, pd.DataFrame):
             data = reweighted_survey.loc[:, inx].mul(
@@ -279,12 +287,21 @@ def plot_data_projection(reweighted_survey, var, iterations,
                 data_pr, _ = _merge_data(reweighted_survey, inx_pr, v, groupby = groupby)
             else:
                 data_pr = False
-        _plot_data_projection_single(ax, data, v, cap, benchmark_year, iterations, groupby, data_pr=data_pr, scenario_name = scenario_name)
-    plt.savefig('FIGURES/projected_{}.png'.format(iterations), dpi=300)
+        _plot_data_projection_single(
+            ax, data, v, cap, benchmark_year, iterations, groupby,
+            unit = unit,
+            data_pr=data_pr, scenario_name = scenario_name)
+    var_names = "-".join(var)
+    plt.tight_layout()
+    plt.savefig('FIGURES/projected_{}_{}.png'.format(
+        var_names,
+        iterations), dpi=300)
     return(data)
 
 
-def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations, groupby, data_pr = False, scenario_name = 'scenario 1'):
+def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations, groupby,
+                                 data_pr = False, scenario_name = 'scenario 1',
+                                 unit = 'household'):
     """Plot projected data."""
     if groupby:
         kind = 'area'
@@ -315,9 +332,11 @@ def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations
     per_husehold = data.div(cap, axis=0)
     if groupby:
         per_husehold = per_husehold.sum(axis=1)
-    per_husehold.plot(style='k--', ax = ax2, label='per household\nsd={:0.2f}'.format(per_husehold.std()))
+    per_husehold.plot(style='k--', ax = ax2, label='per {}\nsd={:0.2f}'.format(
+        unit, per_husehold.std()))
     ax2.set_title('{} projection (n = {})'.format(var, iterations))
-    ax2.set_ylabel('{}\nHouseholds'.format(var))
+    ylabel_unit = unit[0].upper() + unit[1:] + 's'
+    ax2.set_ylabel('{}\n{}'.format(var, ylabel_unit))
     ax2.legend(loc=1)
 
 
@@ -342,7 +361,7 @@ def _project_survey_reweight(trace, census, model_i, err, max_iter = 100):
 
     fw = _gregwt(survey_in, census, complete = True, area_code = 'internal', max_iter = max_iter)
 
-    # index = [int(i) for i in fw.rx(True, 'id')]
+    index = [int(i) for i in fw.rx(True, 'id')]
     a = pd.DataFrame(index=trace.index)
     for e, i in enumerate([i for i in fw.colnames if 'id' not in i]):
         a.loc[:, i] = fw.rx(True, i)
@@ -408,16 +427,16 @@ def plot_projected_weights(trace_out, iterations):
                 ax.scatter(trace_out.loc[:, c], trace_out.wf, label=c, s=sc, zorder=zo)
         except:
             pass
-    # ax.scatter(trace_out.w, trace_out.wf, label='w', s=150, zorder=3)
+    ax.scatter(trace_out.w, trace_out.wf, label='w', s=150, zorder=3)
     lgd = ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=6);
     ax.set_title('Weights for each simulation year $(n = {})$'.format(iterations))
     ax.set_ylabel('Estimated final weights')
     ax.set_xlabel('Benchmarked weights to consumption $wf$')
-    # plt.axis('equal')
+    plt.axis('equal')
     newax = fig.add_axes([0.7, 0.7, 0.2, 0.2], zorder=10)
     inx = [str(i) for i in range(2010, 2031)]
     trace_out.loc[:, inx].mean().plot(ax=newax)
-    # newax.axis('off')
+    newax.axis('off')
     newax.set_ylabel('mean weight')
     plt.tight_layout()
     plt.savefig('FIGURES/weight_mov_{}.png'.format(iterations),
@@ -546,7 +565,7 @@ def run_calibrated_model(model_in,
             reweighted_survey, census, model, err)
         out_reweighted_survey = out_reweighted_survey.set_index('index')
         out_reweighted_survey.to_csv("./data/survey_{}.csv".format(model_name))
-    elif census.shape[0] > 1 and project == 'resample':
+    elif census.shape[0] > 1 and (project == 'resample' or project == 'resampled'):
         print("Projecting sample survey for {} steps via resample".format(
             census.shape[0]))
         out_reweighted_survey = _project_survey_resample(
@@ -1085,6 +1104,7 @@ class PopModel(object):
 
         self._command_no = "{0} = Normal('{0}', mu={1}, sd={2}); "
         self._command_pn = "{0} = PosNormal('{0}', mu={1}, sd={2}); "
+        self._command_gm = "{0} = Gamma('{}', mu={1}, sd={2});"
         self._command_br = "{0} = Bernoulli('{0}', {1}); "
         self._command_bt = "{0} = Beta('{0}', {1}, {2}); "
         self._command_ps = "{0} = Poisson('{0}', {1}); "
@@ -1117,6 +1137,8 @@ class PopModel(object):
             l = ''
         elif dis == 'Normal':
             l = self._command_no.format(var_name, p['mu'], p['sd'])
+        elif dis == 'Gamma':
+            l = self._command_gm.format(var_name, p['mu'], p['sd'])
         elif dis == 'Beta':
             l = self._command_bt.format(var_name, p['alpha'], p['beta'])
         elif dis == 'Bernoulli':
@@ -1131,7 +1153,7 @@ class PopModel(object):
             p_in = p['p']
             l = self._command_dt.format(var_name, p_in)
         else:
-            raise ValueError('Unknow or unspecified distribution: {}'.format(dis))
+            raise ValueError('Unknown or unspecified distribution: {}'.format(dis))
         return(l)
 
     def _call_gregwt(self):
@@ -1166,22 +1188,28 @@ class PopModel(object):
 
     def _make_categories_formula(self, p, var_name, index_var_name):
         """Construct formula for categorical variables."""
-        list_name = "c_{}_list".format(var_name)
+        list_name    = "c_{}_list".format(var_name)
+        list_name_sd = "c_{}_list_sd".format(var_name)
         self.pre_command += "{} = [{}];".format(list_name, p['co_mu'])
         self.pre_command += "{0} = _make_theano({0});".format(list_name)
+        self.pre_command += "{} = [{}];".format(list_name_sd, p['co_sd'])
+        self.pre_command += "{0} = _make_theano({0});".format(list_name_sd)
         c = ''
         if not index_var_name:
             index_var_name = var_name
-        var = "_index_model({}, {})".format(index_var_name, list_name)
-        var_dic = {'p': var}
+        var_1 = "_index_model({}, {})".format(index_var_name, list_name)
+        var_2 = "_index_model({}, {})".format(index_var_name, list_name_sd)
+        # var_dic = {'p': var}
+        var_dic = {'mu': var_1, 'sd': var_2}
         c += self._get_distribution(
-            'Deterministic',
+            # 'Deterministic',
+            'Normal',
             'c_'+var_name,
             var_dic)
 
         return(c)
 
-    def _make_linear_model(self, constant_name, yhat_name, formula):
+    def _make_linear_model(self, constant_name, yhat_name, formula, prefix):
         """Make linear model."""
         table_model = self._table_model[yhat_name]
         linear_model = "yhat_mu_{} = ".format(self._models)
@@ -1211,7 +1239,11 @@ class PopModel(object):
             try:
                 dis_split = dis.split(';')
                 dis = dis_split[-1].strip()
-                index_var_name = dis_split[-2] + '_' + "_".join(var_name.split('_')[1:])
+                prefix_index = dis_split[-2]
+                if len(prefix_index) == 1:
+                    index_var_name = prefix_index + '_' + "_".join(var_name.split('_')[1:])
+                else:
+                    index_var_name = "{}_{}".format(prefix, prefix_index)
                 if self.verbose:
                     print("Index_var_name: ", index_var_name)
                     print("var_name: ", var_name)
@@ -1254,7 +1286,7 @@ class PopModel(object):
         self._model_bounds[yhat_name] = bounds
         self._models += 1
         self.mu[yhat_name] = sigma_mu
-        linear_model = self._make_linear_model(constant_name, yhat_name, formula)
+        linear_model = self._make_linear_model(constant_name, yhat_name, formula, prefix)
         self.command += linear_model
         self.command += '; '
         self.command += "yhat_mu_{0} *= _make_theano({1}); ".format(
@@ -1649,6 +1681,11 @@ class Aggregates():
             columns_delete = self._match_keyword(var)
             self.census = self.census.loc[:,[i for i in self.census.columns if i not in columns_delete]]
 
+    def _compute_values_normal(self):
+        """Compute normal distributed values."""
+        coefficients = self.coefficients.loc[:, "c_" + var]
+        pass
+
     def _construct_new_distribution(self, var, dis):
         """Construct survey with specific distribution."""
 
@@ -1658,7 +1695,11 @@ class Aggregates():
         if dis == 'Deterministic':
             if self.verbose:
                 print('\t|Computing values deterministically')
-                self.survey.loc[:, var] = self.coefficients.loc[:, "c_" + var]
+            self.survey.loc[:, var] = self.coefficients.loc[:, "c_" + var]
+        elif dis == 'Normal':
+            if self.verbose:
+                print('\t|Computing normal distributed values')
+            self._compute_values_normal()
         else:
             if self.verbose:
                 print('\t|Unimplemented distribution, returning as categorical')

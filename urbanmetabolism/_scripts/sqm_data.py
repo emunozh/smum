@@ -45,7 +45,7 @@ BUILDING_TYPES = {
 def get_pop_data(census_file,
                  start_sqm_cap = 40,
                  sqm_demand_gr = 1.03,
-                 sqm_demand_nonres = 0.2,
+                 sqm_demand_nonres = 0.01,
                  sqm_nonres_mean = 800):
 
     census = pd.read_csv(census_file, index_col=0)
