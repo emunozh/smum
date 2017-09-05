@@ -86,16 +86,12 @@ def getTable(
             usecols=[0,2,3,4],
             index_col=0, na_values=['-', '...'])
         connection = connection.loc[connection.index != 'Município (Código)']
-        # connection.loc[:, 'Outra'] = connection.ix[:,0:2].sum(axis=1)
-        # connection = connection.ix[:,2:]
         if specific: connection = connection.div(connection.sum(axis=1), axis=0)
         print('Conn\t= {:0.0f}\tHouseholds\tTab: 1442'.format(connection.sum().sum()))
 
     if 'ban' in indicators:
         ban = pd.read_csv('{}MUN_banheiros.csv'.format(data_dir), usecols=[0,1,2,3,4,5,6], index_col=0, na_values=['-', '...'])
         ban = ban.loc[ban.index != 'Município (Código)']
-        # ban.loc[:, '1-5 banheiros'] = ban.ix[:, 0:5].sum(axis=1)
-        # ban = ban.ix[:, 5:]
         if specific: ban = ban.div(ban.sum(axis=1), axis=0)
         print('Toilets\t= {:0.0f}\tHouseholds\tTab: 1450'.format(ban.sum().sum()))
 
@@ -105,12 +101,19 @@ def getTable(
         if specific: water = water.div(pop, axis=0)
         print('Water\t= {:0.0f}\tm^3\t\tTab: 1773'.format(water.sum().sum()))
 
+    if 'edu' in indicators:
+        edu = pd.read_csv('{}MUN_edu.csv'.format(data_dir),
+                            index_col=0, na_values=['-', '...'])
+        edu.index = [str(i) for i in edu.index]
+        hhsize = edu.sum().sum() / dutyp.sum().sum()
+        print('HH size\t= {:0.2f}*'.format(hhsize))
+        edu = edu.div(hhsize)
+        if specific: edu = edu.div(edu.sum(), axis=0)
+        print('Edu\t= {:0.0f}\tHouseholds\tTab: 1551'.format(edu.sum().sum()))
+
     if 'sex' in indicators:
         sex = pd.read_csv('{}MUN_popSinopseSex.csv'.format(data_dir),
-                          #usecols=[0,1,2,3,4,5,6],
                           index_col=0, na_values=['-', '...'])
-        #sex = sex.loc[sex.index != 'Município (Código)']
-        #sex.loc[:, '1-5 banheiros'] = ban.ix[:, 0:5].sum(axis=1)
         sex.index = [str(i) for i in sex.index]
         sex = sex.div(hhsize)
         if specific: sex = sex.div(sex.sum(axis=1), axis=0)
@@ -118,7 +121,6 @@ def getTable(
 
     if 'age' in indicators:
         age = pd.read_csv('{}MUN_popSinopseAge.csv'.format(data_dir),
-                          #usecols=[0,1,2,3,4,5,6],
                           index_col=0, na_values=['-', '...'])
         age.index = [str(i) for i in age.index]
         hhsize = age.sum().sum() / dutyp.sum().sum()
@@ -157,6 +159,9 @@ def getTable(
     if 'age' in indicators:
         Datasets.append(age)
         groups, g_num = add_groups(groups, 'age', age, g_num)
+    if 'edu' in indicators:
+        Datasets.append(edu)
+        groups, g_num = add_groups(groups, 'edu', edu, g_num)
     result = pd.concat(Datasets, axis=1)
 
     result = result.fillna(0)
@@ -174,7 +179,6 @@ def add_groups(groups, name, df, g_num):
     groups[name] = [i for i in range(g_num, num)]
     g_num = num
     return(groups, g_num)
-
 
 
 def main():
