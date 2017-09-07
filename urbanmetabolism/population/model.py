@@ -278,15 +278,20 @@ def plot_data_projection(reweighted_survey, var, iterations,
         AX = [ax]
     for v, ax in zip(var, AX):
         if isinstance(reweighted_survey, pd.DataFrame):
-            data = reweighted_survey.loc[:, inx].mul(
-                reweighted_survey.loc[:, v], axis=0).sum()
+            if groupby:
+                data = reweighted_survey.loc[:, inx].mul(reweighted_survey.loc[:, v], axis=0)
+                data = data.join(reweighted_survey.loc[:, groupby])
+                data = data.groupby(groupby).sum().T
+            else:
+                data = reweighted_survey.loc[:, inx].mul(
+                    reweighted_survey.loc[:, v], axis=0).sum()
             cap = reweighted_survey.loc[:, inx].sum()
         else:
             data, cap = _merge_data(reweighted_survey, inx, v, groupby = groupby)
-            if isinstance(pr, list):
-                data_pr, _ = _merge_data(reweighted_survey, inx_pr, v, groupby = groupby)
-            else:
-                data_pr = False
+        if isinstance(pr, list):
+            data_pr, _ = _merge_data(reweighted_survey, inx_pr, v, groupby = groupby)
+        else:
+            data_pr = False
         _plot_data_projection_single(
             ax, data, v, cap, benchmark_year, iterations, groupby,
             unit = unit,
