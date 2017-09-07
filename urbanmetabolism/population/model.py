@@ -339,8 +339,14 @@ def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations
     ax2.set_ylabel('{}\n{}'.format(var, ylabel_unit))
     ax2.legend(loc=1)
 
+def _replace(j, rules):
+    for k, r in rules.items():
+        j = j.lower().replace(r[0], r[1])
+    return(j)
 
-def _project_survey_reweight(trace, census, model_i, err, max_iter = 100):
+
+def _project_survey_reweight(trace, census, model_i, err, max_iter = 100,
+                             rep={'urb': ['urban', 'urbanity']}):
     """Project reweighted survey."""
     census.insert(0, 'area', census.index)
 
@@ -349,10 +355,10 @@ def _project_survey_reweight(trace, census, model_i, err, max_iter = 100):
 
     census_cols = [i.split('_')[0].lower() for i in census.columns]
     survey_cols = list()
-    skip_cols = ['i', 'e', 'HH', 'head', 'cat']
+    skip_cols = ['i', 'e', 'HH', 'head', 'cat', 'index', 'c', 'w']
     for i in trace.columns:
         survey_cols.extend(
-            [j.lower().replace('urban', 'urbanity') for j in i.split('_') if j not in skip_cols])
+            [_replace(j, rep) for j in i.split('_') if j not in skip_cols])
     drop_census = [census.columns[e] for e, i in enumerate(census_cols)\
                    if i not in survey_cols and i not in ['area', 'pop']]
 
@@ -456,6 +462,7 @@ def run_calibrated_model(model_in,
                          err = 'wf',
                          project = 'reweight',
                          resample_years = list(),
+                         rep = dict(),
                          **kwargs):
     """Run and calibrate model with all required iterations.
 
@@ -474,6 +481,8 @@ def run_calibrated_model(model_in,
             aggregates on the census file, this method is more time consuming as
             the samples are created on each iteration via MCMC. If the variable
             is set to `False` the method will create a sample for a single year.
+        rep (:obj:`dict`): Dictionary containing rules for replacing names on sample survey.
+            Defaults to `dict()` i.e no modifications, empty dictionary.
         **kwargs: Keyword arguments passed to 'run_composite_model'.
 
     Returns:
@@ -562,7 +571,7 @@ def run_calibrated_model(model_in,
         print("Projecting sample survey for {} steps via reweight".format(
             census.shape[0]))
         out_reweighted_survey = _project_survey_reweight(
-            reweighted_survey, census, model, err)
+            reweighted_survey, census, model, err, rep = rep)
         out_reweighted_survey = out_reweighted_survey.set_index('index')
         out_reweighted_survey.to_csv("./data/survey_{}.csv".format(model_name))
     elif census.shape[0] > 1 and (project == 'resample' or project == 'resampled'):
@@ -698,6 +707,10 @@ def run_composite_model(
         print(m.aggregates.survey.columns)
         for mod in model:
             _ = m.aggregates.print_error(mod, err, year = year)
+    csvfile = m.tracefile.split('.')[0]
+    csvfile += '_df.csv'
+    m.aggregates.survey.to_csv(csvfile)
+
     return(m.aggregates.k, m.aggregates.survey)
 
 
