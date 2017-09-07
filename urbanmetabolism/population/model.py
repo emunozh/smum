@@ -16,7 +16,7 @@ warnings.filterwarnings('ignore')
 
 # pymc3 libraries
 from pymc3 import Model
-from pymc3 import Normal, HalfNormal, Bernoulli, Beta, Bound, Poisson
+from pymc3 import Normal, HalfNormal, Bernoulli, Beta, Bound, Poisson, Gamma
 from pymc3 import Deterministic, Categorical
 from pymc3 import find_MAP, Metropolis, sample, trace_to_dataframe
 from pymc3.backends import SQLite
@@ -592,6 +592,7 @@ def run_composite_model(
     k = dict(),
     year = 2010,
     to_cat = False,
+    to_cat_census = False,
     reweight = True):
     """Run and calibrate a single composite model.
 
@@ -614,6 +615,8 @@ def run_composite_model(
         k (:obj:`dict`, optional): Correction k-factor. Default 1.
         year (:obj:`int`, optional): year in `census_file` (i.e. index) to use for the model califration `k` factor.
         to_cat (:obj:`bool`, optional): Convert survey variables to categorical
+            variables. Default to `False`.
+        to_cat_census (:obj:`bool`, optional): Convert census variables to categorical
             variables. Default to `False`.
         reweight(:obj:`bool`, optional): Reweight sample. Default to `True`.
 
@@ -665,6 +668,7 @@ def run_composite_model(
     m.aggregates.set_table_model([m._table_model[i] for i in m._table_model])
     m.aggregates._set_census_from_file(
         census_file,
+        to_cat = to_cat_census,
         total_pop = population_size,
         index_col = 0)
     population_size_census = m.aggregates.census.loc[year, m.aggregates.pop_col]
@@ -910,6 +914,7 @@ class TableModel(object):
         self.formulas = dict()
         self.skip = ['cat', 'Intercept']
         self.verbose = verbose
+        if self.verbose: print('--> census cols: ', self.census.columns)
 
     def to_excel(self, var=False, year=False, **kwargs):
         """Save table model as excel file."""
@@ -990,7 +995,7 @@ class TableModel(object):
             if self.verbose: print("\t| for specific column {}".format(specific_col))
             v_cols = [i for i in self.census.columns if specific_col in i or specific_col.lower() in i]
             if self.verbose:
-                print('specific col: ', end='\t')
+                print('\t|specific col: ', end='\t')
                 print(v_cols)
         else:
             if self.verbose: print("\t| for all columns:")
@@ -1088,6 +1093,7 @@ class TableModel(object):
     def _get_cols(self, table, val = 'p'):
         cols = [el.split('_')[-1] for el in table.index if \
                 el.split('_')[-1] not in self.skip and \
+                not isinstance(table.loc[el, val], str) and\
                 not np.isnan(float(table.loc[el, val]))
                ]
         return(cols)
@@ -1104,7 +1110,7 @@ class PopModel(object):
 
         self._command_no = "{0} = Normal('{0}', mu={1}, sd={2}); "
         self._command_pn = "{0} = PosNormal('{0}', mu={1}, sd={2}); "
-        self._command_gm = "{0} = Gamma('{}', mu={1}, sd={2});"
+        self._command_gm = "{0} = Gamma('{0}', mu={1}, sd={2});"
         self._command_br = "{0} = Bernoulli('{0}', {1}); "
         self._command_bt = "{0} = Beta('{0}', {1}, {2}); "
         self._command_ps = "{0} = Poisson('{0}', {1}); "
@@ -1127,7 +1133,7 @@ class PopModel(object):
         self.random_seed = random_seed
         self.aggregates = Aggregates(verbose = verbose)
 
-    def _get_distribution(self, dis, var_name, p):
+    def _get_distribution(self, dis, var_name, p, simple=False):
         """Get distribution."""
         if ';' in dis:
             dis = dis.split(";")[-1]
@@ -1151,7 +1157,11 @@ class PopModel(object):
             l = self._command_ct.format(var_name, p['p'])
         elif dis == 'Deterministic':
             p_in = p['p']
-            l = self._command_dt.format(var_name, p_in)
+            if simple:
+                l = self._command_dt.format(var_name, p_in)
+            else:
+                l = "{0} = _make_theano_var({1}, 'float64');".format(var_name + 'theano', p_in)
+                l += self._command_dt.format(var_name, var_name + "theano")
         else:
             raise ValueError('Unknown or unspecified distribution: {}'.format(dis))
         return(l)
@@ -1232,7 +1242,7 @@ class PopModel(object):
                     self._models, p['p'])
                 self.pre_command += command_var
                 p_in = {'p':'intercept_{}'.format(self._models)}
-                l = self._get_distribution(dis, var_name, p_in)
+                l = self._get_distribution(dis, var_name, p_in, simple=True)
             else:
                 l = self._get_distribution(dis, var_name, p)
             self.command += l
@@ -1250,7 +1260,9 @@ class PopModel(object):
             except:
                 index_var_name = False
             if var_name != constant_name:
-                if dis != 'Categorical':
+                if dis == 'Deterministic':
+                    c = ''
+                elif dis != 'Categorical':
                     this_mu = p['co_mu']
                     this_sd = p['co_sd']
                     c = self._command_no.format('c_'+var_name, this_mu, this_sd)
@@ -1359,6 +1371,8 @@ class PopModel(object):
 
         # Add initial weight to trace
         weight_factor = population / self.df_trace.shape[0]
+        if self.verbose:
+            print(weight_factor)
         self.df_trace.loc[:, 'w'] = weight_factor
 
         # Save values
@@ -1459,6 +1473,7 @@ class Aggregates():
         """Class initiator"""
         self.pop_col = pop_col
         self.verbose = verbose
+        self.drop_cols = list()
         self.k = dict()
         self.inverse = []
 
@@ -1490,7 +1505,8 @@ class Aggregates():
             try:
                 for inx in self.table_model.index.tolist():
                     if inter in inx and prefix in inx:
-                        init_val = self.table_model.loc[inx, 'p']
+                        init_val = float(self.table_model.loc[inx, 'p'])
+                        break
             except:
                 init_val = 1
         k = newton(self._compute_error, init_val, args=(var, weight, year))
@@ -1565,9 +1581,11 @@ class Aggregates():
         inx_cols_census = [col for col in self.census.columns if col not in drop_cols]
         toR_survey = self.survey.loc[:, inx_cols_survey]
         toR_survey.to_csv('temp/toR_survey.csv')
+        if self.verbose: print('--> census cols: ', self.census.columns)
         toR_census = self.census.loc[[year], inx_cols_census]
         toR_census.insert(0, 'area', toR_census.index)
         toR_census.to_csv('temp/toR_census.csv')
+        if self.verbose: print('--> census cols: ', toR_census.columns)
 
         if from_script:
             if self.verbose: print("calling gregwt via script")
@@ -1606,18 +1624,18 @@ class Aggregates():
         for var_split in var.split("_"):
             if (len(var_split) > 1) & (var_split != 'cat'):
                 for ms in self.census.columns:
-                    if var_split.lower() in ms.lower():
+                    if var_split.lower() in [m.lower() for m in ms.split('_')]:
                         labels.append(ms)
         return(labels)
 
     def _match_labels(self, labels, cat, inv=1):
         """match labels to census variables."""
         if self.verbose:
-            print("matching categories: ", cat)
+            print("\t\tmatching categories: ", cat)
         cat = np.asarray(cat)
         labels = labels[::inv]
         if self.verbose:
-            print('to labels: ', labels)
+            print('\t\tto labels: ', labels)
         try:
             labels_out = [labels[int(i)] for i in cat]
         except:
@@ -1635,7 +1653,7 @@ class Aggregates():
 
     def _get_labels(self, var, cat, inv=1):
         """Get labels for survey variables."""
-        n_cat = cat.shape[0]
+        n_cat = len(cat)
         labels = self._match_keyword(var)
         if n_cat != len(labels):
             if self.verbose:
@@ -1647,7 +1665,15 @@ class Aggregates():
         else:
             return(labels)
 
-    def _survey_to_cat_single(self, variable_name, cut_values, labels=False, prefix=False):
+    def _get_census_cat(self, var, cut, labels):
+        """get census categorical variables."""
+        #TODO delete function
+        for e in range(len(labels)):
+            print(cut[e], cut[e+1], labels[e])
+        return(False)
+
+    def _survey_to_cat_single(self, variable_name, cut_values,
+                              labels = False, prefix = False, census = False):
         """Transform single variable to categrical."""
         if not labels:
             labels = list()
@@ -1658,11 +1684,18 @@ class Aggregates():
             for cut_l in range(len(cut) -1):
                 labels.append("{}{}-{}".format(prefix, cut[cut_l], cut[cut_l +1]))
 
-        self.survey.loc[:, variable_name] = pd.cut(
-            self.survey.loc[:, variable_name],
-            cut_values,
-            right=False,
-            labels=labels)
+        if census:
+            to_cut_var = self.census.loc[:, variable_name]
+            var_position = [i for i in self.census.columns].index(variable_name)
+            new_cat = self._get_census_cat(variable_name, cut_values, labels)
+            self.census = self.census[:, [i for i in self.census.columns if i != variable_name]]
+            self.census = pd.concat(self.census.loc[:, :var_position], new_cat, self.census.loc[:, var_position:])
+        else:
+            self.survey.loc[:, variable_name] = pd.cut(
+                self.survey.loc[:, variable_name],
+                cut_values,
+                right=False,
+                labels=labels)
 
     def _construct_categories(self, var):
         """Construct survey categories for variable 'var'."""
@@ -1675,11 +1708,14 @@ class Aggregates():
             labels = self._get_labels(var, cat, inv=inv)
             self.survey.loc[:, var] = self.survey.loc[:, var].cat.rename_categories(labels)
         else:
+            #TODO Allow for variables with single category
             if self.verbose:
                 print("\t\t|Single category, won't use variable: ", var)
             self.survey = self.survey.loc[:, [i for i in self.survey.columns if i != var]]
             columns_delete = self._match_keyword(var)
-            self.census = self.census.loc[:,[i for i in self.census.columns if i not in columns_delete]]
+            if self.verbose:
+                print("\t\t\t|will drop: ", columns_delete)
+            self.drop_cols.extend(columns_delete)
 
     def _compute_values_normal(self):
         """Compute normal distributed values."""
@@ -1731,6 +1767,12 @@ class Aggregates():
             else:
                 if self.verbose:
                     print("\t|Warning: distribution <{}> of var <{}> not defined as categorical".format(dis, var))
+
+        if self.verbose:
+            print('--> census cols: ', self.census.columns)
+            print('--> will drop: ', self.drop_cols)
+        self.census = self.census.loc[:,[i for i in self.census.columns if i not in self.drop_cols]]
+        if self.verbose: print('--> census cols: ', self.census.columns)
 
     def set_table_model(self, input_table_model):
         """define table_model.
@@ -1800,7 +1842,7 @@ class Aggregates():
         else:
             raise TypeError("survey must be either a path, formated as str or a pandas DataFrame. Got: {}".format(type(survey)))
 
-    def set_census(self, census, total_pop = False, **kwargs):
+    def set_census(self, census, total_pop = False, to_cat = False, **kwargs):
         """define census.
 
         Args:
@@ -1815,11 +1857,11 @@ class Aggregates():
 
         """
         if isinstance(census, pd.DataFrame):
-            self._set_census_from_frame(survey, total_pop = total_pop)
+            self._set_census_from_frame(survey, total_pop = total_pop, to_cat=to_cat)
         elif isinstance(survey, str):
             if not os.path.isfile(survey):
                 raise ValueError("Can't find file {} on disk".format(survey))
-            self._set_census_from_file(survey, total_pop = total_pop, **kwargs)
+            self._set_census_from_file(survey, total_pop = total_pop, to_cat=to_cat, **kwargs)
         else:
             raise TypeError("census must be either a path, formated as str or a pandas DataFrame. Got: {}".format(type(census)))
 
@@ -1833,15 +1875,15 @@ class Aggregates():
         if to_cat:
             self._add_cat(to_cat)
 
-    def _add_cat(self, to_cat):
+    def _add_cat(self, to_cat, census=False):
         """Add category to survey from dict."""
         for key in to_cat:
             if isinstance(to_cat[key], list):
                 self._survey_to_cat_single(
-                    key, to_cat[key][0], labels=to_cat[key][1])
+                    key, to_cat[key][0], labels=to_cat[key][1], census = census)
             else:
                 self._survey_to_cat_single(
-                    key, to_cat[key])
+                    key, to_cat[key], census = census)
 
     def _set_survey_from_frame(self, frame_survey,
                               inverse = False, drop = False, to_cat = False):
@@ -1866,15 +1908,19 @@ class Aggregates():
         elif total_pop and self.pop_col not in self.census.columns:
             self.census.loc[:, self.pop_col] = total_pop
 
-    def _set_census_from_file(self, file_census, total_pop=False, **kwargs):
+    def _set_census_from_file(self, file_census, total_pop=False, to_cat = False, **kwargs):
         """define census from file"""
         self.census = pd.read_csv(file_census, **kwargs)
         self._set_tot_population(total_pop)
+        if to_cat:
+            self._add_cat(to_cat, census=True)
 
-    def _set_census_from_frame(self, frame_census, total_pop=False):
+    def _set_census_from_frame(self, frame_census, total_pop=False, to_cat = False):
         """define census from DataFrame"""
         self.census = frame_census
         self._set_tot_population(total_pop)
+        if to_cat:
+            self._add_cat(to_cat, census=True)
 
 
 #TODO Internalized into PopModel class.
