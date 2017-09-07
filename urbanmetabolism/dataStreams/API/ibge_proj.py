@@ -48,11 +48,15 @@ def _getData(state):
 
 def project_data(state, data,
                  initial_population=False, initial_year=2010, pop_col = 'pop',
-                 projection_year=2030):
+                 projection_year=2030, growth_rate_input=False):
     if not initial_population:
         initial_population = data.loc[initial_year, pop_col]
-    final_population, final_year = _getData(state)
-    growth_rate = (final_population / initial_population)**(1 / (final_year - initial_year))
+    if not growth_rate_input:
+        final_population, final_year = _getData(state)
+        growth_rate = (final_population / initial_population)**(1 / (final_year - initial_year))
+    else:
+        growth_rate = growth_rate_input
+    print("growth_rate: ", growth_rate)
     for year in range(initial_year+1, projection_year+1):
         data.loc[year] = data.loc[year-1].mul(growth_rate)
     return(data)
