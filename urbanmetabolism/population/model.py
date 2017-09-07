@@ -558,7 +558,7 @@ def run_calibrated_model(model_in,
 
     census_file = kwargs['census_file']
     census = pd.read_csv(census_file, index_col=0)
-    if census.shape[0] > 1 and project == 'reweight':
+    if census.shape[0] > 1 and (project == 'reweight' or project == 'reweighted'):
         print("Projecting sample survey for {} steps via reweight".format(
             census.shape[0]))
         out_reweighted_survey = _project_survey_reweight(

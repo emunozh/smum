@@ -28,7 +28,7 @@ census_file = 'data/benchmarks_br_{}_year.csv'.format(state)
 typ = 'reweighted'
 #typ = 'resampled'
 model_name = '{}_Electricity_Water_projected_dynamic_{}'.format(state.upper(), typ)
-verbose = True
+verbose = False
 
 
 # ## Define model
