@@ -119,7 +119,7 @@ def _delete_prefix(toR_survey):
     toR_survey.columns = new_survey_cols
     return(toR_survey)
 
-def _align_var(breaks_r, pop_col, n):
+def _align_var(breaks_r, pop_col, n, verbose = False):
 
     prev_b = -1; i = 1
     align = dict()
@@ -133,14 +133,18 @@ def _align_var(breaks_r, pop_col, n):
         else:
             align_t.append(e+2)
         prev_b = b
+    if len(align) == 0:
+        align[pop_col] = IntVector((1, len(breaks_r)))
 
     align_r = DataFrame(align)
     return(align_r)
 
 def _gregwt(
-    toR_survey, toR_census, pop_col = 'pop',
+    toR_survey, toR_census,
+    pop_col = 'pop',
     verbose = False,
-    log = True, complete = False,
+    log = True,
+    complete = False,
     survey_index_col = True,
     census_index_col = True,
     survey_weights = 'w',
@@ -175,7 +179,7 @@ def _gregwt(
     if isinstance(breaks_r, bool):
         align_r = False
     else:
-        align_r = _align_var(breaks_r, pop_col, toR_census.ncol)
+        align_r = _align_var(breaks_r, pop_col, toR_census.ncol, verbose = verbose)
     if verbose:
         print("align: ", align_r)
     census_cat_r = IntVector([e+1 for e, i in enumerate(census_col) if i != pop_col and e+1 >= cic])
@@ -203,8 +207,11 @@ def _gregwt(
 
     # (2) reweight
     new_weights = gregwt.GREGWT(
-        data_in = simulation_data, use_ginv = True, verbose = verbose,
-        output_log = log, **kwargs)
+        data_in = simulation_data,
+        use_ginv = True,
+        verbose = verbose,
+        output_log = log,
+        **kwargs)
 
     fw = new_weights.rx2('final_weights')
     if not complete:
@@ -389,6 +396,7 @@ def _replace(j, rules):
 
 
 def _project_survey_reweight(trace, census, model_i, err, max_iter = 100,
+                             verbose = False,
                              rep={'urb': ['urban', 'urbanity']}):
     """Project reweighted survey."""
     census.insert(0, 'area', census.index)
@@ -408,7 +416,11 @@ def _project_survey_reweight(trace, census, model_i, err, max_iter = 100,
     survey_in = trace.loc[:, [i for i in trace.columns if i not in drop_survey]]
     census = census.loc[:, [i for i in census.columns if i not in drop_census and i not in drop_survey]]
 
-    fw = _gregwt(survey_in, census, complete = True, area_code = 'internal', max_iter = max_iter)
+    survey_in = _delete_prefix(survey_in)
+    fw = _gregwt(
+        survey_in, census,
+        complete = True, area_code = 'internal',
+        max_iter = max_iter, verbose = verbose)
 
     index = [int(i) for i in fw.rx(True, 'id')]
     a = pd.DataFrame(index=trace.index)
@@ -614,7 +626,7 @@ def run_calibrated_model(model_in,
         print("Projecting sample survey for {} steps via reweight".format(
             census.shape[0]))
         out_reweighted_survey = _project_survey_reweight(
-            reweighted_survey, census, model, err, rep = rep)
+            reweighted_survey, census, model, err, rep = rep, verbose = verbose)
         out_reweighted_survey = out_reweighted_survey.set_index('index')
         out_reweighted_survey.to_csv("./data/survey_{}.csv".format(model_name))
     elif census.shape[0] > 1 and (project == 'resample' or project == 'resampled'):
@@ -1464,7 +1476,8 @@ class PopModel(object):
                   (truncated_trace.loc[:, variable] <= bounds[1])
             truncated_trace = truncated_trace.loc[inx]
         else:
-            print("can't find variable: {} on trace".format(variable))
+            if self.verbose:
+                print("can't find variable: {} on trace".format(variable))
         self.df_trace = truncated_trace
         if variable in truncated_trace.columns:
             if self.verbose:
