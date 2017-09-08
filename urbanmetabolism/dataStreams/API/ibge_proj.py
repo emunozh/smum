@@ -57,6 +57,8 @@ def project_data(state, data,
     else:
         growth_rate = growth_rate_input
     print("growth_rate: ", growth_rate)
+    if initial_year <= 2010:
+        initial_year = 2010
     for year in range(initial_year+1, projection_year+1):
         data.loc[year] = data.loc[year-1].mul(growth_rate)
     return(data)
