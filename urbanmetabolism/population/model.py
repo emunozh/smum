@@ -103,6 +103,23 @@ def _script_gregwt(survey, census, weights_file, script):
     return(new_weights)
 
 
+def _delete_prefix(toR_survey):
+    # delete prefix from colum names
+    new_survey_cols = list()
+    for sc in toR_survey.columns:
+        names = sc.split("_")
+        if len(names) > 1:
+            if len(names[0]) == 1:
+                l = "_".join(names[1:])
+            else:
+                l = "_".join(names)
+        else:
+            l = names[0]
+        new_survey_cols.append(l)
+    toR_survey.columns = new_survey_cols
+    return(toR_survey)
+
+
 def _gregwt(
     toR_survey, toR_census, pop_col = 'pop',
     verbose = False,
@@ -134,7 +151,9 @@ def _gregwt(
         # sic_pos = 0
     if verbose:
         print("breaks: ", breaks_r)
-    toR_survey, _ = _toR_df(toR_survey)
+    toR_survey, survey_col = _toR_df(toR_survey)
+    if verbose:
+        print("survey cols: ", survey_col)
     if isinstance(breaks_r, bool):
         align_r = False
     else:
@@ -155,6 +174,7 @@ def _gregwt(
     # (1) prepare data
     simulation_data = gregwt.prepareData(
         toR_census, toR_survey,
+        verbose = verbose,
         align = align_r,
         breaks = breaks_r,
         survey_weights = 'w',
@@ -1598,6 +1618,7 @@ class Aggregates():
         inx_cols_survey = [col for col in self.survey.columns if col not in drop_cols and col not in 'level_0']
         inx_cols_census = [col for col in self.census.columns if col not in drop_cols]
         toR_survey = self.survey.loc[:, inx_cols_survey]
+        toR_survey = _delete_prefix(toR_survey)
         toR_survey.to_csv('temp/toR_survey.csv')
         if self.verbose: print('--> census cols: ', self.census.columns)
         toR_census = self.census.loc[[year], inx_cols_census]
