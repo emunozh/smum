@@ -21,6 +21,7 @@ COPY . .
 COPY urbanmetabolism/ ./urbanmetabolism
 
 RUN ln -s urbanmetabolism/data data
+RUN ln -s urbanmetabolism/temp temp
 
 COPY GREGWT_0.7.4.tar.gz ./
 RUN R CMD INSTALL GREGWT_0.7.4.tar.gz
