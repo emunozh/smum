@@ -119,6 +119,23 @@ def _delete_prefix(toR_survey):
     toR_survey.columns = new_survey_cols
     return(toR_survey)
 
+def _align_var(breaks_r, pop_col, n):
+
+    prev_b = -1; i = 1
+    align = dict()
+    align_t = [1]
+
+    for e, b in enumerate(breaks_r):
+        if prev_b + 1 == b and b != n:
+            align[pop_col+'.'+str(i)] = IntVector((min(align_t), max(align_t)))
+            i += 1
+            align_t = list()
+        else:
+            align_t.append(e+2)
+        prev_b = b
+
+    align_r = DataFrame(align)
+    return(align_r)
 
 def _gregwt(
     toR_survey, toR_census, pop_col = 'pop',
@@ -126,6 +143,7 @@ def _gregwt(
     log = True, complete = False,
     survey_index_col = True,
     census_index_col = True,
+    survey_weights = 'w',
     **kwargs):
     """GREGWT."""
     if survey_index_col:
@@ -157,14 +175,14 @@ def _gregwt(
     if isinstance(breaks_r, bool):
         align_r = False
     else:
-        align_r = DataFrame({pop_col: IntVector((1, len(breaks_r)+2))})
+        align_r = _align_var(breaks_r, pop_col, toR_census.ncol)
     if verbose:
         print("align: ", align_r)
-    census_cat_r = IntVector([i for i in range(cic, toR_census.ncol)])
+    census_cat_r = IntVector([e+1 for e, i in enumerate(census_col) if i != pop_col and e+1 >= cic])
     if verbose:
         print("census cat: ", census_cat_r)
         print("census col names: ", toR_census.colnames)
-    survey_cat_r = IntVector([i for i in range(sic, toR_survey.ncol)])
+    survey_cat_r = IntVector([e+1 for e, i in enumerate(survey_col) if i != survey_weights and e+1 >= sic])
     if verbose:
         print("survey cat: ", survey_cat_r)
         print("survey col names: ", toR_survey.colnames)
@@ -177,7 +195,7 @@ def _gregwt(
         verbose = verbose,
         align = align_r,
         breaks = breaks_r,
-        survey_weights = 'w',
+        survey_weights = survey_weights,
         convert = convert,
         pop_total_col = pop_col,
         census_categories = census_cat_r,
