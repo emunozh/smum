@@ -9,6 +9,8 @@ Sun 18 Jun 2017 12:16:21 AM CEST
 
 # system libraries
 import os
+import shutil
+import re
 import warnings
 import copy
 import json
@@ -39,8 +41,8 @@ import theano.tensor as T
 # import theano
 # theano.config.compute_test_value = 'off'
 config.warn.round = False
-config.optimizer = 'None'
-config.compute_test_value = "warn"
+# config.optimizer = 'None'
+# config.compute_test_value = "warn"
 
 # rpy2 libraries
 from rpy2.robjects.vectors import IntVector
@@ -221,13 +223,17 @@ def _gregwt(
 
 
 def _delete_files(name, sufix, verbose=False):
-    files = "./data/trace_{0}_{1}.csv;./data/trace_{0}_{1}.sqlite".format(
-        name, sufix)
+    files = "{0}_{1}_{2}.csv;{0}_{1}_{2}.sqlite;{0}_{1}_{2}.txt".format(
+        './data/trace', name, sufix)
     for file in files.split(";"):
         if os.path.isfile(file):
             if verbose:
                 print("delete: ", file)
             os.remove(file)
+        elif os.path.isdir(file):
+            if verbose:
+                print("delete: ", file)
+            shutil.rmtree(file)
         else:
             if verbose:
                 print("no file: ", file)
@@ -310,7 +316,6 @@ def plot_data_projection(reweighted_survey, var, iterations,
     if not isinstance(pr, bool):
         pr = [i for i in pr]
     if isinstance(pr, list):
-        # year_sample = str(year) + "_{}_{:0.2f}".format(scenario_name, penetration_rate)
         inx_pr = ["{}_{}_{:0.2f}".format(year, scenario_name, pr) for year, pr in zip(inx, pr)]
     else:
         inx_pr = False
@@ -322,6 +327,12 @@ def plot_data_projection(reweighted_survey, var, iterations,
     else:
         AX = [ax]
     for v, ax in zip(var, AX):
+        if isinstance(reweighted_survey, str):
+            if os.path.isfile(reweighted_survey+".csv"):
+                reweighted_survey += ".csv"
+                reweighted_survey = pd.read_csv(reweighted_survey, index_col=0)
+            elif os.path.isfile(reweighted_survey):
+                reweighted_survey = pd.read_csv(reweighted_survey, index_col=0)
         if isinstance(reweighted_survey, pd.DataFrame):
             if groupby:
                 data = reweighted_survey.loc[:, inx].mul(reweighted_survey.loc[:, v], axis=0)
@@ -356,13 +367,12 @@ def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations
     if groupby:
         kind = 'area'
         alpha = 0.6
-        if isinstance(data_pr, bool):
-            data.plot(ax = ax1, kind=kind, alpha=alpha)
     else:
         kind= 'line'
         alpha = 1
-        data.plot(ax = ax1, kind=kind, alpha=alpha)
-    if not isinstance(data_pr, bool):
+    if isinstance(data_pr, bool):
+        data.plot(ax = ax1, kind=kind, alpha=alpha, label=var)
+    else:
         data_pr.plot(ax = ax1, kind=kind, alpha=alpha, label=scenario_name)
     ax1.set_xlabel('simulation year')
     ax1.set_ylabel('Total {}'.format(var))
@@ -570,13 +580,15 @@ def run_calibrated_model(model_in,
 
     if 'verbose' in kwargs:
         verbose = kwargs['verbose']
-        print('Being verbose')
+        if verbose:
+            print('Being verbose')
     else:
         verbose = False
 
     if any([isinstance(model_in[i]['table_model'], pd.Panel) for i in model_in]):
         if verbose:
             print("Model define as dynamic.")
+            print(model_in['Electricity']['table_model'].loc[2016])
         model = _make_flat_model(model_in, year_in)
     else:
         model = model_in
@@ -655,6 +667,9 @@ def run_composite_model(
     from_script = False,
     k = dict(),
     year = 2010,
+    sigma_mu = False,
+    sigma_sd = 0.1,
+    njobs = 2,
     to_cat = False,
     to_cat_census = False,
     reweight = True):
@@ -725,6 +740,8 @@ def run_composite_model(
         m.add_consumption_model(
             mod, model[mod]['table_model'],
             formula = formula,
+            sigma_mu = sigma_mu,
+            sigma_sd = sigma_sd,
             prefix = mod[0].lower(),
             k_factor = k[mod])
 
@@ -737,7 +754,7 @@ def run_composite_model(
         index_col = 0)
     population_size_census = m.aggregates.census.loc[year, m.aggregates.pop_col]
     # run the MCMC model
-    m.run_model(iterations = iterations, population = population_size_census)
+    m.run_model(iterations = iterations, population = population_size_census, njobs = njobs)
     # define survey for reweight from MCMC
     if verbose:
         print("columns of df_trace:")
@@ -911,13 +928,13 @@ def _to_str(x):
         return(np.nan)
 
 
-def _format_table_model(tm, year, var):
+def _format_table_model(tm, year, var, verbose = False):
     df = tm.models[var].loc[[year], :, :].to_frame().unstack()
     df.columns = df.columns.droplevel(0)
     df.columns.name = ''
     df.index.name = ''
 
-    skip = [i for i in df.loc[:, 'dis'] if 'Categorical' in i]
+    skip = [i for i in df.loc[:, 'dis'] if i is not None and 'Categorical' in i]
     select_a = [i not in skip for i in df.loc[:, 'dis']]
     select_b = [i in skip for i in df.loc[:, 'dis']]
     inx = [c for c in df.columns if c != 'dis']
@@ -968,7 +985,10 @@ class TableModel(object):
     def __init__(
         self,
         census_file = False,
-        verbose=False):
+        verbose=False,
+        normalize = True):
+
+        self.normalize = normalize
 
         if census_file:
             if not os.path.isfile(census_file):
@@ -984,7 +1004,7 @@ class TableModel(object):
         self.verbose = verbose
         if self.verbose: print('--> census cols: ', self.census.columns)
 
-    def to_excel(self, var=False, year=False, **kwargs):
+    def to_excel(self, sufix = '', var = False, year = False, **kwargs):
         """Save table model as excel file."""
         if isinstance(var, str):
             var = [var]
@@ -994,13 +1014,13 @@ class TableModel(object):
             year = [year]
         for v in var:
             # Create a Pandas Excel writer using XlsxWriter as the engine.
-            file_name = "data/tableModel_{}.xlsx".format(v)
+            file_name = "data/tableModel_{}{}.xlsx".format(v, sufix)
             writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
             print('creating', file_name)
             if isinstance(year, bool):
                 year = self.models[v].axes[0].tolist()
             for y in year:
-                df = _format_table_model(self, y, v)
+                df = _format_table_model(self, y, v, verbose = self.verbose)
                 _to_excel(df, y, v, writer, **kwargs)
 
             # Close the Pandas Excel writer and output the Excel file.
@@ -1028,11 +1048,13 @@ class TableModel(object):
         """add formula to table model."""
         self.formulas[name] = formula
 
-    def add_model(self, table, name, index_col = 0, **kwargs):
+    def add_model(self, table, name, index_col = 0, reference_cat = list(), skip_cols = list(), **kwargs):
         """Add table model."""
         if self.verbose:
             print('adding {} model'.format(name), end=' ')
         table = pd.read_csv(table, index_col=index_col, **kwargs)
+
+        self.skip.extend(skip_cols)
 
         # add prefix to table index based on table name
         new_index = list()
@@ -1046,6 +1068,14 @@ class TableModel(object):
                 new_index.append(i)
         table.index = new_index
 
+        self.ref_cat = reference_cat
+        if self.verbose:
+            if self.ref_cat:
+                print('with reference categories: ', ','.join(self.ref_cat), end='')
+                print('. ', end='')
+            else:
+                print('', end='')
+
         self.models[name] = table
         if self.dynamic:
             if self.verbose: print("as dynamic model.")
@@ -1053,17 +1083,20 @@ class TableModel(object):
         else:
             if self.verbose: print("as static model.")
 
+
     def update_dynamic_model(self, name,
                              val = 'p',
                              specific_col = False,
-                             compute_average = False):
+                             compute_average = True):
         """Update dynamic model."""
+        if val == 'mu' and compute_average:
+            compute_average = 0
         table = self.models[name]
         if specific_col:
             if self.verbose: print("\t| for specific column {}".format(specific_col))
-            v_cols = [i for i in self.census.columns if specific_col in i or specific_col.lower() in i]
+            v_cols = [i for i in self.census.columns if specific_col == i.split('_')[0] or specific_col.lower() == i.split('_')[0]]
             if self.verbose:
-                print('\t|specific col: ', end='\t')
+                print('\t| specific col: ', end='\t')
                 print(v_cols)
         else:
             if self.verbose: print("\t| for all columns:")
@@ -1071,6 +1104,9 @@ class TableModel(object):
             if self.verbose:
                 for col in v_cols:
                     print("\t\t| {}".format(col))
+
+        if len(v_cols) == 0:
+            return(False)
 
         panel_dic = dict()
         for year in self.census.index:
@@ -1106,19 +1142,28 @@ class TableModel(object):
                     print('\t\t\t| {}_{:<18} {:0.2f}'.format(
                         prefix, e1, new_val))
             else:
-                new_val = ','.join(
-                    [str(i) for i in self.census.loc[year, v_cols].div(
-                        self.census.loc[year, 'pop'])])
-                if self.verbose:
-                    print('\t\t\t| categorical values:')
-                    print('\t\t\t| {}_{:<18} {}'.format(
-                        prefix, e1, new_val))
-            if new_val:
-                this_df.loc['{}_{}'.format(prefix, e1), val] = new_val
+                new_val = self.census.loc[year, v_cols].div(
+                    self.census.loc[year, 'pop'])
+                if val == 'mu':
+                    new_val = new_val[0]
+                    if self.verbose:
+                        print('\t\t\t| absolute values:')
+                        print('\t\t\t| {}_{:<18} {}'.format(
+                            prefix, e1, new_val))
+                else:
+                    new_val = ','.join([str(i) for i in new_val.values])
+                    if self.verbose:
+                        print('\t\t\t| categorical values:')
+                        print('\t\t\t| {}_{:<18} {}'.format(
+                            prefix, e1, new_val))
         else:
             for e in v_cols:
                 e1, e2, sufix = self._get_positions(e, prefix)
-                val_a = self.census.loc[year, '{}_{}'.format(e2, sufix)]
+                if self.normalize:
+                    val_a = self._normalize(e, prefix, year)
+                    val_a = val_a['{}_{}'.format(e2, sufix)]
+                else:
+                    val_a = self.census.loc[year, '{}_{}'.format(e2, sufix)]
                 val_b = self.census.loc[year, 'pop']
                 new_val = val_a / val_b
                 if self.verbose:
@@ -1128,18 +1173,46 @@ class TableModel(object):
                         new_val,
                         ), end='  ')
                     print('| {}_{}'.format(e2, sufix))
-                this_df.loc['{}_{}'.format(prefix, e1), val] = new_val
 
+        try:
+            this_df.loc['{}_{}'.format(prefix, e1), val] = new_val
+        except:
+            print('Warning: could not assing new value to data set on {}_{}'.format(prefix, e1))
         return(this_df)
 
+    def _normalize(self, e, prefix, year):
+        census_cols = [c for c in self.census.columns if e.lower() in [i.lower() for i in c.split("_")]]
+        values = self.census.loc[year, census_cols]
+        total_pop = self.census.loc[year, 'pop']
+        val_a = values.div(values.sum()).mul(total_pop)
+        return(val_a)
+
+    def _find_values(self, inx):
+        x = list()
+        for i in inx:
+            v = i.split('_')[-1]
+            v = re.sub('[^0-9a-zA-Z]+', '', v)
+            v = re.sub('[a-zA-Z]+', '_', v)
+            v = v.rstrip('_')
+            v = v.lstrip('_')
+            v = v.split('_')
+            v = np.asarray([int(i) for i in v])
+            x.append(np.mean(v))
+        return(np.asarray(x))
+
     def _get_weighted_mean(self, inx, year):
-        x = [int(i.split('_')[-1]) for i in inx]
+        x = self._find_values(inx)
         w = self.census.loc[year, inx].tolist()
         avr = np.average(x, weights=w)
         return(avr)
 
     def _get_positions(self, e, prefix):
         sufix = ''; e2 = ''
+        census_cols = [c.split('_')[-1].lower() for c in self.census.columns if e.lower() in [i.lower() for i in c.split("_")]]
+        for rf in self.ref_cat:
+            if rf.lower() in census_cols:
+                return(e, e, rf)
+
         if e == 'Urban' or e == 'Urbanity':
             sufix = 'Urban'
             e2 = 'Urbanity'
@@ -1159,17 +1232,22 @@ class TableModel(object):
         return(e, e2, sufix)
 
     def _get_cols(self, table, val = 'p'):
-        cols = [el.split('_')[-1] for el in table.index if \
-                el.split('_')[-1] not in self.skip and \
-                not isinstance(table.loc[el, val], str) and\
-                not np.isnan(float(table.loc[el, val]))
-               ]
+        cols = list()
+        for el in table.index:
+            name = el.split('_')[-1]
+            if name not in self.skip:
+                try:
+                    value = float(table.loc[el, val])
+                    if not np.isnan(value):
+                        cols.append(name)
+                except:
+                    pass
         return(cols)
 
 
-#################
-## PopModel
 ################
+# PopModel
+###############
 
 class PopModel(object):
     """Main population model class."""
@@ -1184,6 +1262,7 @@ class PopModel(object):
         self._command_ps = "{0} = Poisson('{0}', {1}); "
         self._command_ct = "{0} = Categorical('{0}', p=np.array([{1}])); "
         self._command_dt = "{0} = Deterministic('{0}', {1}); "
+        # self._command_dt = "{0} = Normal('{0}', mu={1}, sd=1e-10); "
 
         self.name = name
         self._table_model = dict()
@@ -1193,7 +1272,7 @@ class PopModel(object):
         self.pre_command = ""
         self.tracefile = os.path.join(
             os.getcwd(),
-            "data/trace_{}.sqlite".format(self.name))
+            "data/trace_{}.txt".format(self.name))
         self.mu = dict()
         self.regression_formulas = dict()
         self._models = 0
@@ -1304,7 +1383,7 @@ class PopModel(object):
 
         for var_name in table_model.index:
             p = table_model.loc[var_name]
-            dis = p['dis']
+            dis = str(p['dis'])
             if var_name == constant_name:
                 command_var = "intercept_{} = _make_theano_var({}, 'float64');".format(
                     self._models, p['p'])
@@ -1350,7 +1429,7 @@ class PopModel(object):
 
     def add_consumption_model(self, yhat_name, table_model,
                               k_factor=1,
-                              sigma_mu=False, sigma_sd=0.1,
+                              sigma_mu = False, sigma_sd = 0.1,
                               prefix = False,
                               bounds = [0, np.inf],
                               constant_name = 'Intercept',
@@ -1386,7 +1465,7 @@ class PopModel(object):
                 'yhat_mu_{}'.format(self._models)
             )
 
-    def run_model(self, iterations=100000, population=False, burn=False, thin=2, **kwargs):
+    def run_model(self, iterations = 100000, population = False, burn = False, thin = 2, njobs = 2, **kwargs):
         """Run the model."""
         if not burn:
             burn = iterations * 0.01
@@ -1411,16 +1490,20 @@ class PopModel(object):
             # step = Metropolis()
             # means, sds = pm.variational.advi(n=iterations*2)
             # step = pm.NUTS(scaling=means)
+            # v_params = pm.variational.advi(n=5000)
 
             # use SQLite as a backend
-            backend = SQLite(self.tracefile)
+            backend = pm.backends.Text(self.tracefile)
+            # backend = SQLite(self.tracefile)
 
             # Calculate the trace
             self.trace = sample(
-                iterations,
-                # step,
-                # start=means,
-                # step, start,
+                # v_params,
+                draws = int(np.ceil(iterations / njobs)),
+                njobs = njobs,
+                # init = 'advi',
+                # step = step,
+                # start = means,
                 trace=backend,
                 random_seed=self.random_seed,
                 **kwargs
@@ -1968,8 +2051,8 @@ class Aggregates():
     def _set_tot_population(self, total_pop):
         """Add total population column to census"""
         if not total_pop and self.pop_col in self.census.columns:
-            print("Warning: using total population column on file --> ", self.pop_col)
-            pass
+            if self.verbose:
+                print("Warning: using total population column on file --> ", self.pop_col)
         if not total_pop and self.pop_col not in self.census.columns:
             raise ValueError('need total population')
         elif total_pop and self.pop_col in self.census.columns:

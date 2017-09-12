@@ -115,6 +115,8 @@ def getTable(
         sex = pd.read_csv('{}MUN_popSinopseSex.csv'.format(data_dir),
                           index_col=0, na_values=['-', '...'])
         sex.index = [str(i) for i in sex.index]
+        hhsize = sex.sum().sum() / dutyp.sum().sum()
+        print('HH size\t= {:0.2f}*'.format(hhsize))
         sex = sex.div(hhsize)
         if specific: sex = sex.div(sex.sum(axis=1), axis=0)
         print('Sex\t= {:0.0f}\tHouseholds\tTab: 3107'.format(sex.sum().sum()))

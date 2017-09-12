@@ -18,11 +18,8 @@ def print_proj_var(col, ax1, data):
     inx.extend([str(i) for i in range(2010, 2031)])
     data_var = data.loc[:, inx].groupby(col).sum()
     data_var_sp = data_var.div(data_var.sum()).T
-    data_var_sp.plot.bar(stacked=True, ax=ax1);
-    years = [str(i) for i in range(2010, 2031, 2)]
-    ax1.set_xticks([i for i in range(0, len(data_var_sp.index), 2)])
-    ax1.set_xticklabels(years)
-    ax1.set_title(col)
+    data_var_sp.plot.bar(stacked=True, ax=ax1)
+    return(ax1)
 
 def _normalize(data, total_pop):
     data = data.div(data.sum(axis=1), axis=0).mul(total_pop, axis=0)
@@ -33,13 +30,16 @@ def print_proj_year(col, ax1, data, total_pop):
     data = data.loc[:, inx]
     if isinstance(total_pop, pd.Series):
         data = _normalize(data, total_pop)
-    data.plot.area(ax=ax1);
+    data.plot.area(ax=ax1)
     ax1.set_title(col)
+    return(ax1)
 
 def print_all(data, sufix,
               skip = list(),
               var=True, title='', rows = 2,
               total_pop = False,
+              start_year = 2010,
+              end_year = 2030,
               save_data = False,
               bias = False):
     if bias:
@@ -50,14 +50,17 @@ def print_all(data, sufix,
     fig, AX = plt.subplots(rows, columns, figsize=(20, 10), sharex='col', sharey='row')
     fig.suptitle(title, fontsize=16)
     i = 0
+    years = [str(i) for i in range(start_year, end_year + 1, 2)]
     for ax_a in AX:
         for ax in ax_a:
             col = data_cols[i]
             i +=1
             if var:
-                print_proj_var(col, ax, data)
+                ax = print_proj_var(col, ax, data)
             else:
-                print_proj_year(col, ax, data, total_pop)
+                ax = print_proj_year(col, ax, data, total_pop)
+            ax.set_xticklabels(years)
+
     plt.savefig('FIGURES/proj_dist_all_{}'.format(sufix), dpi=300)
     if save_data:
         data.to_csv(save_data)
