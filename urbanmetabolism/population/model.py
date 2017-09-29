@@ -70,9 +70,10 @@ def _get_breaks(census_col, verbose = False):
     breaks = list()
     for e, col in enumerate(census_col):
         var_name = col.split('_')[0]
+        print(var_name)
         if var_name != old_var_name:
             if e-1 > 0:
-                if verbose: print("adding {} as break".format(var_name))
+                if verbose: print("adding {} as break = {}".format(var_name, e-1))
                 breaks.append(e-1)
             old_var_name = var_name
     breaks = breaks[:-1]
@@ -149,6 +150,7 @@ def _gregwt(
     complete = False,
     survey_index_col = True,
     census_index_col = True,
+    align_census = True,
     survey_weights = 'w',
     **kwargs):
     """GREGWT."""
@@ -163,16 +165,16 @@ def _gregwt(
     toR_census, census_col = _toR_df(toR_census)
     if verbose:
         print("census cols: ", census_col)
-    breaks_r_in = _get_breaks(census_col, verbose=verbose)
+    if align_census:
+        breaks_r_in = _get_breaks(census_col, verbose=verbose)
+    else:
+        breaks_r_in = list()
     if len(breaks_r_in) == 0:
         breaks_r = False
-        # sic = 2
-        # sic_pos = 0
         convert = False
     else:
         breaks_r = breaks_r_in
         convert = True
-        # sic_pos = 0
     if verbose:
         print("breaks: ", breaks_r)
     toR_survey, survey_col = _toR_df(toR_survey)
@@ -223,9 +225,9 @@ def _gregwt(
 
 
 def _delete_files(name, sufix, verbose=False):
-    files = "{0}_{1}_{2}.csv;{0}_{1}_{2}.sqlite;{0}_{1}_{2}.txt".format(
+    files = "{0}_{1}_{2}.csv|{0}_{1}_{2}.sqlite|{0}_{1}_{2}.txt".format(
         './data/trace', name, sufix)
-    for file in files.split(";"):
+    for file in files.split("|"):
         if os.path.isfile(file):
             if verbose:
                 print("delete: ", file)
@@ -268,21 +270,32 @@ def _project_survey_resample(
     return(trace_dic)
 
 
-def _merge_data(reweighted_survey, inx, v, group = False, groupby = False):
+def _merge_data(reweighted_survey, inx, v, group = False, groupby = False, verbose = False):
     values = dict()
     cap = dict()
     for i in inx:
         file_survey = reweighted_survey + "_{}.csv".format(i)
         survey_temp = pd.read_csv(file_survey, index_col=0)
+        if verbose:
+            print("\t\t| year: ", i)
+            print('\t\t| file: ', file_survey)
         cap_i = survey_temp.wf.sum()
         if group:
+            if verbose: print('\t\t| group: ', group)
             val = survey_temp.loc[:, [v, 'wf']].fillna(group).groupby(v).size()
         else:
+            if verbose: print('\t\t| no group')
             survey_temp.loc[:, v] = survey_temp.loc[:, v].mul(survey_temp.loc[:, 'wf'])
             if not groupby:
+                if verbose: print('\t\t| un-grouped')
                 val = survey_temp.loc[:, v].sum()
             else:
-                val = survey_temp.loc[:, [v, groupby]].groupby(groupby).sum()
+                if not isinstance(groupby, list):
+                    groupby = [groupby]
+                inx_g = groupby.copy()
+                inx_g.append(v)
+                if verbose: print('\t\t| groupby: ', groupby, inx_g)
+                val = survey_temp.loc[:, inx_g].groupby(groupby).sum()
                 val.columns = [i]
         values[i] = val
         cap[i] = cap_i
@@ -306,6 +319,7 @@ def _merge_data(reweighted_survey, inx, v, group = False, groupby = False):
 
 def plot_data_projection(reweighted_survey, var, iterations,
                          groupby = False, pr = False, scenario_name = 'scenario 1',
+                         verbose = False, cut_data = False,
                          col_num = 1, col_width = 10, aspect_ratio = 4,
                          unit = 'household',
                          start_year = 2010, end_year = 2030, benchmark_year = False):
@@ -327,13 +341,21 @@ def plot_data_projection(reweighted_survey, var, iterations,
     else:
         AX = [ax]
     for v, ax in zip(var, AX):
+        if verbose:
+            print(v)
         if isinstance(reweighted_survey, str):
             if os.path.isfile(reweighted_survey+".csv"):
+                if verbose:
+                    print('\t| opening *.csv: ', reweighted_survey)
                 reweighted_survey += ".csv"
                 reweighted_survey = pd.read_csv(reweighted_survey, index_col=0)
             elif os.path.isfile(reweighted_survey):
+                if verbose:
+                    print('\t| opening: ', reweighted_survey)
                 reweighted_survey = pd.read_csv(reweighted_survey, index_col=0)
         if isinstance(reweighted_survey, pd.DataFrame):
+            if verbose:
+                print('\t| as data frame')
             if groupby:
                 data = reweighted_survey.loc[:, inx].mul(reweighted_survey.loc[:, v], axis=0)
                 data = data.join(reweighted_survey.loc[:, groupby])
@@ -343,15 +365,17 @@ def plot_data_projection(reweighted_survey, var, iterations,
                     reweighted_survey.loc[:, v], axis=0).sum()
             cap = reweighted_survey.loc[:, inx].sum()
         else:
-            data, cap = _merge_data(reweighted_survey, inx, v, groupby = groupby)
+            if verbose:
+                print('\t| merging data')
+            data, cap = _merge_data(reweighted_survey, inx, v, groupby = groupby, verbose = verbose)
         if isinstance(pr, list):
-            data_pr, _ = _merge_data(reweighted_survey, inx_pr, v, groupby = groupby)
+            data_pr, _ = _merge_data(reweighted_survey, inx_pr, v, groupby = groupby, verbose = verbose)
         else:
             data_pr = False
         _plot_data_projection_single(
             ax, data, v, cap, benchmark_year, iterations, groupby,
-            unit = unit,
-            data_pr=data_pr, scenario_name = scenario_name)
+            unit = unit, cut_data = cut_data,
+            data_pr = data_pr, scenario_name = scenario_name)
     var_names = "-".join(var)
     plt.tight_layout()
     plt.savefig('FIGURES/projected_{}_{}.png'.format(
@@ -362,6 +386,7 @@ def plot_data_projection(reweighted_survey, var, iterations,
 
 def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations, groupby,
                                  data_pr = False, scenario_name = 'scenario 1',
+                                 cut_data = False,
                                  unit = 'household'):
     """Plot projected data."""
     if groupby:
@@ -376,14 +401,20 @@ def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations
         data_pr.plot(ax = ax1, kind=kind, alpha=alpha, label=scenario_name)
     ax1.set_xlabel('simulation year')
     ax1.set_ylabel('Total {}'.format(var))
-    if benchmark_year and not groupby:
-        min = data.min()
+    # if benchmark_year and not groupby:
+    if benchmark_year:
+        if groupby:
+            min = data.min().min()
+            y = data.loc[str(benchmark_year)].sum()
+            y += min
+        else:
+            min = data.min()
+            y = data.loc[str(benchmark_year)]
+            y += y - min
         x = data.index.tolist().index(str(benchmark_year))
-        y = data.loc[str(benchmark_year)]
-        ax1.vlines(x, data.min(), y+(y-min), color='r')
+        ax1.vlines(x, min, y, color='r')
         ax1.text(
-            x+0.2,
-            y+(y-min),
+            x+0.2, y,
             'benchmark', color='r')
     ax1.legend(loc=2)
 
@@ -407,6 +438,7 @@ def _replace(j, rules):
 
 def _project_survey_reweight(trace, census, model_i, err, max_iter = 100,
                              verbose = False,
+                             align_census = True,
                              rep={'urb': ['urban', 'urbanity']}):
     """Project reweighted survey."""
     census.insert(0, 'area', census.index)
@@ -430,6 +462,7 @@ def _project_survey_reweight(trace, census, model_i, err, max_iter = 100,
     fw = _gregwt(
         survey_in, census,
         complete = True, area_code = 'internal',
+        align_census = align_census,
         max_iter = max_iter, verbose = verbose)
 
     index = [int(i) for i in fw.rx(True, 'id')]
@@ -585,10 +618,14 @@ def run_calibrated_model(model_in,
     else:
         verbose = False
 
+    if 'align_census' in kwargs:
+        align_census = kwargs['align_census']
+    else:
+        align_census = True
+
     if any([isinstance(model_in[i]['table_model'], pd.Panel) for i in model_in]):
         if verbose:
             print("Model define as dynamic.")
-            print(model_in['Electricity']['table_model'].loc[2016])
         model = _make_flat_model(model_in, year_in)
     else:
         model = model_in
@@ -638,7 +675,8 @@ def run_calibrated_model(model_in,
         print("Projecting sample survey for {} steps via reweight".format(
             census.shape[0]))
         out_reweighted_survey = _project_survey_reweight(
-            reweighted_survey, census, model, err, rep = rep, verbose = verbose)
+            reweighted_survey, census, model, err, rep = rep, verbose = verbose,
+            align_census = align_census)
         out_reweighted_survey = out_reweighted_survey.set_index('index')
         out_reweighted_survey.to_csv("./data/survey_{}.csv".format(model_name))
     elif census.shape[0] > 1 and (project == 'resample' or project == 'resampled'):
@@ -660,6 +698,7 @@ def run_composite_model(
     population_size = 1000,
     err = 'wf',
     iterations = 100,
+    align_census = True,
     name = 'noname',
     census_file = 'data/benchmarks.csv',
     drop_col_survey = False,
@@ -771,7 +810,10 @@ def run_composite_model(
             print("Error for mod: ", mod)
             _ = m.aggregates.print_error(mod, "w", year = year)
     drop_cols = [i for i in model]
-    m.aggregates.reweight(drop_cols, from_script = from_script, year = year)
+    m.aggregates.reweight(drop_cols,
+                          from_script = from_script,
+                          year = year,
+                          align_census = align_census)
     for mod in model:
         m.aggregates.compute_k(year = year, var = mod, weight = err)
     if verbose:
@@ -1048,7 +1090,10 @@ class TableModel(object):
         """add formula to table model."""
         self.formulas[name] = formula
 
-    def add_model(self, table, name, index_col = 0, reference_cat = list(), skip_cols = list(), **kwargs):
+    def add_model(self, table, name,
+                  index_col = 0, reference_cat = list(),
+                  static = False,
+                  skip_cols = list(), **kwargs):
         """Add table model."""
         if self.verbose:
             print('adding {} model'.format(name), end=' ')
@@ -1079,13 +1124,14 @@ class TableModel(object):
         self.models[name] = table
         if self.dynamic:
             if self.verbose: print("as dynamic model.")
-            self.update_dynamic_model(name)
+            self.update_dynamic_model(name, static = static)
         else:
             if self.verbose: print("as static model.")
 
 
     def update_dynamic_model(self, name,
                              val = 'p',
+                             static = False,
                              specific_col = False,
                              compute_average = True):
         """Update dynamic model."""
@@ -1100,7 +1146,7 @@ class TableModel(object):
                 print(v_cols)
         else:
             if self.verbose: print("\t| for all columns:")
-            v_cols = self._get_cols(table)
+            v_cols = self._get_cols(table, static = static)
             if self.verbose:
                 for col in v_cols:
                     print("\t\t| {}".format(col))
@@ -1123,13 +1169,15 @@ class TableModel(object):
             this_df = self._update_table(
                 this_df, year,
                 v_cols, val, name, specific_col,
-                compute_average)
+                compute_average,
+                static = static)
             panel_dic[year] = this_df
 
         self.models[name] = pd.Panel(panel_dic)
 
     def _update_table(self, this_df, year, v_cols, val,
-                      name, specific_col, compute_average):
+                      name, specific_col, compute_average,
+                      static = False):
         new_val = False
         prefix = name[0].lower()
         if specific_col:
@@ -1156,28 +1204,40 @@ class TableModel(object):
                         print('\t\t\t| categorical values:')
                         print('\t\t\t| {}_{:<18} {}'.format(
                             prefix, e1, new_val))
+            try:
+                this_df.loc['{}_{}'.format(prefix, e1), val] = new_val
+            except:
+                print('Warning: could not assing new value to data set on {}_{}'.format(prefix, e1))
+            return(this_df)
         else:
             for e in v_cols:
                 e1, e2, sufix = self._get_positions(e, prefix)
-                if self.normalize:
-                    val_a = self._normalize(e, prefix, year)
-                    val_a = val_a['{}_{}'.format(e2, sufix)]
+                if static:
+                    if self.verbose: print('\t\t\t| static')
+                    return(this_df)
+                    # val_a = False
+                    # val_b = False
+                    # new_val = self.census.loc[year, '{}'.format(e2)]
                 else:
-                    val_a = self.census.loc[year, '{}_{}'.format(e2, sufix)]
-                val_b = self.census.loc[year, 'pop']
-                new_val = val_a / val_b
-                if self.verbose:
-                    print('\t\t\t| {}_{:<18} {:8.2f} / {:8.2f} = {:0.2f}'.format(
-                        prefix, e1,
-                        val_a, val_b,
-                        new_val,
-                        ), end='  ')
-                    print('| {}_{}'.format(e2, sufix))
-
-        try:
-            this_df.loc['{}_{}'.format(prefix, e1), val] = new_val
-        except:
-            print('Warning: could not assing new value to data set on {}_{}'.format(prefix, e1))
+                    if self.normalize:
+                        if self.verbose: print('\t\t\t| normalize')
+                        val_a = self._normalize(e, prefix, year)
+                        val_a = val_a['{}_{}'.format(e2, sufix)]
+                    else:
+                        val_a = self.census.loc[year, '{}'.format(e2, sufix)]
+                    val_b = self.census.loc[year, 'pop']
+                    new_val = val_a / val_b
+                    try:
+                        this_df.loc['{}_{}'.format(prefix, e1), val] = new_val
+                    except:
+                        print('Warning: could not assing new value to data set on {}_{}'.format(prefix, e1))
+                    if self.verbose:
+                        print('\t\t\t| {}_{:<18} {:8.2f} / {:8.2f} = {:0.2f}'.format(
+                            prefix, e1,
+                            val_a, val_b,
+                            new_val,
+                            ), end='  ')
+                        print('| {}_{}'.format(e2, sufix))
         return(this_df)
 
     def _normalize(self, e, prefix, year):
@@ -1231,17 +1291,20 @@ class TableModel(object):
             e2 = e
         return(e, e2, sufix)
 
-    def _get_cols(self, table, val = 'p'):
+    def _get_cols(self, table, val = 'p', static = False):
         cols = list()
         for el in table.index:
             name = el.split('_')[-1]
             if name not in self.skip:
-                try:
-                    value = float(table.loc[el, val])
-                    if not np.isnan(value):
-                        cols.append(name)
-                except:
-                    pass
+                if static:
+                    cols.append(name)
+                else:
+                    try:
+                        value = float(table.loc[el, val])
+                        if not np.isnan(value):
+                            cols.append(name)
+                    except:
+                        pass
         return(cols)
 
 
@@ -1282,7 +1345,7 @@ class PopModel(object):
 
     def _get_distribution(self, dis, var_name, p, simple=False):
         """Get distribution."""
-        if ';' in dis:
+        if ";" in dis:
             dis = dis.split(";")[-1]
         if self.verbose:
             print('computing for distribution: ', dis)
@@ -1394,7 +1457,7 @@ class PopModel(object):
                 l = self._get_distribution(dis, var_name, p)
             self.command += l
             try:
-                dis_split = dis.split(';')
+                dis_split = dis.split(";")
                 dis = dis_split[-1].strip()
                 prefix_index = dis_split[-2]
                 if len(prefix_index) == 1:
@@ -1477,8 +1540,8 @@ class PopModel(object):
             print('will save the data to ', self.tracefile )
 
         if self.verbose:
-            print(self.pre_command.replace(";", "\n"))
-            print(self.command.replace("; ", "\n"))
+            print(self.pre_command.replace(';', "\n"))
+            print(self.command.replace('; ', "\n"))
 
         exec(self.pre_command)
         with self.basic_model:
@@ -1714,6 +1777,7 @@ class Aggregates():
     def reweight(self, drop_cols, from_script=False, year = 2010,
                  max_iter = 100,
                  weights_file='temp/new_weights.csv', script="reweight.R",
+                 align_census = True,
                  **kwargs):
         """Reweight survey using GREGWT.
 
@@ -1748,6 +1812,7 @@ class Aggregates():
             if self.verbose: print("calling gregwt")
             new_weights = _gregwt(toR_survey, toR_census,
                                   verbose = self.verbose, max_iter = max_iter,
+                                  align_census = align_census,
                                   **kwargs)
 
         if from_script:
