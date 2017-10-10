@@ -693,7 +693,7 @@ def run_calibrated_model(model_in,
         out_reweighted_survey = _project_survey_resample(
             census, model_in, err,
             k_iter,
-            resample_years = list(),
+            resample_years = resample_years,
             **kwargs)
     else:
         out_reweighted_survey = reweighted_survey

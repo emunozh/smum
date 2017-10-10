@@ -7,7 +7,7 @@ survey <- read.csv('temp/toR_survey.csv')
 
 simulation_data <- prepareData(
   census, survey,
-  verbose=TRUE,
+  #verbose=TRUE,
   align=data.frame(pop=c(1,3)),
   breaks=c(8,21,22,24,31,32,33),
   survey_weights='w',
@@ -19,8 +19,9 @@ simulation_data <- prepareData(
 
 Weights <- GREGWT(
     data_in=simulation_data,
-    #max_iter = 1000,
+    max_iter = 1000,
     use_ginv=TRUE,
+    output_log = TRUE,
     #area_code='internal'
     )
 #print(Weights)
