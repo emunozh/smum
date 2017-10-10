@@ -14,6 +14,7 @@ import re
 import warnings
 import copy
 import json
+import math
 warnings.filterwarnings('ignore')
 
 # pymc3 libraries
@@ -70,7 +71,6 @@ def _get_breaks(census_col, verbose = False):
     breaks = list()
     for e, col in enumerate(census_col):
         var_name = col.split('_')[0]
-        print(var_name)
         if var_name != old_var_name:
             if e-1 > 0:
                 if verbose: print("adding {} as break = {}".format(var_name, e-1))
@@ -93,6 +93,7 @@ def _toR_df(toR_df):
     toR_df.columns = col
     new_index = [i for i in range(1, toR_df.shape[0]+1)]
     toR_df.index = new_index
+    # toR_df = toR_df.dropna()
     toR_df = pandas2ri.py2ri(toR_df)
     return(toR_df, col)
 
@@ -130,7 +131,12 @@ def _align_var(breaks_r, pop_col, n, verbose = False):
 
     for e, b in enumerate(breaks_r):
         if prev_b + 1 == b and b != n:
-            align[pop_col+'.'+str(i)] = IntVector((min(align_t), max(align_t)))
+            try:
+                align[pop_col+'.'+str(i)] = IntVector((min(align_t), max(align_t)))
+            except:
+                if verbose:
+                    print("can't allign: ", align_t)
+                pass
             i += 1
             align_t = list()
         else:
@@ -431,8 +437,9 @@ def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations
     ax2.legend(loc=1)
 
 def _replace(j, rules):
+    j = j.lower()
     for k, r in rules.items():
-        j = j.lower().replace(r[0], r[1])
+        j = j.replace(r[0], r[1])
     return(j)
 
 
@@ -453,7 +460,7 @@ def _project_survey_reweight(trace, census, model_i, err, max_iter = 100,
         survey_cols.extend(
             [_replace(j, rep) for j in i.split('_') if j not in skip_cols])
     drop_census = [census.columns[e] for e, i in enumerate(census_cols)\
-                   if i not in survey_cols and i not in ['area', 'pop']]
+                   if (i not in survey_cols or i.split('_')[0] not in survey_cols) and i not in ['area', 'pop']]
 
     survey_in = trace.loc[:, [i for i in trace.columns if i not in drop_survey]]
     census = census.loc[:, [i for i in census.columns if i not in drop_census and i not in drop_survey]]
@@ -615,6 +622,7 @@ def run_calibrated_model(model_in,
         verbose = kwargs['verbose']
         if verbose:
             print('Being verbose')
+            print(year_in)
     else:
         verbose = False
 
@@ -727,11 +735,11 @@ def run_composite_model(
             benchmarks. Defaults to `'data/benchmarks.csv'`.
         drop_col_survey (:obj:`list`, optional): Columns to drop from survey.
             Defaults to `False`.
-        verbose (:obj:`bool`, optional): Be verbose. Defaults to `Fasle`.
+        verbose (:obj:`bool`, optional): Be verbose. Defaults to `False`.
         from_script (:obj:`bool`, optional): Run reweighting algorithm from file.
             Defaults to `Fasle`.
         k (:obj:`dict`, optional): Correction k-factor. Default 1.
-        year (:obj:`int`, optional): year in `census_file` (i.e. index) to use for the model califration `k` factor.
+        year (:obj:`int`, optional): year in `census_file` (i.e. index) to use for the model calibration `k` factor.
         to_cat (:obj:`bool`, optional): Convert survey variables to categorical
             variables. Default to `False`.
         to_cat_census (:obj:`bool`, optional): Convert census variables to categorical
@@ -751,7 +759,7 @@ def run_composite_model(
     """
     if verbose:
         print("#"*50)
-        print("Start composite model: ", name, sufix)
+        print("Start composite model: ", name, sufix, year)
         print("#"*50)
 
     _delete_files(name, sufix, verbose = verbose)
@@ -1027,7 +1035,7 @@ class TableModel(object):
     def __init__(
         self,
         census_file = False,
-        verbose=False,
+        verbose = False,
         normalize = True):
 
         self.normalize = normalize
@@ -1132,6 +1140,8 @@ class TableModel(object):
     def update_dynamic_model(self, name,
                              val = 'p',
                              static = False,
+                             sd_variation = 0.01,
+                             select = False,
                              specific_col = False,
                              compute_average = True):
         """Update dynamic model."""
@@ -1170,6 +1180,8 @@ class TableModel(object):
                 this_df, year,
                 v_cols, val, name, specific_col,
                 compute_average,
+                select = select,
+                sd_variation = sd_variation,
                 static = static)
             panel_dic[year] = this_df
 
@@ -1177,35 +1189,49 @@ class TableModel(object):
 
     def _update_table(self, this_df, year, v_cols, val,
                       name, specific_col, compute_average,
+                      sd_variation = 0.01,
+                      select = False,
                       static = False):
         new_val = False
         prefix = name[0].lower()
+        sd_default = 0
         if specific_col:
             e1, _, _ = self._get_positions(specific_col, prefix)
             if not isinstance(compute_average, bool):
-                new_val = self._get_weighted_mean(v_cols, year)
+                new_val, sd_default = self._get_weighted_mean(v_cols, year)
                 new_val += compute_average
                 if self.verbose:
                     print('\t\t\t| computed average:')
                     print('\t\t\t| {}_{:<18} {:0.2f}'.format(
                         prefix, e1, new_val))
             else:
-                new_val = self.census.loc[year, v_cols].div(
-                    self.census.loc[year, 'pop'])
+                if static:
+                    new_val = self.census.loc[year, v_cols]
+                else:
+                    new_val = self.census.loc[year, v_cols].div(
+                        self.census.loc[year, 'pop'])
                 if val == 'mu':
                     new_val = new_val[0]
+                    sd_default = new_val * sd_variation
                     if self.verbose:
                         print('\t\t\t| absolute values:')
                         print('\t\t\t| {}_{:<18} {}'.format(
                             prefix, e1, new_val))
                 else:
                     new_val = ','.join([str(i) for i in new_val.values])
+                    if not isinstance(select, bool):
+                        new_val = new_val.split(',')
+                        new_val = [float(i) for i in new_val]
+                        new_val = [i / np.sum(new_val) for i in new_val]
+                        new_val = new_val[select]
                     if self.verbose:
                         print('\t\t\t| categorical values:')
                         print('\t\t\t| {}_{:<18} {}'.format(
                             prefix, e1, new_val))
             try:
                 this_df.loc['{}_{}'.format(prefix, e1), val] = new_val
+                if val == 'mu':
+                    this_df.loc['{}_{}'.format(prefix, e1), 'sd'] = sd_default
             except:
                 print('Warning: could not assing new value to data set on {}_{}'.format(prefix, e1))
             return(this_df)
@@ -1251,11 +1277,10 @@ class TableModel(object):
         x = list()
         for i in inx:
             v = i.split('_')[-1]
-            v = re.sub('[^0-9a-zA-Z]+', '', v)
-            v = re.sub('[a-zA-Z]+', '_', v)
-            v = v.rstrip('_')
-            v = v.lstrip('_')
-            v = v.split('_')
+            v = v.split('-')
+            v = [re.sub('inf', '100', i) for i in v]
+            v = [re.sub('[^0-9a-zA-Z]+', '', i) for i in v]
+            v = [re.sub('[a-zA-Z]+', '_', i) for i in v]
             v = np.asarray([int(i) for i in v])
             x.append(np.mean(v))
         return(np.asarray(x))
@@ -1264,7 +1289,9 @@ class TableModel(object):
         x = self._find_values(inx)
         w = self.census.loc[year, inx].tolist()
         avr = np.average(x, weights=w)
-        return(avr)
+        sd = np.std(x)
+        variance = np.average((x - avr)**2, weights=w)
+        return(avr, math.sqrt(variance))
 
     def _get_positions(self, e, prefix):
         sufix = ''; e2 = ''
@@ -1272,6 +1299,9 @@ class TableModel(object):
         for rf in self.ref_cat:
             if rf.lower() in census_cols:
                 return(e, e, rf)
+
+        if e in [c.split('_')[0] for c in self.census.columns]:
+            return(e, e, sufix)
 
         if e == 'Urban' or e == 'Urbanity':
             sufix = 'Urban'
@@ -1321,7 +1351,7 @@ class PopModel(object):
         self._command_pn = "{0} = PosNormal('{0}', mu={1}, sd={2}); "
         self._command_gm = "{0} = Gamma('{0}', mu={1}, sd={2});"
         self._command_br = "{0} = Bernoulli('{0}', {1}); "
-        self._command_bt = "{0} = Beta('{0}', {1}, {2}); "
+        self._command_bt = "{0} = Beta('{0}', mu={1}, sd={2}); "
         self._command_ps = "{0} = Poisson('{0}', {1}); "
         self._command_ct = "{0} = Categorical('{0}', p=np.array([{1}])); "
         self._command_dt = "{0} = Deterministic('{0}', {1}); "
@@ -1356,7 +1386,7 @@ class PopModel(object):
         elif dis == 'Gamma':
             l = self._command_gm.format(var_name, p['mu'], p['sd'])
         elif dis == 'Beta':
-            l = self._command_bt.format(var_name, p['alpha'], p['beta'])
+            l = self._command_bt.format(var_name, p['mu'], p['sd'])
         elif dis == 'Bernoulli':
             l = self._command_br.format(var_name, p['p'])
         elif dis == 'PosNormal':
@@ -1494,7 +1524,7 @@ class PopModel(object):
                               k_factor=1,
                               sigma_mu = False, sigma_sd = 0.1,
                               prefix = False,
-                              bounds = [0, np.inf],
+                              bounds = [-np.inf, np.inf],
                               constant_name = 'Intercept',
                               formula=False):
         """Define new base consumption model.
@@ -1725,6 +1755,8 @@ class Aggregates():
             except:
                 init_val = 1
         k = newton(self._compute_error, init_val, args=(var, weight, year))
+        if self.verbose:
+            print("k = ", k)
         self.k[var] = k
 
     def _compute_error(self, k, var, weight, year):
@@ -1734,9 +1766,9 @@ class Aggregates():
                 print("Warning: can't compute error for year {}".format(year))
                 print("Error will be set to 0 for the Newton-Raphson optimization algorithm to converge")
             return(0)
-        error = (
-            self.survey.loc[:, var].mul(self.survey.loc[:, weight]).mul(k).sum() -\
-            self.census.loc[year, var])
+        a = self.survey.loc[:, var].mul(self.survey.loc[:, weight]).mul(k).sum()
+        b = self.census.loc[year, var]
+        error = (a - b)
         return(error)
 
     def print_error(self, var, weight, year = 2010, lim = 1e-6):
@@ -1863,7 +1895,10 @@ class Aggregates():
                 if len(this_lab) > 1:
                     print("Error: found more than one label for: ", c)
                 else:
-                    this_lab = this_lab[0]
+                    try:
+                        this_lab = this_lab[0]
+                    except:
+                        this_lab = this_lab
                 labels_out.append(this_lab)
             if self.verbose:
                 print('new labels: ', labels_out)
@@ -1893,6 +1928,8 @@ class Aggregates():
     def _survey_to_cat_single(self, variable_name, cut_values,
                               labels = False, prefix = False, census = False):
         """Transform single variable to categrical."""
+        if self.verbose:
+            print(variable_name)
         if not labels:
             labels = list()
             if prefix:
@@ -1909,6 +1946,7 @@ class Aggregates():
             self.census = self.census[:, [i for i in self.census.columns if i != variable_name]]
             self.census = pd.concat(self.census.loc[:, :var_position], new_cat, self.census.loc[:, var_position:])
         else:
+            self.survey.loc[:, variable_name] = self.survey.loc[:, variable_name].astype(float)
             self.survey.loc[:, variable_name] = pd.cut(
                 self.survey.loc[:, variable_name],
                 cut_values,
@@ -2109,9 +2147,9 @@ class Aggregates():
         if inverse:
             self.inverse = inverse
         self.survey = frame_survey
-        self._cut_survey(drop = drop)
         if to_cat:
             self._add_cat(to_cat)
+        self._cut_survey(drop = drop)
 
     def _set_tot_population(self, total_pop):
         """Add total population column to census"""
@@ -2182,6 +2220,7 @@ def plot_error(trace_in, census_in, iterations,
                skip = list(),
                fit_col = list(),
                weight = 'wf',
+               fit_cols = ['Income', 'Electricity','Water'],
                plot_name = False, wbins = 50,
                wspace = 0.2, hspace = 0.9, top = 0.91,
                year = 2010, save_all = False):
@@ -2191,6 +2230,7 @@ def plot_error(trace_in, census_in, iterations,
     elif isinstance(trace_in, pd.DataFrame):
         trace = trace_in
     else:
+        print(trace_in)
         raise TypeError('trace must either be a valid file on disc of a pandas DataFrame')
     trace = trace.loc[trace.loc[:, weight].notnull()]
 
@@ -2204,7 +2244,6 @@ def plot_error(trace_in, census_in, iterations,
     skip_cols = ['w', 'wf', 'level_0', 'index']
     skip_cols.extend(skip)
 
-    fit_cols = ['Income', 'Electricity','Water']
     for fc in fit_col:
         if fc not in fit_cols:
             fit.cols.append(fc)

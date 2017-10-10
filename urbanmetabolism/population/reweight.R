@@ -1,10 +1,5 @@
 library('GREGWT')
 
-#setwd('~/workspace/R/GREGWT/src/')
-#source("GREGWT.R")
-#source("PrepareData.R")
-#setwd('~/workspace/python/urbanmetabolism_doc/_examples/')
-
 census <- read.csv('temp/toR_census.csv')
 #View(census)
 survey <- read.csv('temp/toR_survey.csv')
@@ -12,18 +7,19 @@ survey <- read.csv('temp/toR_survey.csv')
 
 simulation_data <- prepareData(
   census, survey,
-  align=data.frame(pop=c(1,7)),
-  breaks=c(2,4,6,19,22),
-  #verbose=TRUE,
+  verbose=TRUE,
+  align=data.frame(pop=c(1,3)),
+  breaks=c(8,21,22,24,31,32,33),
   survey_weights='w',
+  convert = TRUE,
   pop_total_col='pop',
-  census_categories=seq(3, 31),
-  survey_categories=c(2,3,4,5)
+  census_categories=seq(3, 36),
+  survey_categories=c(3,4,5,6,7)
   )
 
 Weights <- GREGWT(
     data_in=simulation_data,
-    max_iter = 1000,
+    #max_iter = 1000,
     use_ginv=TRUE,
     #area_code='internal'
     )

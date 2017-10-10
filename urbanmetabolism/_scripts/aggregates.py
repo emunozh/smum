@@ -22,7 +22,8 @@ def print_proj_var(col, ax1, data):
     return(ax1)
 
 def _normalize(data, total_pop):
-    data = data.div(data.sum(axis=1), axis=0).mul(total_pop, axis=0)
+    normal_pop = total_pop.div(total_pop.max()).mul(100)
+    data = data.div(data.sum(axis=1), axis=0).mul(normal_pop, axis=0)
     return(data)
 
 def print_proj_year(col, ax1, data, total_pop):
@@ -30,13 +31,16 @@ def print_proj_year(col, ax1, data, total_pop):
     data = data.loc[:, inx]
     if isinstance(total_pop, pd.Series):
         data = _normalize(data, total_pop)
-    data.plot.area(ax=ax1)
+        normalized = True
+    else:
+        normalized = False
+    data.plot.area(ax = ax1)
     ax1.set_title(col)
     return(ax1)
 
 def print_all(data, sufix,
               skip = list(),
-              var=True, title='', rows = 2,
+              var = True, title = '', rows = 2,
               total_pop = False,
               start_year = 2010,
               end_year = 2030,
@@ -64,7 +68,7 @@ def print_all(data, sufix,
                 ax.set_xticklabels(years)
 
     plt.savefig('FIGURES/proj_dist_all_{}'.format(sufix), dpi=300)
-    if save_data:
+    if save_data and len(skip) == 0:
         data.to_csv(save_data)
     return(data)
 
@@ -92,13 +96,15 @@ def _calibrate_census(census, key, vals, key_o, col, tol=0.1):
             if new_val > sum_year:
                 new_val = sum_year - tol_year
             _val = census.loc[year, key]
-            census.loc[year, key] = new_val                      # <--- (*)
+            census.loc[year, key] = new_val                          # <--- (*)
 
             # All other values
             if allocate_to:
-                # allocate_val = sum_year - new_val
                 allocate_val = _val - new_val
-                census.loc[year, allocate_to] += allocate_val
+                allocate_val = census.loc[year, allocate_to] + allocate_val
+                if allocate_val <= 0:
+                    allocate_val = 0
+                census.loc[year, allocate_to] = allocate_val        # <--- (*)
             else:
                 share_o = share_o / share_o.sum() * (1 - share)
                 new_val_o = round(share_o * sum_year)
@@ -136,15 +142,8 @@ def _introduce_bias(census, bias_to, skip = list(), pop_col = 'pop', save_data =
             val = {2010:val}
         census = _calibrate_census(census, key, val, key_o, col, tol=0.001)
     if save_data:
-        census = census.join(skip_census)
-        if "pop" not in skip:
-            census.loc[:, 'pop'] = pop
-        census.to_csv(save_data)
+        census_out = census.join(skip_census)
+        if "pop" not in census_out.columns:
+            census_out.loc[:, 'pop'] = pop
+        census_out.to_csv(save_data)
     return(census, census_cols)
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
