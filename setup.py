@@ -12,7 +12,7 @@ with open(path.join(here, 'VERSION')) as f:
     version = f.read().strip()
 
 with open(path.join(here, 'requirements.txt')) as f:
-    install_requires.read().split('\n')
+    install_requires = f.read().split('\n')
 
 setup(
     name='umsm',

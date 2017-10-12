@@ -1,2 +1,6 @@
 urbanmetabolism/tags
 urbanmetabolism/swoopBuf
+.eggs/
+build/
+dist/
+umsm.egg-info/
