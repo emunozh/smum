@@ -44,7 +44,7 @@ setup(
         'Development Status :: 3 - Alpha',
 
         # Indicate who your project is intended for
-        'Intended Audience :: Sientific community',
+        'Intended Audience :: Scientific community',
 
         # Pick your license as you wish (should match "license" above)
         'License :: GLP3 License',
@@ -54,14 +54,12 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.6.2',
     ],
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=find_packages(),
-
-    include_package_data=True,
+    # packages=find_packages(),
+    # include_package_data=True,
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's
