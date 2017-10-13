@@ -9,11 +9,11 @@ Fri 13 Oct 2017 02:05:09 PM CEST
 from urbanmetabolism.population.model import TableModel
 
 verbose = True
-census_file = 'data/benchmarks_be_year_bias3_climate.csv'
+census_file = 'urbanmetabolism/data/benchmarks_be_year_bias3_climate.csv'
 
 tm = TableModel(census_file = census_file, verbose = verbose)
 
-tm.add_model('data/test_water_be.csv', 'Water')
+tm.add_model('urbanmetabolism/data/test_water_be.csv', 'Water')
 tm.update_dynamic_model(
     'Water', specific_col = 'ConstructionType', select = 0)
 tm.update_dynamic_model(
