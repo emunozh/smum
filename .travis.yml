@@ -2,12 +2,12 @@ language: python
 python:
   - "3.6"
 install:
-  - add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu $(lsb_release -sc)/"
-  - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-  - add-apt-repository ppa:marutter/rdev
-  - apt-get update
-  - apt-get upgrade
-  - apt-get install r-base
+  - sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu $(lsb_release -sc)/"
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+  - sudo add-apt-repository ppa:marutter/rdev
+  - sudo apt-get update
+  - sudo apt-get upgrade
+  - sudo apt-get install r-base
   - pip install --no-cache-dir -r requirements.txt
   - python setup.py -q install
 notifications:
