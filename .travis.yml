@@ -8,6 +8,6 @@ install:
   - sudo apt-get update
   - sudo apt-get -y install r-base
   - pip install --no-cache-dir -r requirements.txt
-  - python setup.py -q install
+  - python setup.py install
 notifications:
     slack: economydivision:FQ4SZvoepYndcrFjmzYnAtNC
