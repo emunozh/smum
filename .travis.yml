@@ -9,5 +9,6 @@ install:
   - sudo apt-get -y install r-base
   - pip install --no-cache-dir -r requirements.txt
   - python setup.py install
+script: python test.py
 notifications:
     slack: economydivision:FQ4SZvoepYndcrFjmzYnAtNC
