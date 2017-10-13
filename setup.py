@@ -11,8 +11,18 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 with open(path.join(here, 'VERSION')) as f:
     version = f.read().strip()
 
-with open(path.join(here, 'requirements.txt')) as f:
-    install_requires = f.read().split('\n')
+install_requires = [
+    'pandas',
+    'numpy',
+    'scipy',
+    'statsmodels',
+    'matplotlib',
+    'seaborn',
+    'Theano',
+    'pymc3==3.0',
+    'rpy2',
+    'ipfn'
+]
 
 setup(
     name='umsm',
@@ -58,8 +68,8 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    # packages=find_packages(),
-    # include_package_data=True,
+    packages=find_packages(),
+    include_package_data=True,
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's
