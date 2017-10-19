@@ -4,6 +4,7 @@ scipy
 statsmodels
 jupyter-core
 jupyter
+jupyterhub
 matplotlib
 seaborn
 Theano

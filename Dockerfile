@@ -15,7 +15,12 @@ RUN pacman -S --needed --noconfirm r
 RUN pacman -S --needed --noconfirm python-rpy2
 RUN pacman -S --needed --noconfirm python-ipykernel
 RUN pacman -S --needed --noconfirm jupyter-notebook
+RUN pacman -S --needed --noconfirm npm
 RUN pip install --no-cache-dir -r requirements.txt
+RUN npm install -g configurable-http-proxy
+
+# config jupyterhub
+#jupyterhub --generate-config
 
 COPY . .
 COPY urbanmetabolism/ ./urbanmetabolism
