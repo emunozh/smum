@@ -1,0 +1,26 @@
+{
+  "name": "jquery",
+  "version": "3.2.1",
+  "description": "jQuery component",
+  "license": "MIT",
+  "keywords": [
+    "jquery",
+    "component"
+  ],
+  "main": "jquery.js",
+  "ignore": [
+    "component.json",
+    "package.json",
+    "composer.json"
+  ],
+  "homepage": "https://github.com/components/jquery",
+  "_release": "3.2.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "3.2.1",
+    "commit": "e5534d4ab8e80c159553d507e358ed20a806d3bf"
+  },
+  "_source": "https://github.com/components/jquery.git",
+  "_target": "~3.2",
+  "_originalSource": "components/jquery"
+}

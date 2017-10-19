@@ -330,13 +330,14 @@ def plot_data_projection(reweighted_survey, var, iterations,
                          unit = 'household',
                          start_year = 2010, end_year = 2030, benchmark_year = False):
     """Plot projected data as total sum and as per capita."""
+    reweighted_survey_in = reweighted_survey
     inx = [str(i) for i in range(start_year, end_year+1)]
     if not isinstance(var, list):
         raise TypeError('expected type {} for variable var, got {}'.format(type(list), type(var)))
     if not isinstance(pr, bool):
         pr = [i for i in pr]
     if isinstance(pr, list):
-        inx_pr = ["{}_{}_{:0.2f}".format(year, scenario_name, pr) for year, pr in zip(inx, pr)]
+        inx_pr = ["{}_{}_{:0.2f}".format(year, scenario_name, p) for year, p in zip(inx, pr)]
     else:
         inx_pr = False
     plot_num = int(len(var) / col_num)
@@ -349,6 +350,10 @@ def plot_data_projection(reweighted_survey, var, iterations,
     for v, ax in zip(var, AX):
         if verbose:
             print(v)
+        if isinstance(pr, list):
+            data_pr, _ = _merge_data(reweighted_survey_in, inx_pr, v, groupby = groupby, verbose = verbose)
+        else:
+            data_pr = False
         if isinstance(reweighted_survey, str):
             if os.path.isfile(reweighted_survey+".csv"):
                 if verbose:
@@ -374,10 +379,6 @@ def plot_data_projection(reweighted_survey, var, iterations,
             if verbose:
                 print('\t| merging data')
             data, cap = _merge_data(reweighted_survey, inx, v, groupby = groupby, verbose = verbose)
-        if isinstance(pr, list):
-            data_pr, _ = _merge_data(reweighted_survey, inx_pr, v, groupby = groupby, verbose = verbose)
-        else:
-            data_pr = False
         _plot_data_projection_single(
             ax, data, v, cap, benchmark_year, iterations, groupby,
             unit = unit, cut_data = cut_data,

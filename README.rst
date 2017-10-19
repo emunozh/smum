@@ -1,5 +1,5 @@
-Docker for Urban Metabolism Model
-=================================
+Spatial Microsimulation Urban Metabolism Model
+==============================================
 
 .. image:: https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg
     :target: https://cloud.docker.com/app/emunozh/repository/docker/emunozh/urbanmetabolism/general
@@ -16,6 +16,11 @@ Check back for an update on deployment.
 
 If you want to play around with the code please install the docker image.
 
+Using the Docker image
+----------------------
+
+Currently the docker images are build automatically with each new github push.
+
 .. code:: bash
 
    # Make suredocker is runing
@@ -28,13 +33,33 @@ If you want to play around with the code please install the docker image.
    docker pull emunoz/urbanmetabolism
 
    # Run the model
-   docker run -it emunozh/urbanmetabolism /bin/bash /usr/src/app/run.sh
+   docker run -it -p 8080:8080 emunozh/urbanmetabolism /bin/bash /usr/src/app/run.sh
+
+This is the actual content of
+`run.sh`.
 
 .. code:: bash
 
-   # initiate jupyter notebook
-   jupyter-notebook ./urbanmetabolism/examples/start.ipynb
+   #!/bin/sh
+   # run.sh
 
-   pip install jupyterhub
+   # Initiate jupyter notebook
+   jupyterhub --ip=0.0.0.0\
+     -f ./jupyterhub_config.py\
+     ./urbanmetabolism/examples/Welcome.ipynb
+
+You can build the docher image localy for testing and debuging.
+
+.. code:: bash
+
+   # Build the docker image on your computer
+   # Clone github repository
+   git clone git@github.com:emunozh/um.git
+   # Move to um folder
+   cd um
+   # Build docker image
+   docker build . -t um_test
+   # Run docker image
+   docker run -it um_test
 
 
