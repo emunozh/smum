@@ -2392,3 +2392,44 @@ TAE: {:0.2E}, PSAE: {:0.2E}%
     plt.savefig("FIGURES/{}.png".format(plot_name), dpi=300)
 
     return(REC)
+
+
+def growth_rate(start_rate, final_rate, as_array = True,
+                 start = False, end = False,
+                 default_start = 2010,
+                 default_end = 2030):
+    """Construct growth rates."""
+    if isinstance(start, bool):
+        start = default_start
+    if isinstance(end, bool):
+        end = default_end
+
+    i = start - default_start
+    if i < 0: i = 0
+    rate_years = end - start + 1
+    j = default_end - start - end - start
+
+    growth_rate = np.linspace(start_rate,  final_rate, num = rate_years)
+    growth_rate = [0]*i + [i for i in growth_rate] + [final_rate]*j
+    if as_array:
+        growth_rate = np.asarray(growth_rate)
+    return(growth_rate)
+
+
+def plot_growth_rate(Elec, Water, pr, name):
+    """Plot growth rates."""
+    fig, ax = plt.subplots()
+    years = [int(i) for i in range(2010, 2031)]
+    ax.plot(years, pr, label="Technology penetration rate")
+    bm = years.index(2016)
+    ax.set_xticks(years);
+    ax.set_xticklabels(years, rotation=90);
+    ax.plot(years, Elec, label='Electricity efficiency increase rate');
+    ax.plot(years, Water, label='Water efficiency increase rate');
+    ax.vlines(2016, 0, np.max([pr[6], Elec[6], Water[6]]), 'r',
+              linestyles='dashed', alpha=0.4, label='Benchmark year')
+    ax.set_ylim(0,1)
+    ax.set_title("Technology transition rates for {}".format(name))
+    ax.set_ylabel("Transition rate")
+    ax.legend();
+    plt.savefig('FIGURES/transition_rates_{}.png'.format(name), dpi=300)

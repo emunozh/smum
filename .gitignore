@@ -4,3 +4,7 @@ urbanmetabolism/swoopBuf
 build/
 dist/
 umsm.egg-info/
+mykey.key
+mycert.pem
+jupyterhub_cookie_secret
+jupyterhub.sqlite

@@ -25,6 +25,7 @@ COPY hub/ /usr/share/jupyter/hub
 COPY urbanmetabolism/ ./urbanmetabolism
 
 RUN R CMD INSTALL GREGWT_0.7.5.tar.gz
+RUN python setup.py install
 
 COPY makenewuser /usr/bin/makenewuser
 RUN chmod +x /usr/bin/makenewuser

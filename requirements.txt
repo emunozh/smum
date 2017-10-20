@@ -11,3 +11,4 @@ Theano
 pymc3==3.0
 rpy2
 ipfn
+nbconvert

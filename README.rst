@@ -43,10 +43,11 @@ This is the actual content of
    #!/bin/sh
    # run.sh
 
+   # get public IP
+   IP=wget -q -O - checkip.dyndns.org|sed -e 's/.*Current IP Address: //' -e 's/<.*$//'
+
    # Initiate jupyter notebook
-   jupyterhub --ip=0.0.0.0\
-     -f ./jupyterhub_config.py\
-     ./urbanmetabolism/examples/Welcome.ipynb
+   jupyterhub --ip=0.0.0.0
 
 You can build the docher image localy for testing and debuging.
 
@@ -61,5 +62,3 @@ You can build the docher image localy for testing and debuging.
    docker build . -t um_test
    # Run docker image
    docker run -it um_test
-
-

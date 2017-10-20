@@ -6,3 +6,7 @@ useradd -m --shell /bin/bash $USERNAME
 echo $USERNAME:$USERNAME | chpasswd
 
 cp -r /usr/src/app/urbanmetabolism/examples/ /home/$USERNAME/examples/
+chown -R $USERNAME:users /home/$USERNAME/examples/
+
+cp -r /usr/src/app/.ipython/ /home/$USERNAME/.ipython/
+chown -R $USERNAME:users /home/$USERNAME/.ipython
