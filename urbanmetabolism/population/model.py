@@ -283,7 +283,7 @@ def _merge_data(reweighted_survey, inx, v, group = False, groupby = False, verbo
         file_survey = reweighted_survey + "_{}.csv".format(i)
         survey_temp = pd.read_csv(file_survey, index_col=0)
         if verbose:
-            print("\t\t| year: ", i)
+            print("\n\t\t| year: ", i)
             print('\t\t| file: ', file_survey)
         cap_i = survey_temp.wf.sum()
         if group:
@@ -302,6 +302,7 @@ def _merge_data(reweighted_survey, inx, v, group = False, groupby = False, verbo
                 inx_g.append(v)
                 if verbose: print('\t\t| groupby: ', groupby, inx_g)
                 val = survey_temp.loc[:, inx_g].groupby(groupby).sum()
+                if verbose: print('\t\t| val: ', val)
                 val.columns = [i]
         values[i] = val
         cap[i] = cap_i
@@ -318,6 +319,8 @@ def _merge_data(reweighted_survey, inx, v, group = False, groupby = False, verbo
     else:
         s = pd.Series(values, name=v)
         s.index.name = 'year'
+    if any(s.isnull()):
+        s = s.interpolate(method='linear', axis=0)
     c = pd.Series(cap, name='pop')
     c.index.name = 'year'
     return(s, c)
@@ -355,6 +358,7 @@ def plot_data_projection(reweighted_survey, var, iterations,
         else:
             data_pr = False
         if isinstance(reweighted_survey, str):
+            if verbose: print('\t| is str')
             if os.path.isfile(reweighted_survey+".csv"):
                 if verbose:
                     print('\t| opening *.csv: ', reweighted_survey)
