@@ -1,0 +1,8 @@
+#!/bin/sh
+
+USERNAME="$1"
+
+useradd -m --shell /bin/bash $USERNAME
+echo $USERNAME:$USERNAME | chpasswd
+
+cp -r /usr/src/app/urbanmetabolism/examples/ /home/$USERNAME/examples/

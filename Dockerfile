@@ -16,22 +16,21 @@ RUN pacman -S --needed --noconfirm python-rpy2
 RUN pacman -S --needed --noconfirm python-ipykernel
 RUN pacman -S --needed --noconfirm jupyter-notebook
 RUN pacman -S --needed --noconfirm npm
+RUN pacman -S --needed --noconfirm mathjax
 RUN pip install --no-cache-dir -r requirements.txt
 RUN npm install -g configurable-http-proxy
 
-# config jupyterhub
-#jupyterhub --generate-config
-
 COPY . .
-COPY urbanmetabolism/ ./urbanmetabolism
 COPY hub/ /usr/share/jupyter/hub
+COPY urbanmetabolism/ ./urbanmetabolism
 
-COPY GREGWT_0.7.5.tar.gz ./
 RUN R CMD INSTALL GREGWT_0.7.5.tar.gz
-#EXPOSE 8888
 
-RUN useradd -ms /bin/bash esteban
-RUN echo 'esteban' | passwd esteban --stdin
+COPY makenewuser /usr/bin/makenewuser
+RUN chmod +x /usr/bin/makenewuser
+RUN makenewuser esteban
+
+RUN chmod +x ./run.sh
 
 #CMD [ "python", "./test.py" ]
 #RUN ipython3 notebook --port 80

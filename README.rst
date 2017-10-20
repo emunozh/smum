@@ -33,7 +33,7 @@ Currently the docker images are build automatically with each new github push.
    docker pull emunoz/urbanmetabolism
 
    # Run the model
-   docker run -it -p 8080:8080 emunozh/urbanmetabolism /bin/bash /usr/src/app/run.sh
+   docker run -it -p 8080:8080 emunozh/urbanmetabolism /bin/bash ./run.sh
 
 This is the actual content of
 `run.sh`.

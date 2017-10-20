@@ -190,7 +190,7 @@
 #c.JupyterHub.hub_ip = '127.0.0.1'
 
 ## The port for the Hub process
-c.JupyterHub.hub_port = 8080
+# c.JupyterHub.hub_port = 8000
 
 ## The public facing ip of the whole application (the proxy)
 #c.JupyterHub.ip = ''
@@ -217,7 +217,7 @@ c.JupyterHub.hub_port = 8080
 #c.JupyterHub.pid_file = ''
 
 ## The public facing port of the proxy
-#c.JupyterHub.port = 8000
+c.JupyterHub.port = 8080
 
 ## DEPRECATED since version 0.8 : Use ConfigurableHTTPProxy.api_url
 #c.JupyterHub.proxy_api_ip = ''
@@ -695,13 +695,13 @@ c.Authenticator.whitelist = {'esteban'}
 #      adduser -q --gecos "" --home /customhome/river --disabled-password river
 #
 #  when the user 'river' is created.
-# c.LocalAuthenticator.add_user_cmd = ['useradd', '-p', '\'USERNAME\'']
+c.LocalAuthenticator.add_user_cmd = ['makenewuser']
 
 ## If set to True, will attempt to create local system users if they do not exist
 #  already.
 #
 #  Supports Linux and BSD variants only.
-# c.LocalAuthenticator.create_system_users = True
+c.LocalAuthenticator.create_system_users = True
 
 ## Whitelist all users from this UNIX group.
 #
