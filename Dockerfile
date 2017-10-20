@@ -31,7 +31,7 @@ RUN R CMD INSTALL GREGWT_0.7.5.tar.gz
 #EXPOSE 8888
 
 RUN useradd -ms /bin/bash esteban
-RUN echo 'esteban' | passwd root --stdin
+RUN echo 'esteban' | passwd esteban --stdin
 
 #CMD [ "python", "./test.py" ]
 #RUN ipython3 notebook --port 80
