@@ -9,6 +9,7 @@ Mon 28 Aug 2017 03:42:29 PM CEST
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 SKIP = ['Total', 'Residential Condominium']
 SKIPF = ['Table 1_1.xls', 'Table 1_0.xls', 'Table 1_2.xls']
@@ -198,6 +199,32 @@ def get_sqm(grouped=True, verbose=False, counts=False):
         sqm_data = sqm_data.groupby('group').describe()
         sqm_data.columns = sqm_data.columns.droplevel(0)
     return(sqm_data)
+
+
+def plot_nr(pop_data_1, pop_data, pop_data_3, nr_data):
+    fig, ax = plt.subplots(figsize=(10, 4))
+    x = pop_data.index.tolist()
+    ax.plot(x, pop_data_1.loc[:, 'num_nonres'], 'r--', label='800 m2 per building')
+    ax.plot(x, pop_data.loc[:, 'num_nonres'], 'b.-.',
+            label='{:0.0f} m2 per building*'.format(
+        nr_data.loc[:, 'sqm'].mean()))
+    ax.plot(x, pop_data_3.loc[:, 'num_nonres'], 'g--', label='500 m2 per building')
+    ax.legend()
+    ax.set_ylabel('Number of non-residential buildings')
+    ax.set_xlabel('Simulation years')
+    xT = [i for i in range(2010, 2031, 2)]
+    ax.set_xticks(xT);
+    ax.set_title("Estimated number of non-residential buildings")
+    ax.text(2024, 80, """
+    *based on new construction city permits
+    Source: Industry Statistics Division
+    Economic Sector Statistics Service
+    Philippine Statistics Authority
+    Republic of the Philippines
+    """
+    )
+    plt.tight_layout()
+    plt.savefig("FIGURES/numberofbuildings_nonres.png", dpi=300)
 
 
 def main():

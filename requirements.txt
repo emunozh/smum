@@ -8,7 +8,8 @@ jupyterhub
 matplotlib
 seaborn
 Theano
-pymc3==3.0
+pymc3
 rpy2
 ipfn
 nbconvert
+RISE

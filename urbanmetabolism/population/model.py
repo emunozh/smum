@@ -409,6 +409,8 @@ def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations
     if isinstance(data_pr, bool):
         data.plot(ax = ax1, kind=kind, alpha=alpha, label=var)
     else:
+        if not groupby:
+            data.plot(ax = ax1, kind=kind, alpha=alpha, label='baseline')
         data_pr.plot(ax = ax1, kind=kind, alpha=alpha, label=scenario_name)
     ax1.set_xlabel('simulation year')
     ax1.set_ylabel('Total {}'.format(var))
@@ -708,7 +710,7 @@ def run_calibrated_model(model_in,
 
 def run_composite_model(
     model, sufix,
-    population_size = 1000,
+    population_size = False,
     err = 'wf',
     iterations = 100,
     align_census = True,
@@ -888,7 +890,7 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
         if data.sw.max() == max_value:
             print('weights: OK')
         else:
-            print('weights: max design p = {}, max reall p = {}'.format(
+            print('weights: max design p = {}, max real p = {}'.format(
                 max_value, data.sw.max()))
 
     # Expand data
@@ -1147,6 +1149,7 @@ class TableModel(object):
                              static = False,
                              sd_variation = 0.01,
                              select = False,
+                             specific_col_as = False,
                              specific_col = False,
                              compute_average = True):
         """Update dynamic model."""
@@ -1154,6 +1157,10 @@ class TableModel(object):
             compute_average = 0
         table = self.models[name]
         if specific_col:
+            if specific_col_as:
+                temp_col = specific_col
+                specific_col = specific_col_as
+                specific_col_as = temp_col
             if self.verbose: print("\t| for specific column {}".format(specific_col))
             v_cols = [i for i in self.census.columns if specific_col == i.split('_')[0] or specific_col.lower() == i.split('_')[0]]
             if self.verbose:
@@ -1184,6 +1191,7 @@ class TableModel(object):
             this_df = self._update_table(
                 this_df, year,
                 v_cols, val, name, specific_col,
+                specific_col_as,
                 compute_average,
                 select = select,
                 sd_variation = sd_variation,
@@ -1193,7 +1201,9 @@ class TableModel(object):
         self.models[name] = pd.Panel(panel_dic)
 
     def _update_table(self, this_df, year, v_cols, val,
-                      name, specific_col, compute_average,
+                      name, specific_col,
+                      specific_col_as,
+                      compute_average,
                       sd_variation = 0.01,
                       select = False,
                       static = False):
@@ -1201,7 +1211,7 @@ class TableModel(object):
         prefix = name[0].lower()
         sd_default = 0
         if specific_col:
-            e1, _, _ = self._get_positions(specific_col, prefix)
+            e1, _, _ = self._get_positions(specific_col, prefix, specific_col_as)
             if not isinstance(compute_average, bool):
                 new_val, sd_default = self._get_weighted_mean(v_cols, year)
                 new_val += compute_average
@@ -1242,13 +1252,10 @@ class TableModel(object):
             return(this_df)
         else:
             for e in v_cols:
-                e1, e2, sufix = self._get_positions(e, prefix)
+                e1, e2, sufix = self._get_positions(e, prefix, specific_col_as)
                 if static:
                     if self.verbose: print('\t\t\t| static')
                     return(this_df)
-                    # val_a = False
-                    # val_b = False
-                    # new_val = self.census.loc[year, '{}'.format(e2)]
                 else:
                     if self.normalize:
                         if self.verbose: print('\t\t\t| normalize')
@@ -1298,15 +1305,13 @@ class TableModel(object):
         variance = np.average((x - avr)**2, weights=w)
         return(avr, math.sqrt(variance))
 
-    def _get_positions(self, e, prefix):
+    def _get_positions(self, e, prefix, spa):
         sufix = ''; e2 = ''
         census_cols = [c.split('_')[-1].lower() for c in self.census.columns if e.lower() in [i.lower() for i in c.split("_")]]
         for rf in self.ref_cat:
             if rf.lower() in census_cols:
+                if spa: e = spa
                 return(e, e, rf)
-
-        if e in [c.split('_')[0] for c in self.census.columns]:
-            return(e, e, sufix)
 
         if e == 'Urban' or e == 'Urbanity':
             sufix = 'Urban'
@@ -1314,16 +1319,13 @@ class TableModel(object):
         elif e == 'Sex':
             sufix = 'female'
             e2 = 'sex'
-            e = 'HH_head_Sex'
-        elif e == 'Size':
-            e = 'Family_Size'
-        elif e == 'Age':
-            e = 'HH_head_Age'
-        elif e == 'Education':
-            e = 'Education_cat'
+        elif e in [c.split('_')[0] for c in self.census.columns]:
+            if spa: e = spa
+            return(e, e, sufix)
         else:
             sufix = 'yes'
             e2 = e
+        if spa: e = spa
         return(e, e2, sufix)
 
     def _get_cols(self, table, val = 'p', static = False):
@@ -1443,24 +1445,26 @@ class PopModel(object):
 
     def _make_categories_formula(self, p, var_name, index_var_name):
         """Construct formula for categorical variables."""
+        #TODO allow for normal distribution
         list_name    = "c_{}_list".format(var_name)
-        list_name_sd = "c_{}_list_sd".format(var_name)
+        # list_name_sd = "c_{}_list_sd".format(var_name)
         self.pre_command += "{} = [{}];".format(list_name, p['co_mu'])
         self.pre_command += "{0} = _make_theano({0});".format(list_name)
-        self.pre_command += "{} = [{}];".format(list_name_sd, p['co_sd'])
-        self.pre_command += "{0} = _make_theano({0});".format(list_name_sd)
+        # self.pre_command += "{} = [{}];".format(list_name_sd, p['co_sd'])
+        # self.pre_command += "{0} = _make_theano({0});".format(list_name_sd)
         c = ''
         if not index_var_name:
             index_var_name = var_name
         var_1 = "_index_model({}, {})".format(index_var_name, list_name)
-        var_2 = "_index_model({}, {})".format(index_var_name, list_name_sd)
-        # var_dic = {'p': var}
-        var_dic = {'mu': var_1, 'sd': var_2}
+        # var_2 = "_index_model({}, {})".format(index_var_name, list_name_sd)
+        var_dic = {'p': var_1}
+        # var_dic = {'mu': var_1, 'sd': var_2}
         c += self._get_distribution(
-            # 'Deterministic',
-            'Normal',
+            'Deterministic',
+            # 'Normal',
             'c_'+var_name,
-            var_dic)
+            var_dic,
+            simple = True)
 
         return(c)
 
@@ -1578,7 +1582,12 @@ class PopModel(object):
             print(self.pre_command.replace(';', "\n"))
             print(self.command.replace('; ', "\n"))
 
-        exec(self.pre_command)
+        with self.basic_model:
+            exec(self.pre_command)
+
+        if self.verbose:
+            print("Start model")
+
         with self.basic_model:
             exec(self.command)
             # obtain starting values via MAP
@@ -1590,6 +1599,10 @@ class PopModel(object):
             # step = pm.NUTS(scaling=means)
             # v_params = pm.variational.advi(n=5000)
 
+        if self.verbose:
+            print('Staring sampling')
+
+        with self.basic_model:
             # use SQLite as a backend
             backend = pm.backends.Text(self.tracefile)
             # backend = SQLite(self.tracefile)
@@ -1881,7 +1894,17 @@ class Aggregates():
                 for ms in self.census.columns:
                     if var_split.lower() in [m.lower() for m in ms.split('_')]:
                         labels.append(ms)
-        return(labels)
+        if len(labels) > 1:
+            return(labels)
+        else:
+            splitted = re.sub('(?!^)([A-Z][a-z]+)', r' \1', var).split()
+            for var_split in splitted:
+                if (len(var_split) > 1) & (var_split != 'cat'):
+                    for ms in self.census.columns:
+                        if var_split.lower() in [m.lower() for m in ms.split('_')]:
+                            labels.append(ms)
+            return(labels)
+
 
     def _match_labels(self, labels, cat, inv=1):
         """match labels to census variables."""
@@ -2010,7 +2033,7 @@ class Aggregates():
             try:
                 dis = self.table_model.loc[var, 'dis']
                 if self.verbose:
-                    print('OK')
+                    print('OK', dis)
             except:
                 if self.verbose:
                     print('Fail!, no defined distribution.')
@@ -2416,20 +2439,24 @@ def growth_rate(start_rate, final_rate, as_array = True,
     return(growth_rate)
 
 
-def plot_growth_rate(Elec, Water, pr, name):
+def plot_growth_rate(variables, name,
+                     benchmark_year = 2016, start_year = 2010, end_year = 2030,
+                     title = 'Technology transition rates for {}',
+                     ylab = "Transition rate"):
     """Plot growth rates."""
     fig, ax = plt.subplots()
-    years = [int(i) for i in range(2010, 2031)]
-    ax.plot(years, pr, label="Technology penetration rate")
-    bm = years.index(2016)
+
+    years = [int(i) for i in range(start_year, end_year + 1)]
+    for k, v in variables.items():
+        ax.plot(years, v, label=k)
+
+    bm = years.index(benchmark_year)
+    ax.vlines(benchmark_year, 0, 1, 'r',
+              linestyles='dashed', alpha=0.4, label='Benchmark year')
     ax.set_xticks(years);
     ax.set_xticklabels(years, rotation=90);
-    ax.plot(years, Elec, label='Electricity efficiency increase rate');
-    ax.plot(years, Water, label='Water efficiency increase rate');
-    ax.vlines(2016, 0, np.max([pr[6], Elec[6], Water[6]]), 'r',
-              linestyles='dashed', alpha=0.4, label='Benchmark year')
     ax.set_ylim(0,1)
-    ax.set_title("Technology transition rates for {}".format(name))
-    ax.set_ylabel("Transition rate")
+    ax.set_title(title.format(name))
+    ax.set_ylabel(ylab)
     ax.legend();
     plt.savefig('FIGURES/transition_rates_{}.png'.format(name), dpi=300)

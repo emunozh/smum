@@ -8,3 +8,4 @@ mykey.key
 mycert.pem
 jupyterhub_cookie_secret
 jupyterhub.sqlite
+doc/examples/data/trace*

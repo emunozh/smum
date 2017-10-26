@@ -616,7 +616,7 @@ c.Spawner.notebook_dir = '~/examples'
 #  Admin access should be treated the same way root access is.
 #
 #  Defaults to an empty set, in which case no user has admin access.
-c.Authenticator.admin_users = {'esteban', 'root'}
+c.Authenticator.admin_users = {'esteban'}
 
 ## Automatically begin the login process
 #
@@ -666,7 +666,7 @@ c.Authenticator.admin_users = {'esteban', 'root'}
 #  restrictions the authenticator has in place.
 #
 #  If empty, does not perform any additional restriction.
-c.Authenticator.whitelist = {'esteban'}
+c.Authenticator.whitelist = {'esteban', 'test'}
 
 #------------------------------------------------------------------------------
 # LocalAuthenticator(Authenticator) configuration
