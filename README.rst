@@ -12,6 +12,15 @@ Check back for an update on deployment.
 
 If you want to run the model locally please use the docker image.
 
+Install
+-------
+
+To install the python library only via pip.
+
+.. code-block:: bash
+
+  pip install -e git+https://emunozh/um.git#egg=urbanmetabolism
+
 Using the Docker image
 ----------------------
 
