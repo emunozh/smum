@@ -5,7 +5,7 @@ formats:
     - epub
     - pdf
 
-requirements_file: requirements.txt
+requirements_file: ../requirements.txt
 
 python:
    version: 3.6
