@@ -9,7 +9,6 @@ matplotlib
 seaborn
 Theano
 pymc3
-rpy2
 ipfn
 nbconvert
 RISE
