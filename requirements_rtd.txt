@@ -1,0 +1,15 @@
+pandas
+numpy
+scipy
+statsmodels
+jupyter-core
+jupyter
+jupyterhub
+matplotlib
+seaborn
+Theano
+pymc3
+rpy2
+ipfn
+nbconvert
+RISE
