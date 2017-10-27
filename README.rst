@@ -1,11 +1,7 @@
-Spatial Microsimulation Urban Metabolism Model
-==============================================
+Spatial Microsimulation Urban Metabolism Model (SMUM)
+=====================================================
 
-.. image:: https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg
-    :target: https://cloud.docker.com/app/emunozh/repository/docker/emunozh/urbanmetabolism/general
-
-.. image:: https://travis-ci.org/emunozh/um.svg
-    :target: http://travis-ci.org/emunozh/um
+|docker| |travis|
 
 This is the main repository for the developing of the Spatial Microsimulation
 Urban Metabolism (SMUM) model.
@@ -31,7 +27,7 @@ a windows machine.
 Linux
 ~~~~~
 
-.. code:: bash
+.. code-block:: bash
 
    # Install docker if you don't have it via your favorite pakage manager
    sudo pacman -Ss docker
@@ -53,7 +49,7 @@ Linux
 
 You can build the docker image locally for testing and debugging.
 
-.. code:: bash
+.. code-block:: bash
 
    # Build the docker image on your computer
    # Clone github repository
@@ -75,7 +71,7 @@ Windows
 ~~~~~~~
 
 .. caution::
-  UNTESTED
+  NOT TESTED!
 
 The installation process should be simple:
 
@@ -88,3 +84,34 @@ The installation process should be simple:
 4. Lunch the Jupyterhub server :code:`jupyterhub --ip=0.0.0.0`
 
 5. Open your browser at `<http://0.0.0.0:8080>`_
+
+Contribute
+----------
+
+- Issue Tracker: github.com/emunozh/um/issues
+- Source Code: github.com/emunozh/um
+
+Support
+-------
+
+If you are having issues, please let us know.
+
+License
+-------
+
+The project is licensed under the GPL-3.0 license.
+
+.. |docker| image:: https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg
+    :alt: Docker cloud
+    :scale: 100%
+    :target: https://cloud.docker.com/app/emunozh/repository/docker/emunozh/urbanmetabolism/general
+
+.. |travis| image:: https://travis-ci.org/emunozh/um.svg
+    :alt: build status
+    :scale: 100%
+    :target: http://travis-ci.org/emunozh/um
+
+.. |docs| image:: https://readthedocs.org/projects/docs/badge/?version=latest
+    :alt: Documentation Status
+    :scale: 100%
+    :target: https://docs.readthedocs.io/en/latest/?badge=latest

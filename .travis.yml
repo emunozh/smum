@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.6"
+  - 3.6
 install:
   - sudo sh -c 'echo "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/" >> /etc/apt/sources.list'
   - gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
@@ -11,4 +11,8 @@ install:
   - python setup.py install
 script: python test_um.py
 notifications:
-    slack: economydivision:FQ4SZvoepYndcrFjmzYnAtNC
+    slack:
+      rooms:
+        - economydivision:FQ4SZvoepYndcrFjmzYnAtNC#um_dev
+      on_success: change
+      on_failure: always

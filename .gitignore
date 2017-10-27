@@ -9,3 +9,4 @@ mycert.pem
 jupyterhub_cookie_secret
 jupyterhub.sqlite
 doc/examples/data/trace*
+doc/_build/
