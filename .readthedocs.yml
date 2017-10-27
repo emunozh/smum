@@ -1,14 +1,17 @@
 # Setup file for readthedocs
-#
+
 # Build PDF & ePub
 formats:
     - epub
     - pdf
 
-requirements_file: ../requirements.txt
+# library requirements
+requirements_file: requirements.txt
 
+# python version
 python:
    version: 3.6
 
+# how to install library
 python:
    setup_py_install: true
