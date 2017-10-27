@@ -20,7 +20,6 @@ install_requires = [
     'seaborn',
     'Theano',
     'pymc3',
-    'rpy2',
     'ipfn'
 ]
 
