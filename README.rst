@@ -1,7 +1,7 @@
 Spatial Microsimulation Urban Metabolism Model (SMUM)
 =====================================================
 
-|docker| |travis|
+|docker| |travis| |docs|
 
 This is the main repository for the developing of the Spatial Microsimulation
 Urban Metabolism (SMUM) model.
@@ -111,7 +111,7 @@ The project is licensed under the GPL-3.0 license.
     :scale: 100%
     :target: http://travis-ci.org/emunozh/um
 
-.. |docs| image:: https://readthedocs.org/projects/docs/badge/?version=latest
+.. |docs| image:: https://readthedocs.org/projects/smum/badge/?version=latest
     :alt: Documentation Status
     :scale: 100%
-    :target: https://docs.readthedocs.io/en/latest/?badge=latest
+    :target: https://smum.readthedocs.io/en/latest/?badge=latest
