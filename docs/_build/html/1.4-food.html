@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Food &mdash; UrbanMetabolism 0.0.1 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="UrbanMetabolism 0.0.1 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> UrbanMetabolism
+          
+
+          
+            
+            <img src="_static/um_logo.svg.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="0-intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1-um.html">Top-Down Modules (Urban Metabolism)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2-sm.html">Bottom-Up: Synthetic Populations (Spatial Microsimulation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="x-authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="x-contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UrbanMetabolism</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Food</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/1.4-food.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="food">
+<h1>Food<a class="headerlink" href="#food" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="_images/classes_foodModel.png"><img alt="_images/classes_foodModel.png" src="_images/classes_foodModel.png" style="width: 301.0px; height: 274.5px;" /></a>
+<p class="caption"><span class="caption-text">Food class diagram.</span></p>
+</div>
+<dl class="class">
+<dt id="food.FoodFlow">
+<em class="property">class </em><code class="descclassname">food.</code><code class="descname">FoodFlow</code><span class="sig-paren">(</span><em>city</em><span class="sig-paren">)</span><a class="headerlink" href="#food.FoodFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Food Flow class.</p>
+<div class="math">
+\[I_F + P_F + I_{W,Kit} = O_{F,RetFW} + O_{F,ResFW} + O_{F,Met} + O_{F,S}\]</div>
+<p>Where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><span class="math">\(I_F\)</span> mass of food and packaged drinks imported to the city.</li>
+<li><span class="math">\(P_F\)</span> mass of food and packaged drinks produced in the city, for internal consumption.</li>
+<li><span class="math">\(I_{W,Kit}\)</span> mass of kitchen water used during food preparation or drunk during meals.</li>
+<li><span class="math">\(O_{F,RetFW}\)</span> mass of retail food waste produced by grocery stores and restaurants.</li>
+<li><span class="math">\(O_{F,ResFW}\)</span> mass of residential food waste going to landfill, compost, or organic waste collection.</li>
+<li><span class="math">\(O_{F,Met}\)</span> mass of carbon and water lost via respiration and transpiration in residents metabolism.</li>
+<li><span class="math">\(O_{F,S}\)</span> mass of feces and urine exported to sewerage system.</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="food.FoodStock">
+<em class="property">class </em><code class="descclassname">food.</code><code class="descname">FoodStock</code><span class="sig-paren">(</span><em>city</em><span class="sig-paren">)</span><a class="headerlink" href="#food.FoodStock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Food Stock.</p>
+<dl class="method">
+<dt id="food.FoodStock.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>city</em><span class="sig-paren">)</span><a class="headerlink" href="#food.FoodStock.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Food Stock class initiator.</p>
+<ul class="simple">
+<li>Require input: <cite>city</cite></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017 M. Esteban Munoz H..
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

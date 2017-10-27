@@ -1,0 +1,824 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Bottom-Up: Synthetic Populations (Spatial Microsimulation) &mdash; UrbanMetabolism 0.0.1 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="UrbanMetabolism 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Authors" href="x-authors.html"/>
+        <link rel="prev" title="Top-Down Modules (Urban Metabolism)" href="1-um.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> UrbanMetabolism
+          
+
+          
+            
+            <img src="_static/um_logo.svg.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="0-intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1-um.html">Top-Down Modules (Urban Metabolism)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Bottom-Up: Synthetic Populations (Spatial Microsimulation)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#population">Population</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="x-authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="x-contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UrbanMetabolism</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Bottom-Up: Synthetic Populations (Spatial Microsimulation)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/2-sm.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bottom-up-synthetic-populations-spatial-microsimulation">
+<h1>Bottom-Up: Synthetic Populations (Spatial Microsimulation)<a class="headerlink" href="#bottom-up-synthetic-populations-spatial-microsimulation" title="Permalink to this headline">¶</a></h1>
+<p>Simple example of a simulation model:</p>
+<ul class="simple">
+<li>Define model parameters.</li>
+<li>We define a formula for the Electricity model. This model will compute the
+electricity demand based on previously computed income levels.</li>
+<li>We define a python dictionary to tell the fuction <cite>run_calibrated_model</cite> how
+to calibrate it. The order to the models (i.e. dictionary keys) matter, as
+the model will calibrate them in the specified order. In this case we need to
+calibrate the income model first in order to calibrate the electricity model
+because the computation of electricity directly depends on the estimation of
+income.</li>
+<li>We run the model with the defined parameters. The model with iterate until
+all models are calibrated.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># load libraries</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">urbanmetabolism.population.model</span> <span class="kn">import</span> <span class="n">run_calibrated_model</span>
+
+<span class="c1"># load model coefficients</span>
+<span class="n">elec</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/test_elec.csv&#39;</span><span class="p">,</span>   <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">inc</span>   <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/test_inc.csv&#39;</span><span class="p">,</span>    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">water</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/test_water.csv&#39;</span><span class="p">,</span>  <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># define model, order matters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Income&quot;</span><span class="p">:</span>      <span class="p">{</span><span class="s1">&#39;table_model&#39;</span><span class="p">:</span> <span class="n">inc</span> <span class="p">},</span>
+         <span class="s2">&quot;Water&quot;</span><span class="p">:</span>       <span class="p">{</span><span class="s1">&#39;table_model&#39;</span><span class="p">:</span> <span class="n">water</span><span class="p">},</span>
+         <span class="s2">&quot;Electricity&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;table_model&#39;</span><span class="p">:</span> <span class="n">elec</span><span class="p">}}</span>
+
+<span class="c1"># run simulation</span>
+<span class="n">run_calibrated_model</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">census_file</span> <span class="o">=</span> <span class="s1">&#39;data/benchmarks_projected.csv&#39;</span><span class="p">,</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="mi">2016</span><span class="p">)</span>
+</pre></div>
+</div>
+<table border="1" class="docutils" id="id1">
+<caption><span class="caption-text">Income table-model</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="26%" />
+<col width="26%" />
+<col width="36%" />
+<col width="2%" />
+<col width="1%" />
+<col width="6%" />
+<col width="1%" />
+<col width="1%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">co_mu</th>
+<th class="head">co_sd</th>
+<th class="head">p</th>
+<th class="head">mu</th>
+<th class="head">sd</th>
+<th class="head">dis</th>
+<th class="head">ub</th>
+<th class="head">lb</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>919.012059036333</td>
+<td>161.50344091572538</td>
+<td>0.1937183811129848</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Bernoulli</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="row-odd"><td>7105.2244566329355</td>
+<td>127.94148635675795</td>
+<td>0.40300529992772827</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Bernoulli</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="row-even"><td>1666.846395220964</td>
+<td>29.03482607534048</td>
+<td>NaN</td>
+<td>4.45</td>
+<td>NaN</td>
+<td>Poisson</td>
+<td>10</td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td>116.57589770606201</td>
+<td>4.681393204635</td>
+<td>NaN</td>
+<td>50.00</td>
+<td>14</td>
+<td>Normal</td>
+<td>100</td>
+<td>18</td>
+</tr>
+<tr class="row-even"><td>NaN</td>
+<td>NaN</td>
+<td>1147.6639922287982</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Deterministic</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="row-odd"><td>1.0,6023.86254599,11959.091528,18727.4606703,16788.0394185</td>
+<td>0.0,140.904404522,217.208790314,282.176145543,742.04753769</td>
+<td>0.4922609009877138,0.347747530715,0.100126475548,0.0531498434112,0.00671524933751</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Categorical</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="id2">
+<caption><span class="caption-text">Electricity table-model</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="14%" />
+<col width="14%" />
+<col width="8%" />
+<col width="12%" />
+<col width="12%" />
+<col width="22%" />
+<col width="14%" />
+<col width="5%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">co_mu</th>
+<th class="head">co_sd</th>
+<th class="head">p</th>
+<th class="head">mu</th>
+<th class="head">sd</th>
+<th class="head">dis</th>
+<th class="head">ub</th>
+<th class="head">lb</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>203.3226</td>
+<td>3.13016</td>
+<td>0.100</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Bernoulli</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="row-odd"><td>28.8862</td>
+<td>1.96894</td>
+<td>0.010</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Bernoulli</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="row-even"><td>0.8257</td>
+<td>18.66760</td>
+<td>0.920</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Bernoulli</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="row-odd"><td>59.2432</td>
+<td>1.55605</td>
+<td>0.340</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Bernoulli</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="row-even"><td>18.7899</td>
+<td>1.75962</td>
+<td>0.720</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Bernoulli</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="row-odd"><td>24.5935</td>
+<td>1.39104</td>
+<td>0.520</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Bernoulli</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="row-even"><td>0.0014</td>
+<td>0.00004</td>
+<td>NaN</td>
+<td>12711.7</td>
+<td>18000.7</td>
+<td>Normal</td>
+<td>Infinity</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>NaN</td>
+<td>NaN</td>
+<td>3.300</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>Deterministic</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="_images/error_total.png"><img alt="_images/error_total.png" src="_images/error_total.png" style="width: 1080.0px; height: 720.0px;" /></a>
+<p class="caption"><span class="caption-text">Simulation error</span></p>
+</div>
+<div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="_images/Income.png"><img alt="_images/Income.png" src="_images/Income.png" style="width: 576.0px; height: 432.0px;" /></a>
+<p class="caption"><span class="caption-text">Estimated income distribution</span></p>
+</div>
+<div class="figure align-center" id="id5">
+<a class="reference internal image-reference" href="_images/Electricity.png"><img alt="_images/Electricity.png" src="_images/Electricity.png" style="width: 576.0px; height: 432.0px;" /></a>
+<p class="caption"><span class="caption-text">Estimated electricity distribution</span></p>
+</div>
+<div class="section" id="population">
+<h2>Population<a class="headerlink" href="#population" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center" id="id6">
+<a class="reference internal image-reference" href="_images/classes_modelModel.png"><img alt="_images/classes_modelModel.png" src="_images/classes_modelModel.png" style="width: 406.5px; height: 412.5px;" /></a>
+<p class="caption"><span class="caption-text">Population class diagram.</span></p>
+</div>
+<dl class="function">
+<dt id="population.model.run_calibrated_model">
+<code class="descclassname">population.model.</code><code class="descname">run_calibrated_model</code><span class="sig-paren">(</span><em>model_in</em>, <em>log_level=0</em>, <em>err='wf'</em>, <em>project='reweight'</em>, <em>resample_years=[]</em>, <em>rep={}</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.run_calibrated_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run and calibrate model with all required iterations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model_in</strong> (<em>dict</em>) – Model defines as a dictionary, with specified variables
+as keys, containing the <cite>table_model</cite> for each variable and
+an optional formula.</li>
+<li><strong>err</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – Weight to use for error optimization. Defaults to <cite>‘wf’</cite>.</li>
+<li><strong>log_level</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>, optional) – Logging level passed to pandas log-level.</li>
+<li><strong>project</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – Method used for the projection of the sample survey.
+Defaults to <cite>‘reweight’</cite>, this method will reweight the synthetic sample
+survey to match aggregates from the census file. This method is fast
+but might contain large errors on the resulting marginal sums (i.e. TAE).
+An alternative method is define as <cite>‘resample’</cite>. This method will
+construct a new sample for each iteration and reweight it to the know
+aggregates on the census file, this method is more time consuming as
+the samples are created on each iteration via MCMC. If the variable
+is set to <cite>False</cite> the method will create a sample for a single year.</li>
+<li><strong>rep</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>) – Dictionary containing rules for replacing names on sample survey.
+Defaults to <cite>dict()</cite> i.e no modifications, empty dictionary.</li>
+<li><strong>**kwargs</strong> – Keyword arguments passed to ‘run_composite_model’.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">calibrated reweighted survey.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">reweighted_survey (pandas.DataFrame)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-rst"><div class="highlight"><pre><span></span>&gt;&gt;&gt; elec = pd.read_csv(&#39;data/test_elec.csv&#39;, index_col=0)
+&gt;&gt;&gt; inc =  pd.read_csv(&#39;data/test_inc.csv&#39;,  index_col=0)
+&gt;&gt;&gt; model = {&quot;Income&quot;:      {&#39;table_model&#39;: inc },
+             &quot;Electricity&quot;: {&#39;table_model&#39;: elec}
+&gt;&gt;&gt; reweighted_survey = run_calibrated_model(
+        model,
+        name = &#39;Sorsogon_Electricity&#39;,
+        population_size = 32694,
+        iterations = 100000)
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="population.model.run_composite_model">
+<code class="descclassname">population.model.</code><code class="descname">run_composite_model</code><span class="sig-paren">(</span><em>model</em>, <em>sufix</em>, <em>population_size=False</em>, <em>err='wf'</em>, <em>iterations=100</em>, <em>align_census=True</em>, <em>name='noname'</em>, <em>census_file='data/benchmarks.csv'</em>, <em>drop_col_survey=False</em>, <em>verbose=False</em>, <em>from_script=False</em>, <em>k={}</em>, <em>year=2010</em>, <em>sigma_mu=False</em>, <em>sigma_sd=0.1</em>, <em>njobs=2</em>, <em>to_cat=False</em>, <em>to_cat_census=False</em>, <em>reweight=True</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.run_composite_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run and calibrate a single composite model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> (<em>dict</em>) – Dictionary containing model parameters.</li>
+<li><strong>sufix</strong> (<em>str</em>) – model <cite>name</cite> sufix.</li>
+<li><strong>name</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – </li>
+<li><strong>population_size</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>, optional) – Defaults to 1000.</li>
+<li><strong>err</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – Weight to use for error optimization. Defaults to <cite>‘wf’</cite>.</li>
+<li><strong>iterations</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>, optional) – Number of sample iterations on MCMC model.
+Defaults to <cite>100</cite>.</li>
+<li><strong>census_file</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – Define census file with aggregated
+benchmarks. Defaults to <cite>‘data/benchmarks.csv’</cite>.</li>
+<li><strong>drop_col_survey</strong> (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code>, optional) – Columns to drop from survey.
+Defaults to <cite>False</cite>.</li>
+<li><strong>verbose</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional) – Be verbose. Defaults to <cite>False</cite>.</li>
+<li><strong>from_script</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional) – Run reweighting algorithm from file.
+Defaults to <cite>Fasle</cite>.</li>
+<li><strong>k</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – Correction k-factor. Default 1.</li>
+<li><strong>year</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>, optional) – year in <cite>census_file</cite> (i.e. index) to use for the model calibration <cite>k</cite> factor.</li>
+<li><strong>to_cat</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional) – Convert survey variables to categorical
+variables. Default to <cite>False</cite>.</li>
+<li><strong>to_cat_census</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional) – Convert census variables to categorical
+variables. Default to <cite>False</cite>.</li>
+<li><strong>reweight</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional) – Reweight sample. Default to <cite>True</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>Returns a list containing the</dt>
+<dd><p class="first last">estimated k-factors as <cite>model.PopModel.aggregates.k</cite> and the reweighted
+survey as <cite>model.PopModel.aggregates.survey</cite>.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">result (<code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">objects</span></code>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-rst"><div class="highlight"><pre><span></span>&gt;&gt;&gt; k_out, reweighted_survey = run_composite_model(model, sufix)
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="population.model.PopModel">
+<em class="property">class </em><code class="descclassname">population.model.</code><code class="descname">PopModel</code><span class="sig-paren">(</span><em>name='noname'</em>, <em>verbose=False</em>, <em>random_seed=12345</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.PopModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main population model class.</p>
+<dl class="method">
+<dt id="population.model.PopModel.add_consumption_model">
+<code class="descname">add_consumption_model</code><span class="sig-paren">(</span><em>yhat_name, table_model, k_factor=1, sigma_mu=False, sigma_sd=0.1, prefix=False, bounds=[-inf, inf], constant_name='Intercept', formula=False</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.PopModel.add_consumption_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define new base consumption model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.PopModel.plot_model">
+<code class="descname">plot_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#population.model.PopModel.plot_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model traceplot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.PopModel.plot_model_test">
+<code class="descname">plot_model_test</code><span class="sig-paren">(</span><em>yhat_name</em>, <em>mu</em>, <em>sd</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.PopModel.plot_model_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model test plot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.PopModel.print_command">
+<code class="descname">print_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#population.model.PopModel.print_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print computed command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.PopModel.run_model">
+<code class="descname">run_model</code><span class="sig-paren">(</span><em>iterations=100000</em>, <em>population=False</em>, <em>burn=False</em>, <em>thin=2</em>, <em>njobs=2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.PopModel.run_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="population.model.Aggregates">
+<em class="property">class </em><code class="descclassname">population.model.</code><code class="descname">Aggregates</code><span class="sig-paren">(</span><em>verbose=False</em>, <em>pop_col='pop'</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.Aggregates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class containing the aggregated data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>verbose</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional) – Defaults to <cite>False</cite>.</li>
+<li><strong>pop_col</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – Defaults to <cite>‘pop’</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="Aggregates.pop_col">
+<code class="descname">pop_col</code><a class="headerlink" href="#Aggregates.pop_col" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Population column on census data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Aggregates.k">
+<code class="descname">k</code><a class="headerlink" href="#Aggregates.k" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Dictionary containing the k-factors.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">inverse =</code></dt>
+<dd><p><em>list</em> – List of categories to invert.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Aggregates.verbose">
+<code class="descname">verbose</code><a class="headerlink" href="#Aggregates.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> – Be verbose.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.Aggregates.compute_k">
+<code class="descname">compute_k</code><span class="sig-paren">(</span><em>init_val=False</em>, <em>inter='Intercept'</em>, <em>prefix='e_'</em>, <em>year=2010</em>, <em>weight='wf'</em>, <em>var='Electricity'</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.Aggregates.compute_k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the k factor to minimize the error using the Newton-Raphson algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>init_val</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>, optional) – Estimated initial value passed
+to the Newton-Raphson algorithm for optimizing the error value.
+Defaults to <cite>False</cite>. If no value is given the function will try
+get the intercept value from the <cite>table_model</cite>. If the function
+does not find the intercept value on the <cite>table_model</cite> it will
+set it to 1.</li>
+<li><strong>inter</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – Intercept name on <cite>table_model</cite>.
+Defaults to <cite>‘Intercept’</cite>.</li>
+<li><strong>prefix</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – Model prefix. Defaults to <cite>‘e_’</cite>.</li>
+<li><strong>year</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>, optional) – year to be used from aggregates.
+Defaults to <cite>2010</cite>.</li>
+<li><strong>weight</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – Weight value to use for optimizations.
+Defaults to <cite>wf</cite>.</li>
+<li><strong>var</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – Variable to minimize the error for.
+Defaults to <cite>‘Electricity’</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.Aggregates.print_error">
+<code class="descname">print_error</code><span class="sig-paren">(</span><em>var</em>, <em>weight</em>, <em>year=2010</em>, <em>lim=1e-06</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.Aggregates.print_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print computed error to command line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>var</strong> (<em>str</em>) – Variable name.</li>
+<li><strong>weight</strong> (<em>str</em>) – Weight variable to use for the estimation of error.</li>
+<li><strong>year</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>, optional) – Year to compute the error for. Defaults to <cite>2010</cite>.</li>
+<li><strong>lim</strong> (<code class="xref py py-obj docutils literal"><span class="pre">float</span></code>, optional) – Limit for model to converge. Defaults to <cite>1e-6</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>Computed error as:</dt>
+<dd><p class="first last"><span class="math">\(\sum_i X_{i, var} * w_i * k_{var} - Tx_{var, year}\)</span></p>
+</dd>
+<dt>Where:</dt>
+<dd><ul class="first last simple">
+<li><span class="math">\(Tx\)</span> are the known marginal sums for variable <span class="math">\(var\)</span>.</li>
+<li><span class="math">\(X\)</span> is the generated sample survey. For each <span class="math">\(i\)</span> record on the sample of variable <span class="math">\(var\)</span>.</li>
+<li><span class="math">\(w\)</span> are the estimated new weights.</li>
+<li><span class="math">\(k\)</span> estimated correction factor for variable <span class="math">\(var\)</span>.</li>
+</ul>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">error (float)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.Aggregates.reweight">
+<code class="descname">reweight</code><span class="sig-paren">(</span><em>drop_cols</em>, <em>from_script=False</em>, <em>year=2010</em>, <em>max_iter=100</em>, <em>weights_file='temp/new_weights.csv'</em>, <em>script='reweight.R'</em>, <em>align_census=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.Aggregates.reweight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reweight survey using GREGWT.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>drop_cols</strong> (<em>list</em>) – list of columns to drop previous to the reweight.</li>
+<li><strong>from_script</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional) – runs the reweight from a script.</li>
+<li><strong>script</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – script to run for the reweighting of
+the sample survey. <cite>from_script</cite> needs to be set to <cite>True</cite>. Defaults to <cite>‘reweight.R’</cite></li>
+<li><strong>weights_file</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – Only required if reweight is run from script.
+Defaults to <cite>‘temp/new_weights.csv’</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.Aggregates.set_census">
+<code class="descname">set_census</code><span class="sig-paren">(</span><em>census</em>, <em>total_pop=False</em>, <em>to_cat=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.Aggregates.set_census" title="Permalink to this definition">¶</a></dt>
+<dd><p>define census.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>census</strong> (<em>str</em><em>, </em><em>pandas.DataFrame</em>) – Either census data as <cite>pandas.DataFrame</cite> or name of a file as <cite>str</cite>.</li>
+<li><strong>total_pop</strong> (<code class="xref py py-obj docutils literal"><span class="pre">int</span></code>, optional) – Total population. Defaults to <cite>False</cite>.</li>
+<li><strong>**kwargs</strong> – Optional kword arguments for reading data from file,
+only used if <cite>census</cite> is a file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">TypeError</span></code> – If <cite>census</cite> is neither not a string or a DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – If <cite>census</cite> is not a valid file.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.Aggregates.set_survey">
+<code class="descname">set_survey</code><span class="sig-paren">(</span><em>survey</em>, <em>inverse=False</em>, <em>drop=False</em>, <em>to_cat=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.Aggregates.set_survey" title="Permalink to this definition">¶</a></dt>
+<dd><p>define survey.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>survey</strong> (<em>str</em><em>, </em><em>pandas.DataFrame</em>) – Either survey data as
+<cite>pandas.DataFrame</cite> or name of a file as <cite>str</cite>.</li>
+<li><strong>inverse</strong> (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional) – Defaults to <cite>False</cite>.</li>
+<li><strong>drop</strong> – (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional): Defaults to <cite>False</cite>.</li>
+<li><strong>to_cat</strong> – (<code class="xref py py-obj docutils literal"><span class="pre">bool</span></code>, optional): Defaults to <cite>False</cite>.</li>
+<li><strong>**kwargs</strong> – Optional kword arguments for reading data from file,
+only used if <cite>survey</cite> is a file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">TypeError</span></code> – If <cite>survey</cite> is neither not a string or a DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – If <cite>survey</cite> is not a valid file.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="population.model.Aggregates.set_table_model">
+<code class="descname">set_table_model</code><span class="sig-paren">(</span><em>input_table_model</em><span class="sig-paren">)</span><a class="headerlink" href="#population.model.Aggregates.set_table_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>define table_model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_table_model</strong> (<em>list</em><em>, </em><em>pandas.DataFrame</em>) – input <cite>table_model</cite> either as a list of <cite>pandas.DataFrame</cite> or as a single <cite>pandas.DataFrame</cite>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – if <cite>input_table_model</cite> is not a list of <cite>pandas.DataFrame</cite> or a single <cite>pandas.DataFrame</cite>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="x-authors.html" class="btn btn-neutral float-right" title="Authors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="1-um.html" class="btn btn-neutral" title="Top-Down Modules (Urban Metabolism)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017 M. Esteban Munoz H..
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

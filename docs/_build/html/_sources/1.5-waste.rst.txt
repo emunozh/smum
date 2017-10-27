@@ -1,0 +1,23 @@
+.. highlight:: rst
+
+Waste
+------------
+
+.. figure:: ./_static/images/classes_wasteModel.png
+   :align: center
+   :scale: 50%
+
+   Waste class diagram.
+
+
+.. autoclass:: waste.WasteFlow
+   :members:
+   :special-members:
+   :private-members:
+
+.. autoclass:: waste.WasteStock
+   :members:
+   :special-members:
+   :private-members:
+
+

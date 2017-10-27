@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Energy &mdash; UrbanMetabolism 0.0.1 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="UrbanMetabolism 0.0.1 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> UrbanMetabolism
+          
+
+          
+            
+            <img src="_static/um_logo.svg.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="0-intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1-um.html">Top-Down Modules (Urban Metabolism)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2-sm.html">Bottom-Up: Synthetic Populations (Spatial Microsimulation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="x-authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="x-contributing.html">Contributing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UrbanMetabolism</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Energy</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/1.3-energy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="energy">
+<h1>Energy<a class="headerlink" href="#energy" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="_images/classes_energyModel.png"><img alt="_images/classes_energyModel.png" src="_images/classes_energyModel.png" style="width: 330.5px; height: 314.0px;" /></a>
+<p class="caption"><span class="caption-text">Energy class diagram.</span></p>
+</div>
+<dl class="class">
+<dt id="energy.EnergyFlow">
+<em class="property">class </em><code class="descclassname">energy.</code><code class="descname">EnergyFlow</code><span class="sig-paren">(</span><em>city</em><span class="sig-paren">)</span><a class="headerlink" href="#energy.EnergyFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energy Flow class.</p>
+<div class="math">
+\[I_{E} = I_{E,buildings} + I_{E,transport} + I_{E,industry} +
+        I_{E,construction} + I_{E,water pumping} + I_{E,waste}\]</div>
+<p>The total energy demand of a city is expressed as the total sum of all
+energy sectors.</p>
+<p>The total energy consumption of the building sector is computed based on
+climatic conditions of the city (<span class="math">\(HDD\)</span> and <span class="math">\(CDD\)</span>) and energy
+consumption intensities based on building type.</p>
+<div class="math">
+\[I_{E,buildings} = I_{E,heating} + I_{E,cooling} + I_{E,light-and-appl.} + I_{E,water-heating}\]</div>
+<div class="math">
+\[I_{E,heating} = \sum_{building-type} HDD * i_{E,heating} * P * f\]</div>
+<div class="math">
+\[I_{E,cooling} = \sum_{building-type} CDD * i_{E,cooling} * P * f * cp\]</div>
+<p>Where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><span class="math">\(HDD\)</span> Heating degree days.</li>
+<li><span class="math">\(CDD\)</span> Cooling degree days.</li>
+<li><span class="math">\(i_{E,cooling}\)</span> heating intensity.</li>
+<li><span class="math">\(i_{E,heating}\)</span> cooling intensity.</li>
+<li><span class="math">\(P\)</span> Population of the urban agglomeration.</li>
+<li><span class="math">\(f\)</span> Floor space are per capita.</li>
+<li><span class="math">\(cp\)</span></li>
+</ul>
+</div></blockquote>
+<p>The total energy demand for the transport sector is computed as follows:</p>
+<div class="math">
+\[I_{E,transport} = I_{E,passenger} + I_{E,freight} + I_{E,aviation} + I_{E,marine}\]</div>
+<p>The computation of energy demand for the passenger transportation can be
+computed as follows:</p>
+<div class="math">
+\[I_{E,passenger} = \sum_{mode} \frac{1}{P_p} * P * \rho_i * h * \varepsilon\]</div>
+<p>Where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><span class="math">\(P_p\)</span> Average population density <span class="math">\([km^{-2}]\)</span>.</li>
+<li><span class="math">\(\rho_i\)</span> Density of transportation infrastructure <span class="math">\([km * km^{-2}]\)</span>.</li>
+<li><span class="math">\(h\)</span> utilization intensity of infrastructure <span class="math">\([\text{veh-}km * km^{-2}]\)</span>.</li>
+<li><span class="math">\(\varepsilon\)</span> Fuel efficiency <span class="math">\([J*\text{veh-}km^{-1}]\)</span>.</li>
+</ul>
+</div></blockquote>
+<p>The sum of the first four terms within the summation is equivalent to the vehicle-kilometers traveled (VKT) city indicator.</p>
+<p>Energy surface balance (not implemented):</p>
+<div class="math">
+\[I_{E,S} + I_{E,F} + I_{E,I} = O_{E,L} + O_{E,G} + O_{E,E}\]</div>
+<p>Where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><span class="math">\(I_{E,S}\)</span> Rate of arrival of radiant energy from the sun.</li>
+<li><span class="math">\(I_{E,F}\)</span> Rate of generation of heat due to combustion and dissipation in machinery.</li>
+<li><span class="math">\(I_{E,I}\)</span> Rate of heat arrival from the earth’s interior.</li>
+<li><span class="math">\(O_{E,L}\)</span> Rate of loss of heat by evapotranspiration.</li>
+<li><span class="math">\(O_{E,G}\)</span> Rate of loss of heat by conduction to soil, buildings, roads, etc.</li>
+<li><span class="math">\(O_{E,E}\)</span> Rate of loss of heat by radiation.</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="energy.EnergyStock">
+<em class="property">class </em><code class="descclassname">energy.</code><code class="descname">EnergyStock</code><span class="sig-paren">(</span><em>city</em><span class="sig-paren">)</span><a class="headerlink" href="#energy.EnergyStock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energy Stock.</p>
+<p>This class defines the existing energy stock by sector.</p>
+<p>All energy streams are aggregated by sector.</p>
+<p>A data-set will the detail energy stream is generated as a <cite>csv</cite> file and
+stored under the <cite>/results</cite> folder.</p>
+<p>The Energy Stock is computed as follows:</p>
+<dl class="method">
+<dt id="energy.EnergyStock.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>city</em><span class="sig-paren">)</span><a class="headerlink" href="#energy.EnergyStock.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energy Stock class initiator.</p>
+<ul class="simple">
+<li>Require input: <cite>city</cite></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017 M. Esteban Munoz H..
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

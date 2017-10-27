@@ -1,0 +1,27 @@
+.. highlight:: rst
+
+Water
+------------
+
+.. figure:: ./_static/images/classes_waterModel.png
+   :align: center
+   :scale: 50%
+
+   Water class diagram.
+
+
+.. autoclass:: water.WaterDemand
+   :members:
+   :special-members:
+   :private-members:
+
+.. autoclass:: water.WaterFlow
+   :members:
+   :special-members:
+   :private-members:
+
+.. autoclass:: water.WaterStock
+   :members:
+   :special-members:
+   :private-members:
+
