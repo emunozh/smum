@@ -65,7 +65,7 @@ setup(
     ],
     
     on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-    if not on_rtd:?
+    if not on_rtd:
         # You can just specify the packages manually here if your project is
         # simple. Or you can use find_packages().
         packages=find_packages(),
@@ -91,5 +91,6 @@ setup(
             # 'gdal': ['GDAL', 'Shapely>=1.5.13'],
         # },
     else:
-        install_requires = []    
+        install_requires = []
+        setup_requires = []
 )
