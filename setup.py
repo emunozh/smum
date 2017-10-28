@@ -63,29 +63,33 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
+    
+    on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+    if not on_rtd:?
+        # You can just specify the packages manually here if your project is
+        # simple. Or you can use find_packages().
+        packages=find_packages(),
+        include_package_data=True,
 
-    # You can just specify the packages manually here if your project is
-    # simple. Or you can use find_packages().
-    packages=find_packages(),
-    include_package_data=True,
+        # List run-time dependencies here.  These will be installed by pip when
+        # your project is installed. For an analysis of "install_requires" vs pip's
+        # requirements files see:
+        # https://packaging.python.org/en/latest/requirements.html
+        install_requires=install_requires,
 
-    # List run-time dependencies here.  These will be installed by pip when
-    # your project is installed. For an analysis of "install_requires" vs pip's
-    # requirements files see:
-    # https://packaging.python.org/en/latest/requirements.html
-    install_requires=install_requires,
+        setup_requires=[
+            "setuptools_git >= 1.0",
+        ],
 
-    setup_requires=[
-        "setuptools_git >= 1.0",
-    ],
-
-    # List additional groups of dependencies here (e.g. development
-    # dependencies). You can install these using the following syntax,
-    # for example:
-    # $ pip install -e .[dev,test]
-    # extras_require={
-        # 'dev': ['nose', 'flake8'],
-        # 'test': ['nose', 'flake8'],
-        # 'gdal': ['GDAL', 'Shapely>=1.5.13'],
-    # },
+        # List additional groups of dependencies here (e.g. development
+        # dependencies). You can install these using the following syntax,
+        # for example:
+        # $ pip install -e .[dev,test]
+        # extras_require={
+            # 'dev': ['nose', 'flake8'],
+            # 'test': ['nose', 'flake8'],
+            # 'gdal': ['GDAL', 'Shapely>=1.5.13'],
+        # },
+    else:
+        install_requires = []    
 )
