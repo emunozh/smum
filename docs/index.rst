@@ -30,7 +30,7 @@ The python library is composed of two main components:
      micro-level agents.
 
 For a complete exmple please refere to the following
-`ipython notebook <http://nbviewer.jupyter.org/github/emunozh/um/blob/master/doc/examples/Welcome.ipynb>`_
+`ipython notebook <http://nbviewer.jupyter.org/github/emunozh/um/blob/master/docs/examples/Welcome.ipynb>`_
 
 .. toctree::
    :maxdepth: 3
