@@ -19,7 +19,7 @@ To install the python library only via pip.
 
 .. code-block:: bash
 
-  pip install -e git+https://emunozh/um.git#egg=urbanmetabolism
+  pip install -e git+https://github.com/emunozh/um.git#egg=urbanmetabolism
 
 Using the Docker image
 ----------------------

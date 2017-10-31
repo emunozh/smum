@@ -51,6 +51,7 @@ from rpy2.robjects import DataFrame, pandas2ri
 pandas2ri.activate()
 from rpy2.robjects import r
 from rpy2.robjects.packages import importr
+utils_package = importr("utils")  # import utils package from R
 
 
 #####################
@@ -130,15 +131,16 @@ def _align_var(breaks_r, pop_col, n, verbose = False):
     align_t = [1]
 
     for e, b in enumerate(breaks_r):
-        if prev_b + 1 == b and b != n:
+        if prev_b + 1 == b and b < n+1:
             try:
+                assert(min(align_t) != max(align_t))
                 align[pop_col+'.'+str(i)] = IntVector((min(align_t), max(align_t)))
             except:
                 if verbose:
-                    print("can't allign: ", align_t)
+                    print("can't allign {} at {} for {}".format(align_t, e, b))
                 pass
             i += 1
-            align_t = list()
+            align_t = [e+2]
         else:
             align_t.append(e+2)
         prev_b = b
@@ -148,8 +150,11 @@ def _align_var(breaks_r, pop_col, n, verbose = False):
     align_r = DataFrame(align)
     return(align_r)
 
+gregwt_iteration = 0
+
 def _gregwt(
     toR_survey, toR_census,
+    save_path = './temp/calibrated_benchmarks_{}.csv',
     pop_col = 'pop',
     verbose = False,
     log = True,
@@ -160,6 +165,10 @@ def _gregwt(
     survey_weights = 'w',
     **kwargs):
     """GREGWT."""
+    global gregwt_iteration
+    gregwt_iteration += 1
+    save_path = save_path.format(gregwt_iteration)
+
     if survey_index_col:
         sic = 2
     else:
@@ -214,6 +223,8 @@ def _gregwt(
         pop_total_col = pop_col,
         census_categories = census_cat_r,
         survey_categories = survey_cat_r)
+
+    utils_package.write_csv(simulation_data.rx2('Tx_complete'), save_path)
 
     # (2) reweight
     new_weights = gregwt.GREGWT(
@@ -475,6 +486,7 @@ def _project_survey_reweight(trace, census, model_i, err, max_iter = 100,
     survey_in = _delete_prefix(survey_in)
     fw = _gregwt(
         survey_in, census,
+        save_path = './temp/calibrated_benchmarks_proj_{}.csv',
         complete = True, area_code = 'internal',
         align_census = align_census,
         max_iter = max_iter, verbose = verbose)
@@ -2243,14 +2255,22 @@ def _get_plot_var(trace, census, skip_cols, fit_cols):
     return(plot_variables)
 
 
+def _clean_census(census_file, year):
+    census = pd.read_csv(census_file, index_col=0)
+    census.columns = [i.replace('G.', '') for i in census.columns]
+    census.index = [year]
+    return(census)
+
+
 def plot_error(trace_in, census_in, iterations,
                pop = False,
                skip = list(),
                fit_col = list(),
                weight = 'wf',
                fit_cols = ['Income', 'Electricity','Water'],
-               plot_name = False, wbins = 50,
-               wspace = 0.2, hspace = 0.9, top = 0.91,
+               add_cols = False,
+               plot_name = False,
+               wbins = 50, wspace = 0.2, hspace = 0.9, top = 0.91,
                year = 2010, save_all = False):
     """Plot modeling errro distribution"""
     if isinstance(trace_in, str) and os.path.isfile(trace_in):
@@ -2259,22 +2279,26 @@ def plot_error(trace_in, census_in, iterations,
         trace = trace_in
     else:
         print(trace_in)
-        raise TypeError('trace must either be a valid file on disc of a pandas DataFrame')
+        raise TypeError('trace must either be a valid file on disc or a pandas DataFrame')
     trace = trace.loc[trace.loc[:, weight].notnull()]
 
     if isinstance(census_in, str) and os.path.isfile(census_in):
-        census = pd.read_csv(census_in, index_col = 0)
+        if 'temp/' in census_in:
+            census = _clean_census(census_in, year)
+        else:
+            census = pd.read_csv(census_in, index_col = 0)
     elif isinstance(census_in, pd.DataFrame):
         census = census_in
     else:
-        raise TypeError('census must either be a valid file on disc of a pandas DataFrame')
+        raise TypeError('census must either be a valid file on disc or a pandas DataFrame')
+
+    if isinstance(add_cols, pd.DataFrame) or isinstance(add_cols, pd.Series):
+        for inx in add_cols.index:
+            census.loc[year, inx] = add_cols.loc[inx]
 
     skip_cols = ['w', 'wf', 'level_0', 'index']
     skip_cols.extend(skip)
-
-    for fc in fit_col:
-        if fc not in fit_cols:
-            fit.cols.append(fc)
+    skip_cols.append(year)
 
     # Colors
     sn_blue = sns.color_palette()[0] #blue
@@ -2395,7 +2419,7 @@ TAE: {:0.2E}, PSAE: {:0.2E}%
              (0, val.max()), '--', color = sn_red, alpha = 1,
              label='Original sample weight')
     ax3.set_ylim(0, val.max())
-    ax3.set_xlim(trace.loc[:, weight].max()/100*-1, trace.loc[:, weight].max())
+    ax3.set_xlim(trace.loc[:, weight].min(), trace.loc[:, weight].max())
     ax3.text(trace.w.mean(), val.max()/2,
              " <-- $d = {:0.2f}$".format(trace.w.mean()),
              color = sn_red,
