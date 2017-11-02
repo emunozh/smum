@@ -1175,6 +1175,8 @@ class TableModel(object):
                 specific_col_as = temp_col
             if self.verbose: print("\t| for specific column {}".format(specific_col))
             v_cols = [i for i in self.census.columns if specific_col == i.split('_')[0] or specific_col.lower() == i.split('_')[0]]
+            if len(v_cols) == 0:
+                v_cols = [i for i in self.census.columns if specific_col == i.split('_')[-1] or specific_col.lower() == i.split('_')[-1]]
             if self.verbose:
                 print('\t| specific col: ', end='\t')
                 print(v_cols)
@@ -1344,16 +1346,26 @@ class TableModel(object):
         cols = list()
         for el in table.index:
             name = el.split('_')[-1]
+            if self.verbose:
+                print("\t\t| try: {}".format(name), end=' ')
             if name not in self.skip:
+                if self.verbose: print('not in skip', end='')
                 if static:
+                    if self.verbose: print(', static', end='')
                     cols.append(name)
                 else:
+                    if self.verbose: print(', not static', end='')
                     try:
                         value = float(table.loc[el, val])
                         if not np.isnan(value):
                             cols.append(name)
+                        if self.verbose: print(', OK!')
                     except:
+                        if self.verbose: print(', Fail!')
                         pass
+            else:
+                if self.verbose:
+                    print('OK')
         return(cols)
 
 
@@ -2222,21 +2234,39 @@ class Aggregates():
 #TODO Internalized into PopModel class.
 def _plot_single_error(survey_var, census_key, survey, census, pop,
                        weight = 'wf',
+                       verbose = False,
+                       is_categorical = True,
                        save_all = False, year = 2010, raw = False):
     """Plot error distrinution for single variable"""
-    Rec_s = survey.loc[:, [survey_var, str(weight)]].groupby(survey_var).sum()
+    if survey.loc[:, survey_var].dtype == 'float64':
+        Rec_s = survey.loc[:, survey_var].mul(survey.loc[:, str(weight)]).sum()
+        Rec_s = pd.DataFrame({survey_var:Rec_s}, index = [year])
+        # is_categorical = False
+    else:
+        Rec_s = survey.loc[:, [survey_var, str(weight)]].groupby(survey_var).sum()
+        # is_categorical = True
     Rec_c = census.loc[[year], [c for c in census.columns if census_key in c]]
-    # Rec = Rec_c.T.join(Rec_s)
-    Rec = pd.concat([Rec_c.T, Rec_s], axis=1)
+    if is_categorical:
+        Rec = pd.concat([Rec_c.T, Rec_s], axis = 1)
+    else:
+        Rec = Rec_c.join(Rec_s)
     if raw:
         return(Rec)
-    Rec_0 = Rec.loc[Rec.loc[:, str(weight)].isnull()]
-    diff = (Rec.loc[:, str(weight)] - Rec.loc[:, year]).div(pop).mul(100)
-    diff_0 = (Rec_0.loc[:, year]).div(pop).mul(-100)
+    if is_categorical:
+        Rec_0 = Rec.loc[Rec.loc[:, str(weight)].isnull()]
+        diff_0 = (Rec_0.loc[:, year]).div(pop).mul(-100)
+        diff = (Rec.loc[:, str(weight)] - Rec.loc[:, year]).div(pop).mul(100)
+    else:
+        diff_0 = pd.DataFrame({census_key:False}, index=[year])
+        diff = abs(Rec.iloc[0, 0] - Rec.iloc[0, 1])
+        diff = pd.DataFrame({census_key:diff}, index=[year])
     if save_all:
-        ax = diff.plot(kind='bar')
+        fig, ax = plt.subplots()
         diff.plot(kind='bar', ax=ax)
-        ax.set_ylabel("Error [%]")
+        if is_categorical:
+            ax.set_ylabel("Error [%]")
+        else:
+            ax.set_ylabel("Error")
         plt.tight_layout()
         plt.savefig("FIGURES/error_{}.png".format(census_key), dpi=300)
         plt.cla()
@@ -2269,7 +2299,9 @@ def plot_error(trace_in, census_in, iterations,
                weight = 'wf',
                fit_cols = ['Income', 'Electricity','Water'],
                add_cols = False,
+               verbose = False,
                plot_name = False,
+               is_categorical = True,
                wbins = 50, wspace = 0.2, hspace = 0.9, top = 0.91,
                year = 2010, save_all = False):
     """Plot modeling errro distribution"""
@@ -2320,11 +2352,17 @@ def plot_error(trace_in, census_in, iterations,
     for pv in plot_variables:
         Rec, Rec_0 = _plot_single_error(
             pv, plot_variables[pv], trace, census, pop,
-            save_all=save_all, year=year, weight = weight)
+            verbose = verbose,
+            is_categorical = is_categorical,
+            save_all = save_all, year = year, weight = weight)
         Diff.append(Rec)
         Diff_0.append(Rec_0)
-    Diff = pd.concat(Diff)
-    Diff_0 = pd.concat(Diff_0)
+    if is_categorical:
+        Diff = pd.concat(Diff)
+        Diff_0 = pd.concat(Diff_0)
+    else:
+        Diff = pd.concat(Diff, axis=1).T
+        Diff_0 = pd.concat(Diff_0, axis=1).T
     fit_error = list()
     fit_error_abs = list()
     for col in fit_cols:
@@ -2338,7 +2376,9 @@ def plot_error(trace_in, census_in, iterations,
     fig.suptitle("Sampling error (year = {}, n = {})".format(year, iterations), fontsize="x-large")
     x = Diff.index.get_indexer_for(Diff_0.index)
     Diff.plot(kind='bar', label="PSAE", ax=ax, color =  sn_blue)
-    if Diff_0.shape[0] >= 1:
+    if Diff_0.shape[0] >= 1 and not any(Diff_0 == False):
+        print('Diff_0')
+        print(Diff_0)
         ax.bar(x, Diff_0, color=sn_grey, label='missing parameters', width=0.6)
         b_labels = ["{:0.2f}%".format(i) for i in Diff_0]
 
@@ -2351,12 +2391,18 @@ def plot_error(trace_in, census_in, iterations,
             ax.text(x, y, l,
                     ha='center', va=va_pos, color='grey', alpha=0.7)
 
-    ax.plot((0, Diff.shape[0]), (Diff[Diff >= 0].mean(), Diff[Diff >= 0].mean()),
-            '--', color = sn_red, label='(+)PSAE = {:0.2f}% Overestimate'.format(Diff[Diff >= 0].mean()), alpha=0.4)
-    ax.plot((0, Diff.shape[0]), (Diff[Diff < 0].mean(), Diff[Diff < 0].mean()),
-            '--', color = sn_red, label='(-)PSAE = {:0.2f}% Underestimate'.format(Diff[Diff < 0].mean()), alpha=0.4)
-    ax.set_ylabel("PSAE [%]")
-    ax.set_title("Percentage Standardized Absolute Error (PSAE)")
+    if is_categorical:
+        ax.plot((0, Diff.shape[0]), (Diff[Diff >= 0].mean(), Diff[Diff >= 0].mean()),
+               '--', color = sn_red,
+               label='(+)PSAE = {:0.2f}% Overestimate'.format(Diff[Diff >= 0].mean()),
+               alpha=0.4)
+        ax.plot((0, Diff.shape[0]), (Diff[Diff < 0].mean(), Diff[Diff < 0].mean()),
+               '--', color = sn_red, label='(-)PSAE = {:0.2f}% Underestimate'.format(Diff[Diff < 0].mean()), alpha=0.4)
+        ax.set_ylabel("PSAE [%]")
+        ax.set_title("Percentage Standardized Absolute Error (PSAE)")
+    else:
+        ax.set_ylabel("Absolute error")
+        ax.set_title("Absolute Error")
     ax.legend()
     ax.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
     plt.tight_layout()
@@ -2369,20 +2415,30 @@ def plot_error(trace_in, census_in, iterations,
     rects = ax1.patches
     labels = ["{:0.2E}\n{:0.2E}%".format(i, j) for i,j in zip(fit_error_abs, fit_error)]
     for rect, label in zip(rects, labels):
-        height = rect.get_height()
-        if not np.isnan(height):
-            ax1.text(rect.get_x() + rect.get_width()/2, height/2,
-                 label, ha = 'center', va = 'top', color = sn_red)
+       height = rect.get_height()
+       if not np.isnan(height):
+           ax1.text(rect.get_x() + rect.get_width()/2, height/2,
+                label, ha = 'center', va = 'top', color = sn_red)
     ax1.legend(loc=4)
     ax1.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
     rec = list()
     for pv in plot_variables:
-        rec.append(
-            _plot_single_error(pv, plot_variables[pv],
-                               trace, census, pop, raw=True, year=year,
-                               weight = weight))
-    REC = pd.concat(rec)
-    REC.columns = ['Observed', 'Simulated']
+       rec.append(
+           _plot_single_error(pv, plot_variables[pv],
+                              trace, census, pop, raw = True, year = year,
+                              is_categorical = is_categorical,
+                              verbose = verbose,
+                              weight = weight))
+    if is_categorical:
+        REC = pd.concat(rec)
+        REC.columns = ['Observed', 'Simulated']
+    else:
+        k = list()
+        for i in rec:
+            i.index = [i.columns[0]]
+            i.columns = ['Observed', 'Simulated']
+            k.append(i)
+        REC = pd.concat(k)
     TAE = abs((REC.Observed - REC.Simulated).mean())
     PSAE = TAE / pop * 100
     rec_corr = REC.corr().iloc[0, 1]
@@ -2399,31 +2455,31 @@ PearsonR: {:0.2f}
 TAE: {:0.2E}, PSAE: {:0.2E}%
     """.format(rec_corr, TAE, PSAE)
     sns.regplot(y = "Observed", x = "Simulated", data = REC, ax = ax2, color = sn_blue)
-    ax2.text(0, REC.Observed.max(),
-             value_text,
-             color = sn_red,
-             va = 'top')
+    ax2.text(REC.Simulated.min(), REC.Observed.max(),
+            value_text,
+            color = sn_red,
+            va = 'top')
     ax2.set_title("Simulated and Observed marginal sums")
     ax2.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
     ax2.ticklabel_format(axis='x', style='sci', scilimits=(-2,2))
 
     val, bins = np.histogram(trace.loc[:, weight], bins = wbins)
     sns.distplot(trace.loc[:, weight],
-                 bins = bins, kde = False,
-                 label = 'Distribution of estimated new weights',
-                 color = sn_blue,
-                 hist_kws={"alpha": 1},
-                 ax = ax3)
+                bins = bins, kde = False,
+                label = 'Distribution of estimated new weights',
+                color = sn_blue,
+                hist_kws={"alpha": 1},
+                ax = ax3)
     ax3.set_xlabel('Estimated weights')
     ax3.plot((trace.w.mean(), trace.w.mean()),
-             (0, val.max()), '--', color = sn_red, alpha = 1,
-             label='Original sample weight')
+            (0, val.max()), '--', color = sn_red, alpha = 1,
+            label='Original sample weight')
     ax3.set_ylim(0, val.max())
     ax3.set_xlim(trace.loc[:, weight].min(), trace.loc[:, weight].max())
     ax3.text(trace.w.mean(), val.max()/2,
-             " <-- $d = {:0.2f}$".format(trace.w.mean()),
-             color = sn_red,
-             va = 'top')
+            " <-- $d = {:0.2f}$".format(trace.w.mean()),
+            color = sn_red,
+            va = 'top')
     ax3.legend()
     ax3.set_title("Distribution of estimated new sample weights")
     ax3.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))

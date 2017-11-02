@@ -1,2 +1,2 @@
-,area,AC_no,AC_yes,Lighting_no,Lighting_yes,Refrigeration_no,Refrigeration_yes,TV_no,TV_yes,Size_1,Size_2,Size_3,Size_4,Size_5,Size_6,Size_7,Size_8,Size_9,Size_10,sex_male,sex_female,Urbanity_Rural,Urbanity_Urban,age_0_18,age_19_25,age_26_35,age_36_45,age_46_55,age_56_65,age_66_75,age_76_85,age_86_100,Education_Elementary_School,Education_High_School,Education_Post_Secondary,Education_College,Education_Post_Graduate,pop
-2030,2030,45.0,44860.0,45.0,44861.0,45.0,44861.0,45.0,44861.0,1224.0,12535.0,24089.0,2564.0,1952.0,695.0,1170.0,518.0,131.0,28.0,31560.0,13346.0,6547.0,38359.0,0.0,288.0,3401.0,15748.0,20645.0,2853.0,1412.0,274.0,286.0,6325.0,5613.0,14725.0,15293.0,2949.0,44906
+,area,BuildingSqm,BuildingKwh,pop
+2030,2030,98638.17790133199,14308.819452128264,159.0
