@@ -26,7 +26,7 @@ if not on_rtd:
         'ipfn',
         'rpy2',
     ]
-    
+
     setup_requires=[
         "setuptools_git >= 1.0",
     ],
@@ -36,7 +36,7 @@ else:
     setup_requires = []
 
 setup(
-    name='umsm',
+    name='urbanmetabolism',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -75,7 +75,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
-    
+
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     # packages=find_packages(),
@@ -87,7 +87,7 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=install_requires,
     setup_requires=setup_requires,
-    
+
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
     # for example:
@@ -97,5 +97,5 @@ setup(
         # 'test': ['nose', 'flake8'],
         # 'gdal': ['GDAL', 'Shapely>=1.5.13'],
     # },
-    
+
 )

@@ -10,3 +10,4 @@ jupyterhub_cookie_secret
 jupyterhub.sqlite
 doc/examples/data/trace*
 docs/_build/
+urbanmetabolism.egg-info/
