@@ -12,15 +12,15 @@
 # serve to show the default.
 
 import sys, os
-from unittest.mock import MagicMock
+# from unittest.mock import MagicMock
 
-class Mock(MagicMock):
-    @classmethod
-    def __getattr__(cls, name):
-            return MagicMock()
+# class Mock(MagicMock):
+    # @classmethod
+    # def __getattr__(cls, name):
+            # return MagicMock()
 
-MOCK_MODULES = ['rpy2']
-sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+# MOCK_MODULES = ['rpy2']
+# sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -207,7 +207,7 @@ latex_elements = {
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
-latex_documents = [('index', 'UrbanMetabolism.tex', u'Urban Metabolism Documentation', u'Esteban', 'manual')]
+latex_documents = [('index', 'UrbanMetabolism.tex', u'Urban Metabolism Documentation', u'Esteban Mu\~noz', 'manual')]
 
 
 # A dictionary that contains LaTeX snippets that override those Sphinx usually
