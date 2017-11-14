@@ -42,11 +42,11 @@ class WaterDemand():
 
     Depending on the water tariff in place the variable :math:`P` can't be
     modeled as an dependent variable. If the water tariff is computes as
-    function of consumed volume we cannot assume error term.
+    function of consumed volume we cannot assume the error term.
 
     Household characteristics:
 
-    Efficiency ratea:
+    Efficiency rate:
 
     The water saving penetration and water saving rate are computed at each
     simulation step. The water saving rate is an indicator for governmental
