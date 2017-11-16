@@ -13,3 +13,4 @@ rpy2
 ipfn
 nbconvert
 RISE
+XlsxWriter
