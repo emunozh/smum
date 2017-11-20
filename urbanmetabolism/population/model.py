@@ -447,8 +447,9 @@ def _plot_data_projection_single(ax1, data, var, cap, benchmark_year, iterations
     per_husehold = data.div(cap, axis=0)
     if groupby:
         per_husehold = per_husehold.sum(axis=1)
-    per_husehold.plot(style='k--', ax = ax2, label='per {}\nsd={:0.2f}'.format(
-        unit, per_husehold.std()))
+    per_husehold.plot(style='k--', ax = ax2, alpha=0.2,
+                      label='per {}\nsd={:0.2f}'.format(
+                          unit, per_husehold.std()))
     ax2.set_title('{} projection (n = {})'.format(var, iterations))
     ylabel_unit = unit[0].upper() + unit[1:] + 's'
     ax2.set_ylabel('{}\n{}'.format(var, ylabel_unit))
@@ -2497,7 +2498,7 @@ TAE: {:0.2E}, PSAE: {:0.2E}%
     return(REC)
 
 
-def growth_rate(start_rate, final_rate, as_array = True,
+def transition_rate(start_rate, final_rate, as_array = True,
                  start = False, end = False,
                  default_start = 2010,
                  default_end = 2030):
@@ -2512,31 +2513,57 @@ def growth_rate(start_rate, final_rate, as_array = True,
     rate_years = end - start + 1
     j = default_end - start - end - start
 
-    growth_rate = np.linspace(start_rate,  final_rate, num = rate_years)
-    growth_rate = [0]*i + [i for i in growth_rate] + [final_rate]*j
+    transition_rate = np.linspace(start_rate,  final_rate, num = rate_years)
+    transition_rate = [0]*i + [i for i in transition_rate] + [final_rate]*j
     if as_array:
-        growth_rate = np.asarray(growth_rate)
-    return(growth_rate)
+        transition_rate = np.asarray(transition_rate)
+    return(transition_rate)
 
 
-def plot_growth_rate(variables, name,
+def plot_transition_rate(variables, name,
                      benchmark_year = 2016, start_year = 2010, end_year = 2030,
                      title = 'Technology transition rates for {}',
-                     ylab = "Transition rate"):
+                     title_p = "Technology penetration rate for {}",
+                     ylab = "Transition rate",
+                     ylab_p = "Penetration rate"):
     """Plot growth rates."""
-    fig, ax = plt.subplots()
+    p_key = ['penetration' in k for k in variables.keys()]
+    p_name_keys = [k for k in variables.keys() if 'penetration' in k]
+    v_name_keys = [k for k in variables.keys() if 'penetration' not in k]
+
+    if any(p_key):
+        fig, (axl, axr) = plt.subplots(1,2, figsize=(15,5))
+    else:
+        fig, axl = plt.subplots(1)
 
     years = [int(i) for i in range(start_year, end_year + 1)]
-    for k, v in variables.items():
-        ax.plot(years, v, label=k)
+    for k in v_name_keys:
+        v = variables[k]
+        v = [1 - i for i in v]
+        axl.plot(years, v, label=k)
 
     bm = years.index(benchmark_year)
-    ax.vlines(benchmark_year, 0, 1, 'r',
+    axl.vlines(benchmark_year, 0, 1, 'r',
               linestyles='dashed', alpha=0.4, label='Benchmark year')
-    ax.set_xticks(years);
-    ax.set_xticklabels(years, rotation=90);
-    ax.set_ylim(0,1)
-    ax.set_title(title.format(name))
-    ax.set_ylabel(ylab)
-    ax.legend();
+    axl.set_xticks(years);
+    axl.set_xticklabels(years, rotation=90);
+    axl.set_ylim(0,1)
+    axl.set_title(title.format(name))
+    axl.set_ylabel(ylab)
+    axl.legend()
+
+    if any(p_key):
+        for r in p_name_keys:
+            v = variables[r]
+            axr.plot(years, v, label=r)
+
+        axr.vlines(benchmark_year, 0, 1, 'r',
+                  linestyles='dashed', alpha=0.4, label='Benchmark year')
+        axr.set_xticks(years);
+        axr.set_xticklabels(years, rotation=90);
+        axr.set_ylim(0,1)
+        axr.set_title(title_p.format(name))
+        axr.set_ylabel(ylab_p)
+        axr.legend();
+
     plt.savefig('FIGURES/transition_rates_{}.png'.format(name), dpi=300)

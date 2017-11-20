@@ -40,12 +40,13 @@ def print_proj_year(col, ax1, data, total_pop):
 
 def print_all(data, sufix,
               skip = list(),
-              var = True, title = '', rows = 2,
+              var = False,
+              title = '', rows = 2,
               total_pop = False,
               start_year = 2010,
               end_year = 2030,
               save_data = False,
-              set_xticks = True,
+              set_xticks = False,
               bias = False):
     if bias:
         data, data_cols = _introduce_bias(data, bias, skip = skip, pop_col = total_pop, save_data = save_data)

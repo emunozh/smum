@@ -55,7 +55,7 @@ master_doc = u'index'
 
 
 # General information about the project.
-project = u'UrbanMetabolism'
+project = u'Spatial Microsimulation Urban Metabolism (SMUM)'
 
 copyright = u'2017 M. Esteban Munoz H.'
 
@@ -244,7 +244,7 @@ latex_logo = '_static/images/GI-REC.png'
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [('index', 'New', u'New Documentation', [u'Esteban'], 1)]
+man_pages = [('index', 'SMUM', u'Spatial Microsimulation Urban Metabolism', [u'Esteban'], 1)]
 
 # Documents to append as an appendix to all manuals.
 #texinfo_appendices = []

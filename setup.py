@@ -12,38 +12,41 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 with open(path.join(here, 'VERSION')) as f:
     version = f.read().strip()
 
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-if not on_rtd:
-    install_requires = [
-        'pandas',
-        'numpy',
-        'scipy',
-        'statsmodels',
-        'matplotlib',
-        'seaborn',
-        'Theano',
-        'pymc3',
-        'ipfn',
-        'rpy2',
-    ]
+#on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+#if not on_rtd:
+#    install_requires = [
+#        'pandas',
+#        'numpy',
+#        'scipy',
+#        'statsmodels',
+#        'matplotlib',
+#        'seaborn',
+#        'Theano',
+#        'pymc3',
+#        'ipfn',
+#        'rpy2',
+#    ]
+#
+#    setup_requires=[
+#        "setuptools_git >= 1.0",
+#    ],
+#
+#else:
+#    install_requires = []
+#    setup_requires = []
 
-    setup_requires=[
-        "setuptools_git >= 1.0",
-    ],
-
-else:
-    install_requires = []
-    setup_requires = []
+install_requires = []
+setup_requires = []
 
 setup(
-    name='urbanmetabolism',
+    name='smum',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
     version=version,
 
-    description='An urban metabalism spatial microsimulation model.',
+    description='A Spatial Microsimulation Urban Metabolims model.',
     long_description=long_description,
 
     # The project's main homepage.
