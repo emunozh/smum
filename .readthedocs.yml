@@ -6,7 +6,7 @@ formats:
     - pdf
 
 # library requirements
-requirements_file: requirements_rtd.txt
+requirements_file: requirements.txt
 
 # python version
 python:
