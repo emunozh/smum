@@ -46,12 +46,19 @@ config.warn.round = False
 # config.compute_test_value = "warn"
 
 # rpy2 libraries
-from rpy2.robjects.vectors import IntVector
-from rpy2.robjects import DataFrame, pandas2ri
-pandas2ri.activate()
-from rpy2.robjects import r
-from rpy2.robjects.packages import importr
-utils_package = importr("utils")  # import utils package from R
+try:
+    from rpy2.robjects.vectors import IntVector
+    from rpy2.robjects import DataFrame, pandas2ri
+    pandas2ri.activate()
+    from rpy2.robjects import r
+    from rpy2.robjects.packages import importr
+    utils_package = importr("utils")  # import utils package from R
+except:
+    IntVector = 'Null'
+    DataFrame = 'Null'
+    pandas2ri = 'Null'
+    r = 'Null'
+    importr = 'Null'
 
 
 #####################
