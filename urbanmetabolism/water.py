@@ -27,7 +27,7 @@ class WaterDemand():
 
         Q^{hh}_{W,D} =
         \\beta_0 +
-        \\beta_1 HH_{1} + \dots + \\beta_p HH_p +
+        \\beta_1 HH_{1} + \dots + \\beta_n HH_n +
         \\beta_y Y +
         \\beta_p P +
         \\epsilon
