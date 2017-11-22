@@ -20,6 +20,7 @@ RUN pacman -S --needed --noconfirm mathjax
 RUN pacman -S --needed --noconfirm wget
 RUN pacman -S --needed --noconfirm pandoc
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir rpy2
 RUN npm install -g configurable-http-proxy
 RUN jupyter-nbextension install rise --py --sys-prefix
 RUN jupyter-nbextension enable rise --py --sys-prefix

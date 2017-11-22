@@ -35,8 +35,19 @@ with open(path.join(here, 'VERSION')) as f:
 #    install_requires = []
 #    setup_requires = []
 
-install_requires = []
-setup_requires = []
+install_requires = [
+    'pandas',
+    'numpy',
+    'scipy',
+    'statsmodels',
+    'matplotlib',
+    'seaborn',
+    'Theano',
+    'pymc3',
+    'ipfn',
+]
+
+setup_requires=["setuptools_git >= 1.0"]
 
 setup(
     name='smum',
