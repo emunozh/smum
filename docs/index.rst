@@ -21,6 +21,7 @@ Spatial Microsimulation Urban Metabolism (SMUM)
    0-intro.rst
    1-um.rst
    2-sm.rst
+   2.0-population.rst
    x-authors
    x-contributing
    x-history
