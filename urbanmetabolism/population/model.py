@@ -509,7 +509,8 @@ def _project_survey_reweight(trace, census, model_i, err, max_iter = 100,
     return(trace_out)
 
 
-def print_cross_tab(a, b, year, file_name):
+def cross_tab(a, b, year, file_name,
+                    split_a = False, split_b = False, print_tab = False):
     """Print cross tabulation data."""
     data = pd.read_csv(file_name.format(year), index_col = 0)
 
@@ -521,12 +522,12 @@ def print_cross_tab(a, b, year, file_name):
         'High'
     ]
 
-    if b.split('_')[-1] == 'Level':
+    if b.split('_')[-1] == 'Level' or split_b:
         data.loc[:, b] = pd.qcut(
             data.loc[:, b.split('_')[0]], 5,
             labels = lables_cat)
 
-    if a.split('_')[-1] == 'Level':
+    if a.split('_')[-1] == 'Level' or split_a:
         data.loc[:, a] = pd.qcut(
             data.loc[:, a.split('_')[0]], 5,
             labels = lables_cat)
@@ -541,12 +542,14 @@ def print_cross_tab(a, b, year, file_name):
     plt.savefig("FIGURES/{}_{}_{}.png".format(a, b, year), dpi=300)
 
     data_cross = np.round(data_cross, 2)
-    print(data_cross)
+    if print_tab:
+        print(data_cross)
     excel_file = 'data/{}_{}_{}.xlsx'.format(a, b, year)
     writer = pd.ExcelWriter(excel_file)
     data_cross.to_excel(writer, 'Sheet1')
     writer.save()
     print("data saved as: {}".format(excel_file))
+    return(data_cross)
 
 
 def plot_projected_weights(trace_out, iterations):
@@ -884,11 +887,22 @@ def _index_model(inx, co_mu_list):
 
 
 def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduction,
-                       atol = 1, verbose = False, scenario_name = "scenario 1"):
+                       atol = 10, verbose = False, scenario_name = "scenario 1"):
     """Reduce consumption levels given a penetration rate and sampling rules."""
     # read data
     data = pd.read_csv(file_name.format(year), index_col=0)
     data = data.loc[data.wf > 0]
+
+    # run only is some reduction
+    if all([i == 0 for i in reduction.values()]):
+        print("{:05.2f}% {:^15} reduction; efficiency rate {:05.2f}%; year {:04.0f} and penetration rate {:05.2f}".format(
+            0, 'both', 0, year, penetration_rate))
+
+        year_sample = str(year) + "_{}_{:0.2f}".format(scenario_name, penetration_rate)
+        data.to_csv(file_name.format(year_sample))
+
+        return(data)
+
     if verbose:
         print("\tfile with {:0.0f} households".format(data.wf.sum()))
     data.loc[:, 'w'] = 1
@@ -936,11 +950,15 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
         if np.allclose(data_sample.w.sum(), data.wf.sum() * penetration_rate, atol=atol):
             print('sampling: OK, with absolute tolerance = {}'.format(atol))
         else:
-            print('sampling: Fail')
+            print('sampling: Fail, with abolute tolerance = {}'.format(atol))
 
     # reduce consumption values
     for variable, reduction_factor in reduction.items():
-        data_sample.loc[:, variable] -= data_sample.loc[:, variable].mul(reduction_factor)
+        temp_old = data_sample.loc[:, variable].sum()
+        data_sample.loc[:, variable] = data_sample.loc[:, variable].mul(1 - reduction_factor)
+        temp_new= data_sample.loc[:, variable].sum()
+        if verbose:
+            print("{} = {:0.2f}".format(variable, 1 - (temp_new / temp_old)))
 
     # sample reduction
     col_group = [i for i in data_sample.columns if i not in ['w', 'sw', 'wf']]
@@ -961,8 +979,7 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
         else:
             print('reduction: Fail')
 
-    if verbose:
-        print("\tfile with {:0.0f} selected households".format(new_weights.w.sum()))
+    if verbose: print("\tfile with {:0.0f} selected households".format(new_weights.w.sum()))
 
     old_values = dict()
     for variable, _ in reduction.items():
@@ -970,6 +987,7 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
         old_values[variable] = old_val
 
     data.loc[:, 'wf'] = data.loc[:, 'wf'].sub(new_weights.loc[:, 'w'], fill_value=0)
+    data = data.loc[data.wf > 0]
     new_weights.loc[:, 'wf'] = new_weights.loc[:, 'w']
     data_out = pd.concat([data, new_weights])
 
@@ -981,13 +999,11 @@ def reduce_consumption(file_name, year, penetration_rate, sampling_rules, reduct
             (1 - (new_val / old_val)) * 100,
             variable, reduction_factor * 100, year, penetration_rate))
 
-    if verbose:
-        print("\tfile with {:0.0f} households".format(data_out.wf.sum()))
+    if verbose: print("\tfile with {:0.0f} households".format(data_out.wf.sum()))
 
     year_sample = str(year) + "_{}_{:0.2f}".format(scenario_name, penetration_rate)
     data_out.to_csv(file_name.format(year_sample))
 
-    # return(data_out)
     return(data_out)
 
 
