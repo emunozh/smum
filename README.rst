@@ -88,7 +88,7 @@ The installation process should be simple:
 
 2. Pull the docker image :code:`docker pull emunoz/urbanmetabolism`
 
-3. Run the docker container :code:`docker run -it -p 8080:8080 emunozh/urbanmetabolis`
+3. Run the docker container :code:`docker run -it -p 8080:8080 emunozh/urbanmetabolism`
 
 4. Lunch the Jupyterhub server :code:`jupyterhub --ip=0.0.0.0`
 
