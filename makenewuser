@@ -5,7 +5,7 @@ USERNAME="$1"
 useradd -m --shell /bin/bash $USERNAME
 echo $USERNAME:$USERNAME | chpasswd
 
-cp -r /usr/src/app/docs/examples/ /home/$USERNAME/examples/
+cp -r /usr/src/app/docs/example_ph/ /home/$USERNAME/examples/
 chown -R $USERNAME:users /home/$USERNAME/examples/
 
 cp -r /usr/src/app/.ipython/ /home/$USERNAME/.ipython/

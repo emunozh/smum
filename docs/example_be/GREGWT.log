@@ -1,0 +1,28 @@
+Loading required package: MASS
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 3.6e+06 | PSAE: 3.1e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 3.6e+06 | PSAE: 3.1e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 3.6e+06 | PSAE: 3.1e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 3.6e+06 | PSAE: 3.1e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 1.6e+06 | PSAE: 1.4e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 1.1e+07 | PSAE:   9e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 6.4e+06 | PSAE: 5.3e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 2.6e+06 | PSAE: 2.1e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 3.4e+06 | PSAE: 2.8e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 1.4e+07 | PSAE: 1.1e+03 |
+| dTx |  2.8e+05 <  1e-03 -> FALSE  | dAm |  8.5e-08 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 2.1e+07 | PSAE: 1.7e+03 |
+| dTx |  2.3e+05 <  1e-03 -> FALSE  | dAm |  1.2e-08 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 4.7e+06 | PSAE: 3.8e+02 |
+| dTx |  2.9e+05 <  1e-03 -> FALSE  | dAm |  3.1e-08 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 9.6e+06 | PSAE: 7.7e+02 |
+Loading required package: MASS
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 3.3e+06 | PSAE: 2.8e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 3.3e+06 | PSAE: 2.8e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 3.3e+06 | PSAE: 2.8e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 3.3e+06 | PSAE: 2.8e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   1e+07 | PSAE: 8.7e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   4e+06 | PSAE: 3.3e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 2.3e+06 | PSAE: 1.9e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   1e+07 | PSAE: 8.3e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 8.2e+06 | PSAE: 6.7e+02 |
+| dTx |    0e+00 <  1e-03 ->  TRUE  | dAm |    0e+00 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 2.8e+06 | PSAE: 2.3e+02 |
+| dTx |  3.1e+05 <  1e-03 -> FALSE  | dAm |  1.1e-07 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 2.8e+07 | PSAE: 2.3e+03 |
+| dTx |  2.6e+05 <  1e-03 -> FALSE  | dAm |  3.2e-08 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 9.5e+06 | PSAE: 7.7e+02 |
+| dTx |  2.8e+05 <  1e-03 -> FALSE  | dAm |  1.9e-08 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 6.7e+06 | PSAE: 5.4e+02 |
