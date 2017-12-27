@@ -13,7 +13,7 @@ census_file = 'docs/example_ph/data/benchmarks_be_year_bias3_climate.csv'
 
 tm = TableModel(census_file = census_file, verbose = verbose)
 
-tm.add_model('docs/examples/data/test_water_be.csv', 'Water')
+tm.add_model('docs/example_ph/data/test_water_be.csv', 'Water')
 tm.update_dynamic_model(
     'Water', specific_col = 'ConstructionType', select = 0)
 tm.update_dynamic_model(
