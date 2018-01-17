@@ -9,7 +9,7 @@ Spatial Microsimulation Urban Metabolism (SMUM)
 
 |GIREC| |UNEP|
 
-:Author: Dr. M. Esteban Munoz H. <emunozh@gmail.com>
+:Author: Dr. M. Esteban Munoz H. <emunozh@gmail.com, esteban.munoz@un.org>
 :Version: 0.1
 :Date: |date|
 

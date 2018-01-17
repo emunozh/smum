@@ -57,7 +57,7 @@ master_doc = u'index'
 # General information about the project.
 project = u'Spatial Microsimulation Urban Metabolism (SMUM)'
 
-copyright = u'2017 M. Esteban Munoz H.'
+copyright = u'2017-2018 M. Esteban Munoz H.'
 
 
 # The version info for the project you're documenting, acts as replacement for
@@ -262,7 +262,7 @@ man_pages = [('index', 'SMUM', u'Spatial Microsimulation Urban Metabolism', [u'E
 epub_title = u'Spatial Microsimulation Urban Metabolism (SMUM)'
 epub_author = u'Esteban Muñoz'
 epub_publisher = u'UN Environment'
-epub_copyright = u'2017, Esteban Muñoz'
+epub_copyright = u'2017-2018, Esteban Muñoz'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
