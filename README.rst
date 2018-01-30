@@ -48,7 +48,7 @@ Linux
 
    # Pull docker image
    # Be patient the image is big
-   docker pull emunoz/urbanmetabolism
+   docker pull emunozh/urbanmetabolism
 
    # Run the model
    docker run -it -p 8080:8080 emunozh/urbanmetabolism
@@ -86,7 +86,7 @@ The installation process should be simple:
 
 1. Install `Docker for Windows <https://www.docker.com/docker-windows>`_
 
-2. Pull the docker image :code:`docker pull emunoz/urbanmetabolism`
+2. Pull the docker image :code:`docker pull emunozh/urbanmetabolism`
 
 3. Run the docker container :code:`docker run -it -p 8080:8080 emunozh/urbanmetabolism`
 
