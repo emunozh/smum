@@ -3,12 +3,29 @@ Spatial Microsimulation Urban Metabolism Model (SMUM)
 
 |docker| |travis| |docs|
 
+.. image:: ./docs/_static/immages/um_logo.svg.png
+   :scale: 100 %
+   :alt: SMUM
+   :align: center
+
 This is the main repository for the developing of the Spatial Microsimulation
 Urban Metabolism (SMUM) model.
 
+.. image:: ./docs/_static/images/UNEnvironment.png
+   :width: 40pt
+   :alt: UNEP
+   :align: center
+
+.. image:: ./docs/_static/images/GI-REC.png
+   :width: 40pt
+   :alt: GIREC
+   :align: center
+
+
+
 The model is currently under development.
 
-Check back for an update on deployment.
+Check back for an update on its deployment.
 
 If you want to run the model locally please use the docker image.
 
