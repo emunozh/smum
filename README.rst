@@ -12,12 +12,12 @@ This is the main repository for the developing of the Spatial Microsimulation
 Urban Metabolism (SMUM) model.
 
 .. image:: ./docs/_static/images/UNEnvironment.png
-   :width: 20pt
+   :width: 5pt
    :alt: UNEP
    :align: center
 
 .. image:: ./docs/_static/images/GI-REC.png
-   :width: 20pt
+   :width: 5pt
    :alt: GIREC
    :align: center
 
