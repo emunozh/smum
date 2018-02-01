@@ -11,19 +11,11 @@ Spatial Microsimulation Urban Metabolism Model (SMUM)
 This is the main repository for the developing of the Spatial Microsimulation
 Urban Metabolism (SMUM) model.
 
-.. image:: ./docs/_static/images/UNEnvironment.png
+.. image:: ./docs/_static/images/UNEnvironment2.png
    :width: 5pt
    :scale: 5 %
    :alt: UNEP
    :align: center
-
-.. image:: ./docs/_static/images/GI-REC.png
-   :width: 5pt
-   :scale: 5 %
-   :alt: GIREC
-   :align: center
-
-
 
 The model is currently under development.
 
