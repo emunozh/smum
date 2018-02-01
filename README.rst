@@ -13,11 +13,13 @@ Urban Metabolism (SMUM) model.
 
 .. image:: ./docs/_static/images/UNEnvironment.png
    :width: 5pt
+   :scale: 5 %
    :alt: UNEP
    :align: center
 
 .. image:: ./docs/_static/images/GI-REC.png
    :width: 5pt
+   :scale: 5 %
    :alt: GIREC
    :align: center
 
