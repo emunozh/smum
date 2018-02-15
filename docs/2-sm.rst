@@ -169,6 +169,7 @@ This subsection describes the required steps to perform a simple simulation.
 The steps to perform a simulation are twofold:
 
 1) The definition of a consumption model; and
+
 2) The construction of scenarios
 
 The definition of consumption models is required for the estimation of

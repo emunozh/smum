@@ -26,3 +26,65 @@ Loading required package: MASS
 | dTx |  3.1e+05 <  1e-03 -> FALSE  | dAm |  1.1e-07 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 2.8e+07 | PSAE: 2.3e+03 |
 | dTx |  2.6e+05 <  1e-03 -> FALSE  | dAm |  3.2e-08 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 9.5e+06 | PSAE: 7.7e+02 |
 | dTx |  2.8e+05 <  1e-03 -> FALSE  | dAm |  1.9e-08 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE: 6.7e+06 | PSAE: 5.4e+02 |
+
+start GREGWT, read variables
+using data_in ... ok
+get area benchmarks
+	get Tx (for single area): index  1
+	X_complete:  10000 1
+	Tx:  1
+	total_pop:  1 4
+	dx:  10000 ... ok
+get area population
+using total population by area_id:  1
+population: 63048 ... ok ... ok
+arrange data and data formats ... ok
+convert NA to 0
+dim(Tx) -->  2 1 
+
+ndim 2 TX 
+
+ area_numbers --> 1 
+
+ loop -->  1 
+
+divide initial weights by area population
+length(dx) 10000
+pop:  63048 
+ length(dx) 10000 ... ok ... ok
+GREGWT...
+	group...ok
+	get first lambda
+	dim(X) 10000 2
+	length(dx) 10000
+		get A... ok
+		length(Tx):  2		length(hTx):  2
+			using ginv Loading required package: MASS
+okok
+		Lambda:-9.222492e-05 -9.20522e-09ok
+	main loop
+		New Lambda
+		get A... ok
+		length(Tx):  2		length(hTx):  2
+			using ginv okok
+		Lambda:-8.020327e-06 -8.005306e-10| dTx |  3.3e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 ok| OK | AC:  1
+population alignment
+bind index ... ok
+ compute error
+###############################################
+     Tx hTx
+
+###############################################
+ | TAE:   0e+00
+ using total population:  63048 | PSAE:   0e+00
+prepare output
+	|--> dim(X)               =  10000 2
+	|--> dim(X_complete)      =  10000 2
+	|--> dim(Tx)              =  2 1
+	|--> dim(Tx_complete)     =  2 1
+	|--> length(constrains)   =  2
+	|--> length(constrains_c) =  2
+	|--> dim(pop)             = 
+	|--> dim(survey)          =  10000 3Loading required package: MASS
+| dTx |  2.6e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.6e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.6e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.6e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.6e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.6e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.6e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.6e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.7e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.7e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.7e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.7e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.7e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  2.7e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00Loading required package: MASS
+| dTx |  3.3e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.3e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.3e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.3e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.3e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.3e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.3e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.4e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.4e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.4e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.4e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.4e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.4e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00| dTx |  3.4e+07 <  1e-03 -> FALSE  | dAm |  8.4e-05 <= 1e-03 ->  TRUE  | itr:     1 | OK | AC:  1 | TAE:   0e+00 | PSAE:   0e+00

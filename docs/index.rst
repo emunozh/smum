@@ -1,4 +1,3 @@
-.. highlight:: rst
 .. |date| date::
 
 .. urbanmetabolism_doc Masterfile
@@ -17,7 +16,7 @@ Spatial Microsimulation Urban Metabolism (SMUM)
    :maxdepth: 3
 
    0-aim.rst
-   x-readme
+   x-readme.rst
    0-intro.rst
    1-um.rst
    2-sm.rst

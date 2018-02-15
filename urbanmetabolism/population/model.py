@@ -54,6 +54,7 @@ try:
     from rpy2.robjects.packages import importr
     utils_package = importr("utils")  # import utils package from R
 except:
+    print("can't find rpy2 libray! GREGWT won't run!")
     IntVector = 'Null'
     DataFrame = 'Null'
     pandas2ri = 'Null'
@@ -91,10 +92,10 @@ def _get_breaks(census_col, verbose = False):
 
 def _toR_df(toR_df):
     """Convert pandas DataFrame to R data.frame."""
-    for col in toR_df.columns:
-        col_dtype = toR_df.loc[:, col].dtype
+    for e, col in enumerate(toR_df.columns):
+        col_dtype = toR_df.iloc[:, e].dtype
         if isinstance(col_dtype, CategoricalDtype):
-            toR_df.loc[:, col] = toR_df.loc[:, col].astype(str)
+            toR_df.iloc[:, e] = toR_df.iloc[:, e].astype(str)
     col = toR_df.columns.tolist()
     if 'Unnamed' in col[0]:
         col[0] = "X"
@@ -1891,12 +1892,16 @@ class Aggregates():
         """
         self.survey = self.survey.reset_index()
         self.survey = self.survey.loc[:, [i for i in self.survey.columns if i not in 'level_0']]
+
+        if self.verbose: print('--> survey cols: ', self.survey.columns)
         inx_cols_survey = [col for col in self.survey.columns if col not in drop_cols and col not in 'level_0']
-        inx_cols_census = [col for col in self.census.columns if col not in drop_cols]
         toR_survey = self.survey.loc[:, inx_cols_survey]
         toR_survey = _delete_prefix(toR_survey)
         toR_survey.to_csv('temp/toR_survey.csv')
+        if self.verbose: print('--> survey cols: ', self.survey.columns)
+
         if self.verbose: print('--> census cols: ', self.census.columns)
+        inx_cols_census = [col for col in self.census.columns if col not in drop_cols]
         toR_census = self.census.loc[[year], inx_cols_census]
         toR_census.insert(0, 'area', toR_census.index)
         toR_census.to_csv('temp/toR_census.csv')
@@ -2548,7 +2553,10 @@ def plot_transition_rate(variables, name,
                      title = 'Technology transition rates for {}',
                      title_p = "Technology penetration rate for {}",
                      ylab = "Transition rate",
-                     ylab_p = "Penetration rate"):
+                     ylab_p = "Penetration rate",
+                     ylim_a = (0, 1),
+                     ylim_b = (0, 1),
+                         ):
     """Plot growth rates."""
     p_key = ['penetration' in k for k in variables.keys()]
     p_name_keys = [k for k in variables.keys() if 'penetration' in k]
@@ -2566,11 +2574,11 @@ def plot_transition_rate(variables, name,
         axl.plot(years, v, label=k)
 
     bm = years.index(benchmark_year)
-    axl.vlines(benchmark_year, 0, 1, 'r',
+    axl.vlines(benchmark_year, ylim_a[0], ylim_a[1], 'r',
               linestyles='dashed', alpha=0.4, label='Benchmark year')
     axl.set_xticks(years);
     axl.set_xticklabels(years, rotation=90);
-    axl.set_ylim(0,1)
+    axl.set_ylim(ylim_a)
     axl.set_title(title.format(name))
     axl.set_ylabel(ylab)
     axl.legend()
@@ -2580,11 +2588,11 @@ def plot_transition_rate(variables, name,
             v = variables[r]
             axr.plot(years, v, label=r)
 
-        axr.vlines(benchmark_year, 0, 1, 'r',
+        axr.vlines(benchmark_year, ylim_b[0], ylim_b[1], 'r',
                   linestyles='dashed', alpha=0.4, label='Benchmark year')
         axr.set_xticks(years);
         axr.set_xticklabels(years, rotation=90);
-        axr.set_ylim(0,1)
+        axr.set_ylim(ylim_b)
         axr.set_title(title_p.format(name))
         axr.set_ylabel(ylab_p)
         axr.legend();

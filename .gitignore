@@ -10,3 +10,6 @@ jupyterhub.sqlite
 doc/examples/data/trace*
 docs/_build/
 *.egg-info/
+env/
+docs/example_be/RST/
+docs/example_be/makeRST.sh
