@@ -1,0 +1,30 @@
+Construction Year,Construction Type,Size,Number of housing units,Floor surface area per housing unit (m2),Protected volume (m³),Total building envelope area (m²),Roof (m²),Exterior wall (m2),size,con,typ
+pre '46,SFH ,Detached,1,279.0,766.0,599.2,158.4,228.9,SFH -Detached,Detached,SFH
+pre '46,SFH ,Semi-detached,1,237.0,651.8,447.1,119.9,158.2,SFH -Semi-detached,Semi-detached,SFH
+pre '46,SFH ,Terraced,1,225.9,621.3,323.0,90.0,92.0,SFH -Terraced,Terraced,SFH
+pre '46,MFH ,Small,6,75.0,1716.0,558.8,165.0,114.7,MFH -Small,Small,MFH
+pre '46,MFH ,Medium,12,96.0,5166.6,1112.7,215.0,292.5,MFH -Medium,Medium,MFH
+'46-'70,SFH ,Detached,1,235.8,648.5,538.8,158.2,183.0,SFH -Detached,Detached,SFH
+'46-'70,SFH ,Semi-detached,1,193.4,531.7,381.4,101.4,133.1,SFH -Semi-detached,Semi-detached,SFH
+'46-'70,SFH ,Terraced,1,198.8,546.6,296.8,90.8,79.1,SFH -Terraced,Terraced,SFH
+'46-'70,MFH ,Small,3,70.0,780.0,306.8,78.0,98.7,MFH -Small,Small,MFH
+'46-'70,MFH ,Medium,24,88.0,7335.2,3583.2,706.8,704.2,MFH -Medium,Medium,MFH
+'46-'70,MFH ,Large,8,105.0,3087.4,830.7,115.2,272.3,MFH -Large,Large,MFH
+'71-'90,SFH ,Detached,1,238.4,655.7,548.8,170.0,159.4,SFH -Detached,Detached,SFH
+'71-'90,SFH ,Semi-detached,1,185.3,509.6,389.6,108.5,122.9,SFH -Semi-detached,Semi-detached,SFH
+'71-'90,SFH ,Terraced,1,168.3,462.8,256.9,78.6,70.1,SFH -Terraced,Terraced,SFH
+'71-'90,MFH ,Small,4,70.0,1160.3,485.3,128.0,156.7,MFH -Small,Small,MFH
+'71-'90,MFH ,Medium,13,125.0,3511.0,1124.0,255.2,296.8,MFH -Medium,Medium,MFH
+'71-'90,MFH ,Large,390,85.0,109350.0,22302.0,1350.0,5929.2,MFH -Large,Large,MFH
+'91-'05,SFH ,Detached,1,258.4,710.5,558.1,161.6,183.4,SFH -Detached,Detached,SFH
+'91-'05,SFH ,Semi-detached,1,224.0,615.9,410.0,125.2,121.4,SFH -Semi-detached,Semi-detached,SFH
+'91-'05,SFH ,Terraced,1,191.6,526.9,264.5,80.9,75.2,SFH -Terraced,Terraced,SFH
+'91-'05,MFH ,Small,6,155.0,3168.0,1527.8,330.0,586.8,MFH -Small,Small,MFH
+'91-'05,MFH ,Medium,11,110.0,4076.8,1553.8,231.0,568.8,MFH -Medium,Medium,MFH
+'91-'05,MFH ,Large,197,105.0,76245.0,16358.0,1115.0,9579.4,MFH -Large,Large,MFH
+post '05,SFH ,Detached,1,269.6,741.4,557.9,152.3,173.2,SFH -Detached,Detached,SFH
+post '05,SFH ,Semi-detached,1,233.7,642.7,407.9,118.0,118.3,SFH -Semi-detached,Semi-detached,SFH
+post '05,SFH ,Terraced,1,199.9,549.8,267.7,76.3,72.0,SFH -Terraced,Terraced,SFH
+post '05,MFH ,Small,3,75.0,780.3,362.1,76.5,156.8,MFH -Small,Small,MFH
+post '05,MFH ,Medium,33,96.0,10779.9,3455.6,632.4,1272.7,MFH -Medium,Medium,MFH
+post '05,MFH ,Large,30,121.3,11574.0,3262.8,360.0,890.0,MFH -Large,Large,MFH
