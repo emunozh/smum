@@ -456,3 +456,53 @@ a value of 1.83e-4% (0.000183%).
   +---------------------------+-----------------+------------------+-----------------+--------------------+------+-----+
   | **w_Education**           | 1.0, ..., 40.19 | 0.0, ..., 119.68 | 0.33, ..., 0.04 | None;i;Categorical |      |     |
   +---------------------------+-----------------+------------------+-----------------+--------------------+------+-----+
+
+Bottom-Up: API (Spatial Microsimulation)
+==========================================================
+
+.. autofunction:: microsim.run.run_calibrated_model
+
+.. autofunction:: microsim.run.run_composite_model
+
+.. autofunction:: microsim.run.transition_rate
+
+.. autofunction:: microsim.run.reduce_consumption
+
+.. autofunction:: microsim.util_plot.cross_tab
+
+.. autofunction:: microsim.util_plot.plot_data_projection
+
+.. autofunction:: microsim.util_plot.plot_error
+
+.. autofunction:: microsim.util_plot.plot_projected_weights
+
+.. autofunction:: microsim.util_plot.plot_transition_rate
+
+.. figure:: ./_static/images/classes_M_aggregates.png
+   :align: center
+   :scale: 50%
+
+   Aggregates class diagram.
+
+.. autoclass:: microsim.aggregates.Aggregates
+   :members:
+
+
+.. figure:: ./_static/images/classes_M_population.png
+   :align: center
+   :scale: 50%
+
+   Population class diagram.
+
+.. autoclass:: microsim.population.PopModel
+   :members:
+
+
+.. figure:: ./_static/images/classes_M_table.png
+   :align: center
+   :scale: 50%
+
+   Table class diagram.
+
+.. autoclass:: microsim.table.TableModel
+   :members:

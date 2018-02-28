@@ -6,21 +6,19 @@
 Spatial Microsimulation Urban Metabolism (SMUM)
 ===============================================
 
-|GIREC| |UNEP|
+|UNEP|    |GIREC|
 
 :Author: Dr. M. Esteban Munoz H. <emunozh@gmail.com, esteban.munoz@un.org>
-:Version: 0.1
+:Version: 0.2.0
 :Date: |date|
 
 .. toctree::
    :maxdepth: 3
 
-   0-aim.rst
-   x-readme.rst
    0-intro.rst
    1-um.rst
    2-sm.rst
-   2.0-population.rst
+   3-examples.rst
    x-authors
    x-contributing
    x-history
@@ -36,9 +34,9 @@ Indices and tables
 .. |GIREC| image:: ./_static/images/GI-REC.png
     :alt: GI-REC
     :scale: 35%
-    :target: www.resourceefficientcities.org
+    :target: http://www.resourceefficientcities.org
 
 .. |UNEP| image:: ./_static/images/UNEnvironment.png
     :alt: UN Environment
     :scale: 20%
-    :target: www.unep.org
+    :target: http://www.unep.org
