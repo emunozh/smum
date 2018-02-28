@@ -6,7 +6,7 @@
 Fri 13 Oct 2017 02:05:09 PM CEST
 
 """
-from urbanmetabolism.population.model import TableModel
+from smum.microsim.table import TableModel
 
 verbose = True
 census_file = 'docs/example_ph/data/benchmarks_be_year_bias3_climate.csv'
