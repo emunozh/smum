@@ -13,3 +13,4 @@ ipfn
 nbconvert
 RISE
 XlsxWriter
+nbsphinx
