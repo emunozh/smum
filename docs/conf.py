@@ -52,6 +52,9 @@ templates_path = [u'_templates']
 # The suffix of source filenames.
 source_suffix = '.rst'
 
+# Reference figures by number
+numfig = True
+
 # The encoding of source files.
 source_encoding = u'utf-8-sig'
 
