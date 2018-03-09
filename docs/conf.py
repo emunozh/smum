@@ -176,7 +176,7 @@ html_short_title = "SMUM"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = '_static/images/um_logo.svg.png'
+html_logo = '_static/images/smum_logo.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -253,7 +253,7 @@ latex_elements = {
 latex_documents = [('index',
                     'UrbanMetabolism.tex',
                     u'Spatial Microsimulation Urban Metabolism Documentation',
-                    u'Esteban Mu\~noz', 'manual')]
+                    u'Dr. Esteban Mu\~noz', 'manual')]
 
 
 # A dictionary that contains LaTeX snippets that override those Sphinx usually
@@ -263,7 +263,8 @@ latex_elements = { 'babel': '\\usepackage[english]{babel}' }
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-latex_logo = '_static/images/GI-REC.png'
+# latex_logo = '_static/images/GI-REC.png'
+latex_logo = '_static/images/smum_logo.png'
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.

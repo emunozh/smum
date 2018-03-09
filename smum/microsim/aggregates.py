@@ -116,13 +116,14 @@ class Aggregates():
                 :math:`\sum_i X_{i, var} * w_i * k_{var} - Tx_{var, year}`
 
                 Where:
-                    - :math:`Tx` are the known marginal sums for variable
-                        :math:`var`.
-                    - :math:`X` is the generated sample survey. For each
-                        :math:`i` record on the sample of variable :math:`var`.
-                    - :math:`w` are the estimated new weights.
-                    - :math:`k` estimated correction factor for variable
-                        :math:`var`.
+
+                  - :math:`Tx` are the known marginal sums for variable
+                    :math:`var`.
+                  - :math:`X` is the generated sample survey. For each
+                    :math:`i` record on the sample of variable :math:`var`.
+                  - :math:`w` are the estimated new weights.
+                  - :math:`k` estimated correction factor for variable
+                    :math:`var`.
 
         """
         try:

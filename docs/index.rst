@@ -1,14 +1,16 @@
-.. |date| date::
-
 .. urbanmetabolism_doc Masterfile
 
 ===============================================
 Spatial Microsimulation Urban Metabolism (SMUM)
 ===============================================
 
-|UNEP|
+.. only:: latex
 
-|GIREC|
+  |logo|
+
+.. only:: html
+
+  |UNEP| |space| |GIREC|
 
 :Author: Dr. M. Esteban Munoz H. <emunozh@gmail.com> or <esteban.munoz@un.org>
 :Version: 0.2.0
@@ -74,9 +76,6 @@ well as some specific python an R libraries.
 | GREGWT          | Sample reweighting library |
 +-----------------+----------------------------+
 
-Table of Contents
-===================
-
 .. toctree::
    :maxdepth: 1
 
@@ -88,20 +87,22 @@ Table of Contents
    x-contributing
    x-history
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
-
-.. glossary::
-
 .. |GIREC| image:: ./_static/images/GI-REC.png
     :alt: GI-REC
-    :scale: 35%
+    :scale: 42%
     :target: http://www.resourceefficientcities.org
 
 .. |UNEP| image:: ./_static/images/UNEnvironment.png
     :alt: UN Environment
     :scale: 20%
     :target: http://www.unep.org
+
+.. |space| image:: ./_static/images/na.png
+    :alt: _
+    :width: 1cm
+
+.. |logo| image:: ./_static/images/UNEnvironment2.png
+    :alt: UNEP-GIREC
+    :width: 12cm
+
+.. |date| date::
