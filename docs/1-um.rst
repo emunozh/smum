@@ -3,23 +3,23 @@
 Top-Down: City-Systems (Urban Metabolism)
 =========================================
 
-The Urban Metabolism module aims to describe the resources flows of
+The Urban Metabolism module aims to describe the resource flows of
 a city-system at an aggregated level with the use of input-output tables.
 
-This module aims to:
+This module aims to provide:
 
-  1. A framework for the description of resources flows;
+  1. A framework for the description of resource flows;
   2. A description of macro-level drivers for the changes of these flows; and
-  3. A description of linkages between resources flows.
+  3. A description of linkages between different resource flows.
 
 The main idea of this library module--and of this python library-- is that each
-module can be use independently. The UM module can be run independently from
+module can be used independently. The UM module can be run independently from
 the rest of the library.
 
 The library is structured as two types of functions:
 
   1. A function dedicated to the description of a city and city-data, see :ref:`city`.
-  2. Resources flow specific classes:
+  2. Resource flow specific classes:
 
      - :ref:`materials`
      - :ref:`water`
@@ -27,7 +27,7 @@ The library is structured as two types of functions:
      - :ref:`food`
      - :ref:`waste`
 
-For each of this classes a Unified Modeling Language (UML_) class diagram has
+For each of these classes a Unified Modeling Language (UML_) class diagram has
 been generated.
 
 The description of the individual functions of this module can be found below

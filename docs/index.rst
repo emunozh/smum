@@ -20,17 +20,17 @@ Spatial Microsimulation Urban Metabolism (SMUM)
 
   This documentation is generated automatically from the main `github
   repository <www.github.com/emunozh/em>`_. The build of the documentation is not
-  allways succesfull and you might up reading a documentation of an outdated
-  version of the model. Please allways very the version of the model you are
+  always successful and you might end up reading a documentation of an outdated
+  version of the model. Please always verify the version of the model you are
   running. This simulation library is under development and we are constantly
   changing the simulation libraries.
 
 This is the main documentation for the Spatial Microsimulation Urban Metabolism
 model. This model combines two powerful approaches for the simulation of
-resources flows within cities. The first approach is Urban Metabolism (UM).
+resource flows within cities. The first approach is Urban Metabolism (UM).
 This approach describes the metabolic performance of cities by quantifying and
-balancing all resources inputs and outputs from a predefined city-system. The
-second components of the simulation model is the Spatial Microsimulation (SM)
+balancing all resource inputs and outputs from a predefined city-system. The
+second component of the simulation model is the Spatial Microsimulation (SM)
 model. This component of the simulation library constructs a synthetic
 population for the specific city-system and allocates consumption values to the
 individual city agents. The simulation library benchmarks this synthetic sample
