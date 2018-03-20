@@ -3,16 +3,16 @@
 Examples
 ========
 
-Running a Simple Example
+Running a simple example
 -------------------------
 
 The following steps are required to construct a minimal simulation example.
 
 1. Define model parameters.
-2. We define a formula for the Electricity model. This model will compute the
+2. We define a formula for the electricity model. This model will compute the
    electricity demand based on previously computed income levels.
 3. We define a python dictionary to tell the function `run_calibrated_model`
-   how to calibrate it. The order of the models (i.e. dictionary keys) matter
+   how to calibrate the model. The order of the models (i.e. dictionary keys) matter
    as the model will calibrate them in the specified order. In this case, we
    need to calibrate the income model first in order to calibrate the
    electricity model because the computation of electricity directly depends on
@@ -34,7 +34,7 @@ The following steps are required to construct a minimal simulation example.
   # define model, order matters
   model = {"Income":      {'table_model': inc },
            "Water":       {'table_model': water},
-           "Electricity": {'table_model': elec}}
+           "Electricity": {'table_model': elec}
 
   # run simulation
   run_calibrated_model(
@@ -43,20 +43,20 @@ The following steps are required to construct a minimal simulation example.
       year = 2016)
 
 This subsection describes the required steps to perform a simple simulation.
-The steps to perform a simulation are twofold:
+The steps to perform a simulation are two-fold:
 
 1) The definition of a consumption model; and
 
 2) The construction of scenarios
 
 The definition of consumption models is required for the estimation of
-consumption levels at a micro level. The consumption models estimate resource
+consumption levels at a micro-level. The consumption models estimate resource
 consumption intensities at an individual level based on predefined consumption
-drivers. The consumption model implemented in the simulation can be any time of
+drivers. The consumption model implemented in the simulation can be any type of
 resource demand model.
 
 The definition of scenarios is performed at an aggregate level (simple
-scenario) or at a micro level (advanced scenario). The construction of simple
+scenario) or at a micro-level (advanced scenario). The construction of simple
 scenarios is performed by extrapolating the driver variables at an aggregated
 level. An advanced scenario will update the consumption model itself for each
 simulation year.
@@ -64,8 +64,8 @@ simulation year.
 Consumption models
 ~~~~~~~~~~~~~~~~~~
 
-In order to explain the consumption of resources at a micro level, the model
-requires a defined consumption model. :numref:`tab_income` list the input data passed to
+In order to explain the consumption of resources at a micro-level, the model
+requires a defined consumption model. :numref:`tab_income` lists the input data passed to
 the urban metabolism model, defining the model used for the estimation of
 income. Income levels are subsequently used for the estimation of electricity
 and water demand.
@@ -75,7 +75,7 @@ for each variable:
 
 1. Mean value of variable coefficient `[co_mu]`
 
-   This is the `mu` value used to define a sampling probability distribution
+   This is the `mu` value (µ value) used to define a sampling probability distribution
    (normal distributed) for the variable coefficient.
 
    This coefficient indicates the effect that the variable has on income.
@@ -88,7 +88,7 @@ for each variable:
 
 2. Standard deviation of variable coefficient `[co_sd]`
 
-   The second parameter the model need to define a normal distribution is the
+   The second parameter the model needs in order to define a normal distribution is the
    standard deviation of the sampling probability distribution.
 
    With the values of `co_mu` and `co_sd`, the model constructs a normal distribution.
@@ -111,12 +111,12 @@ for each variable:
    (male is the reference category) with a 19% probability.
 
    If the expected variable is categorical (high\middle/low, 1/2/3, etc.) the
-   value assign to parameter `p` is a vector with size equal to the number of
+   value assigned to parameter `p` is a vector with size equal to the number of
    categories.
 
 4. Mean value of distribution `[mu]`
 
-   This is the `mu` value used to define a sampling probability distribution for
+   This is the `mu` value (µ value) used to define a sampling probability distribution for
    the variable value.
 
    This parameter has to be defined for either continuous variables (normal
@@ -131,24 +131,24 @@ for each variable:
 
    This parameter defines the sampling probability distribution for the
    variable values. The Markov-Chain-Monte-Carlo routine will use this
-   distribution (define through parameters `mu` and `sd`) to sample the variables
+   distribution (define through parameters `mu` and `sd`) to sample the variable
    values.
 
-   The variables coefficients are by default sampled along a normal
+   The variable coefficients are by default sampled along a normal
    distribution, defined by `co_mu` and `co_sd`.
 
-7. An upper bound `[ub]`
+7. An upper boundary `[ub]`
 
-   An optional Upper Bound defined by parameter `ub` can be imputed into the
+   An optional Upper Boundary defined by parameter `ub` can be imputed into the
    simulation model. This parameter will cap the sampled variable value at this
    value.
 
-8. A lower bound `[lb]`
+8. A lower boundary `[lb]`
 
-   Identical to parameter `ub` but for the lower bound of the sampled variable.
+   Identical to parameter `ub` but for the lower boundary of the sampled variable.
 
 .. _tab_income:
-.. table:: Income table-model for Sorsogon City (benchmark year 2016)
+.. table:: Income table-model for Sorsogon City (benchmark year 2016; in Philippine-Pesos)
 
   +------------------+--------------------+---------------+----------+-------+-------+---------------+------+------+
   |                  | `co_mu`            | `co_sd`       | `p`      | `mu`  | `sd`  | `dis`         | `ub` | `lb` |
@@ -171,8 +171,8 @@ variables used for the estimation are:
 
 1. Gender of the household head
 
-   This variable defined the gender of the household head. The model assumes
-   a 919.01 increase in household income if the household head is female. The
+   This variable defines the gender of the household head. The model assumes
+   a 919.01 Philippine-Pesos increase in household income if the household head is female. The
    model will construct a synthetic sample where 20% of all household heads are
    female.
 
@@ -185,7 +185,7 @@ variables used for the estimation are:
 
 3. Family size
 
-   The impact of family income by household size if of 1666.85 Pesos per
+   The impact of family income by household size is an additional 1666.85 Pesos per
    additional family member.
 
 4. Age of head of household
@@ -193,7 +193,7 @@ variables used for the estimation are:
    The age of the household head is modelled as a continues variable. This is
    defined by setting the parameter `dis` to “Normal” (the normal distribution is
    a continuous distribution). The shape of the distribution is defined by
-   variable `mu` and `sd`.
+   variables `mu` and `sd`.
 
    The impact of household head age on income is defined by parameter `co_mu`, set
    to 116.58 with a standard deviation of 4.68 (via parameter `sd`).
@@ -222,12 +222,12 @@ model, required for the estimation of regression coefficients used on variable
 the constructed sample survey income levels. The figure also shows the absolute
 and specific error of the calibration. The estimated total income, i.e. the sum
 of all households’ income in the synthetic sample survey differs by 0.01% from
-the official total income of the city reported on 2016. This means that the
+the official total income of the city reported in 2016. This means that the
 income estimation of the model has been calibrated properly. The computed
 calibration `k-factor` is used for the estimation of income for all other
 simulation years.
 
-Following this schema, the model is able to compute all type of variables. On
+Following this schema, the model is able to compute all type of variables. In
 this section, the model is implemented for the estimation of electricity
 consumption levels as well as water consumption levels. The estimation of water
 and electricity consumption makes use of previously estimated income levels for
@@ -278,7 +278,7 @@ consumption are the following:
    This variable is one of the most important variables for the estimation of
    electricity consumption levels of individual households.
 
-   This variable describes the use of Air Conditioning on the household for cooling.
+   This variable describes the use of Air Conditioning in the household for cooling purposes.
 
 2) Cooking
 
@@ -286,15 +286,15 @@ consumption are the following:
 
 3) Lighting
 
-   This variable indicated the use of electric energy for the lighting of the
+   This variable indicates the use of electric energy for the lighting of the
    house. This variable is directly related to electrification rate. By 2016 it
    is assumed that 97% of all households use electric energy for the lighting
-   of their house.
+   of their houses in Sorsogon City, the Philippines.
 
 4) Refrigeration
 
-   This variable describes the use of electricity for refrigeration. Similar to
-   the lighting variable, the model assumes that by 2016 all households use
+   This variable describes the use of electricity for refrigeration purposes. Similar to
+   the lighting variable, the model assumes that by 2016 all households in the city use
    electric energy for refrigeration.
 
 5) TV

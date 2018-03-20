@@ -54,7 +54,7 @@ Linux
 
    # Make sure docker is runing
    systemctl status docker
-   # Satrt docker service
+   # Start docker service
    systemctl start docker
 
    # Pull docker image
