@@ -26,7 +26,7 @@ try:
     pandas2ri.activate()
     from rpy2.robjects.packages import importr
     UTILS_PACKAGE = importr("utils")  # import utils package from R
-except ImportError:
+except:
     print("can't find rpy2 libray! GREGWT won't run!")
     IntVector = 'Null'
     DataFrame = 'Null'
@@ -104,14 +104,17 @@ def _align_var(breaks_r, pop_col, n, verbose=False):
     prev_b = -1
     i = 1
     align = dict()
+    _vector = list()
     align_t = [1]
     for e, b in enumerate(breaks_r):
         if prev_b + 1 == b and b < n+1:
             try:
                 assert(min(align_t) != max(align_t))
-                align[pop_col + '.' + str(i)] = IntVector(
+                # align[pop_col + '.' + str(i)] = IntVector(
+                align[pop_col] = IntVector(
                     (min(align_t), max(align_t)))
-            except AssertionError:
+                # _vector.extend([min(align_t), max(align_t)])
+            except:
                 if verbose:
                     print("can't allign {} at {} for {}".format(align_t, e, b))
                 pass
@@ -122,6 +125,8 @@ def _align_var(breaks_r, pop_col, n, verbose=False):
         prev_b = b
     if len(align) == 0:
         align[pop_col] = IntVector((1, len(breaks_r)))
+    # else:
+        # align[pop_col] = IntVector(_vector)
     align_r = DataFrame(align)
     return align_r
 

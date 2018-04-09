@@ -20,6 +20,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from smum.microsim.aggregates import Aggregates
+from smum.microsim.util import _make_theano, _make_theano_var, _index_model
 sns.set_context('notebook')
 warnings.filterwarnings('ignore')
 
@@ -38,12 +39,12 @@ class PopModel(object):
         self.distributions["PosNormal"] = "{0} =\
             PosNormal('{0}', mu={1}, sd={2}); "
         self.distributions["Gamma"] = "{0} = Gamma('{0}', mu={1}, sd={2});"
-        self.distributions["Bertoulli"] = "{0} = Bernoulli('{0}', {1}); "
+        self.distributions["Bernoulli"] = "{0} = Bernoulli('{0}', {1}); "
         self.distributions["Beta"] = "{0} = Beta('{0}', mu={1}, sd={2}); "
         self.distributions["Poisson"] = "{0} = Poisson('{0}', {1}); "
-        self.distributions["Categorical"] = "{0} =\
-            Categorical('{0}', p=np.array([{1}])); "
+        self.distributions["Categorical"] = "{0} = Categorical('{0}', p=np.array([{1}])); "
         self.distributions["dt"] = "{0} = Deterministic('{0}', {1}); "
+        self.distributions["Deterministic"] = "{0} = Deterministic('{0}', {1}); "
 
         self.name = name
         self._table_model = dict()
@@ -63,10 +64,13 @@ class PopModel(object):
 
     def _get_distribution(self, dis, var_name, p, simple=False):
         """Get distribution."""
+        if self.verbose:
+            print("get distribution")
         if ";" in dis:
             dis = dis.split(";")[-1]
         if self.verbose:
             print('computing for distribution: ', dis)
+
         if 'None' in dis:
             distribution_formula = ''
         elif dis in ['Normal', 'PosNormal', 'Gamma', 'Beta']:
@@ -84,8 +88,7 @@ class PopModel(object):
                 distribution_formula = self.distributions[dis].format(
                     var_name, p_in)
             else:
-                distribution_formula = "{0} =\
-                    _make_theano_var({1}, 'float64');".format(
+                distribution_formula = "{0} = _make_theano_var({1}, 'float64');".format(
                         var_name + 'theano', p_in)
                 distribution_formula += self.distributions[dis].format(
                     var_name, var_name + "theano")
@@ -99,6 +102,8 @@ class PopModel(object):
             formula=False,
             constant_name='Intercept'):
         """Construct regression formula for consumption model."""
+        if self.verbose:
+            print("make regression model")
         if not formula:
             exclusion = [yhat_name, constant_name]
             estimators = list()
@@ -138,13 +143,20 @@ class PopModel(object):
             var_dic,
             simple=True)
 
+        if self.verbose:
+            print(c_command)
+
         return c_command
 
     def _make_linear_model(self, constant_name, yhat_name, formula, prefix):
         """Make linear model."""
+        if self.verbose:
+            print("make linear model")
         table_model = self._table_model[yhat_name]
         linear_model = "yhat_mu_{} = ".format(self._models)
         if not formula:
+            if self.verbose:
+                print("No formula provided, constructing one")
             formula = constant_name+"+"+"+".join(
                 ["c_{0}*{0}".format(e) for e in table_model.index if
                     (e != constant_name) &
@@ -165,10 +177,16 @@ class PopModel(object):
                     self._models, p['p'])
                 self.pre_command += command_var
                 p_in = {'p': 'intercept_{}'.format(self._models)}
+                if self.verbose:
+                    print("* call _get_distribution (constant)")
                 l_distribution = self._get_distribution(
                     dis, var_name, p_in, simple=True)
+                if self.verbose: print("got --> ", l_distribution)
             else:
+                if self.verbose:
+                    print("* call _get_distribution")
                 l_distribution = self._get_distribution(dis, var_name, p)
+                if self.verbose: print("got: ", l_distribution)
             self.command += l_distribution
             try:
                 dis_split = dis.split(";")
@@ -182,20 +200,30 @@ class PopModel(object):
                 if self.verbose:
                     print("Index_var_name: ", index_var_name)
                     print("var_name: ", var_name)
-            except IndexError:
+            except:
+                if self.verbose:
+                    print("Except")
                 index_var_name = False
             if var_name != constant_name:
                 if dis == 'Deterministic':
+                    if self.verbose:
+                        print("As Deterministic.")
                     c_command = ''
                 elif dis != 'Categorical':
+                    if self.verbose:
+                        print("As non Categorical")
                     this_mu = p['co_mu']
                     this_sd = p['co_sd']
                     c_command = self.distributions['Normal'].format(
                         'c_' + var_name, this_mu, this_sd)
                 else:
+                    if self.verbose:
+                        print("As Categorical")
                     c_command = self._make_categories_formula(
                         p, var_name, index_var_name)
             else:
+                if self.verbose:
+                    print("As Constant")
                 c_command = ''
             self.command += c_command
 
@@ -217,6 +245,9 @@ class PopModel(object):
                               formula=False):
         """Define new base consumption model.
         """
+        if self.verbose:
+            print("Add consuption model")
+
         if prefix:
             constant_name = "{}_{}".format(prefix, constant_name)
         self.regression_formulas[yhat_name] = self._make_regression_formula(
@@ -242,9 +273,10 @@ class PopModel(object):
                 'sigma_{}'.format(self._models))
         else:
             # Estimate deterministically
-            self.command += self.distributions['Normal'].format(
+            self.command += self.distributions['Deterministic'].format(
                 yhat_name,
-                'yhat_mu_{}'.format(self._models)
+                'yhat_mu_{}'.format(self._models),
+                # sigma_sd
             )
 
     def run_model(

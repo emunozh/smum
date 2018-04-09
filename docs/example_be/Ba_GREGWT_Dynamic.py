@@ -1,20 +1,7 @@
 
 # coding: utf-8
 
-# # Spatial$^{*}$ Microsimulation Urban Metabolism Model (SMUM)
-# 
-# <div class="image123">
-#     <div class="imgContainer">
-#         <img src="./logos/UNEnvironment.png" alt="UNEP logo" style="width:200px">
-#     </div>
-#     <div class="imgContainer">
-#         <img src="./logos/GI-REC.png" alt="GI_REC logo" style="width:200px">
-#     </div>
-# </div>
-# 
-# # 2.a Dynamic Sampling Model  and GREGWT
-# 
-# [UN Environment](http://www.unep.org/)
+# ## Brussels. Step 2.a Dynamic Sampling Model  and GREGWT
 
 # In[1]:
 
@@ -26,16 +13,16 @@ import datetime; print(datetime.datetime.now())
 # 
 # This notebook shows the main sampling and reweighting algorithm.
 
-# ## Import libraries
+# ### Import libraries
 
 # In[2]:
 
 
-from urbanmetabolism.population.model import run_calibrated_model
-from urbanmetabolism.population.model import TableModel
+from smum.microsim.run import run_calibrated_model
+from smum.microsim.table import TableModel
 
 
-# ## Global variables
+# ### Global variables
 
 # In[3]:
 
@@ -50,7 +37,7 @@ verbose = False
 njobs = 2
 
 
-# ## Define Table model
+# ### Define Table model
 
 # In[4]:
 
@@ -58,9 +45,9 @@ njobs = 2
 tm = TableModel(census_file = census_file, verbose=verbose)
 
 
-# ### Water model
+# #### Water model
 
-# In[13]:
+# In[5]:
 
 
 tm.add_model('data/table_water.csv', 'Water')
@@ -78,13 +65,13 @@ tm.update_dynamic_model(
     compute_average = False)
 
 
-# In[14]:
+# In[6]:
 
 
 tm.models['Water'].loc[2020]
 
 
-# In[15]:
+# In[7]:
 
 
 formula_water = "+".join(
@@ -94,21 +81,21 @@ formula_water = "+".join(
 tm.add_formula(formula_water, 'Water')
 
 
-# In[16]:
+# In[8]:
 
 
 tm.add_formula(formula_water, 'Water')
 
 
-# In[17]:
+# In[9]:
 
 
 tm.print_formula('Water')
 
 
-# ### Electricity model
+# #### Electricity model
 
-# In[5]:
+# In[10]:
 
 
 tm.add_model('data/table_elec.csv',  'Electricity',
@@ -133,13 +120,13 @@ tm.update_dynamic_model(
     compute_average = False)
 
 
-# In[6]:
+# In[11]:
 
 
 tm.models['Electricity'].loc[2016]
 
 
-# In[10]:
+# In[12]:
 
 
 skip_elec = [
@@ -153,35 +140,35 @@ formula_elec = "+".join(
 formula_elec += '+c_e_ConstructionType*w_ConstructionType +c_e_Income*w_Income +c_e_HHSize*w_HHSize +c_e_ConstructionYear*w_ConstructionYear+e_CDD +e_HDD'
 
 
-# In[11]:
+# In[13]:
 
 
 tm.add_formula(formula_elec, 'Electricity')
 
 
-# In[12]:
+# In[14]:
 
 
 tm.print_formula('Electricity')
 
 
-# ### Make model and save it to excel
+# #### Make model and save it to excel
 
-# In[18]:
+# In[15]:
 
 
 table_model = tm.make_model()
 
 
-# In[19]:
+# In[16]:
 
 
 tm.to_excel(sufix = "_be")
 
 
-# ## Define model variables
+# ### Define model variables
 
-# In[21]:
+# In[17]:
 
 
 labels_age = [
@@ -221,7 +208,7 @@ drop_col_survey = [
 ]
 
 
-# In[20]:
+# In[18]:
 
 
 fw = run_calibrated_model(
@@ -236,20 +223,3 @@ fw = run_calibrated_model(
     iterations = iterations,
     drop_col_survey = drop_col_survey)
 
-
-# <div class="image123">
-#     <div class="imgContainer">
-#         <img src="./logos/UNEnvironment.png" alt="UNEP logo" style="width:200px">
-#     </div>
-#     <div class="imgContainer">
-#         <img src="./logos/GI-REC.png" alt="GI_REC logo" style="width:200px">
-#     </div>
-# </div>
-# 
-# # 2.a Micro-level Electricity demand model
-# 
-# [UN Environment](http://www.unep.org/)
-# 
-# [Home](Welcome.ipynb)
-# 
-# [Next](Bc_GREGWT_validation_wbias.ipynb) (2.c) Model Internal Validation

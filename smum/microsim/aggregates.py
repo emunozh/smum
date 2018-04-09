@@ -78,7 +78,7 @@ class Aggregates():
                     if inter in inx and prefix in inx:
                         init_val = float(self.table_model.loc[inx, 'p'])
                         break
-            except IndexError:
+            except:
                 init_val = 1
         k = newton(self._compute_error, init_val, args=(var, weight, year))
         if self.verbose:
@@ -128,7 +128,7 @@ class Aggregates():
         """
         try:
             k = self.k[var]
-        except IndexError:
+        except:
             k = 1
         error = self._compute_error(k, var, weight, year)
         print("error: {:0.2E} for {}".format(error, var), end='\t')
@@ -249,7 +249,7 @@ class Aggregates():
             print('\t\tto labels: ', labels)
         try:
             labels_out = [labels[int(i)] for i in cat]
-        except IndexError:
+        except:
             labels_out = list()
             for c in cat:
                 this_lab = [l for l in labels if str(c) in l.split('_')]
@@ -258,7 +258,7 @@ class Aggregates():
                 else:
                     try:
                         this_lab = this_lab[0]
-                    except TypeError:
+                    except:
                         this_lab = this_lab
                 labels_out.append(this_lab)
             if self.verbose:
@@ -370,7 +370,7 @@ class Aggregates():
                 dis = self.table_model.loc[var, 'dis']
                 if self.verbose:
                     print('OK', dis)
-            except IndexError:
+            except:
                 if self.verbose:
                     print('Fail!, no defined distribution.')
                 dis = 'Unknown'

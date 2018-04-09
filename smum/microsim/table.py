@@ -71,11 +71,13 @@ class TableModel(object):
         """prepare model for simulation."""
         model_out = dict()
         for name in self.models:
+            if self.verbose:
+                print(name)
             model_out[name] = {'table_model': self.models[name]}
             try:
                 formula = self.formulas[name]
                 model_out[name]['formula'] = formula
-            except IndexError:
+            except:
                 pass
         return model_out
 
@@ -247,7 +249,7 @@ class TableModel(object):
                 this_df.loc['{}_{}'.format(prefix, e1), val] = new_val
                 if val == 'mu':
                     this_df.loc['{}_{}'.format(prefix, e1), 'sd'] = sd_default
-            except IndexError:
+            except:
                 print('Warning: could not assing new \
                        value to data set on {}_{}'.format(prefix, e1))
             return this_df
@@ -271,7 +273,7 @@ class TableModel(object):
                     new_val = val_a / val_b
                     try:
                         this_df.loc['{}_{}'.format(prefix, e1), val] = new_val
-                    except IndexError:
+                    except:
                         print('Warning: could not assing new \
                               value to data set on {}_{}'.format(prefix, e1))
                     if self.verbose:
@@ -364,7 +366,7 @@ class TableModel(object):
                             cols.append(name)
                         if self.verbose:
                             print(', OK!')
-                    except TypeError:
+                    except:
                         if self.verbose:
                             print(', Fail!')
                         pass

@@ -1,24 +1,9 @@
 
 # coding: utf-8
 
-# # Spatial$^{*}$ Microsimulation Urban Metabolism Model (SMUM)
-# 
-# ## Case Study: Brussels
-# 
-# <div class="image123">
-#     <div class="imgContainer">
-#         <img src="./logos/UNEnvironment.png" alt="UNEP logo" style="width:200px">
-#     </div>
-#     <div class="imgContainer">
-#         <img src="./logos/GI-REC.png" alt="GI_REC logo" style="width:200px">
-#     </div>
-# </div>
-# 
-# # 2.b Non-Residential Model
-# 
-# [UN Environment](http://www.unep.org/)
+# ## Brussels. Step 2.b Dynamic Sampling Model and GREGWT, Non-Residential Model
 
-# In[11]:
+# In[1]:
 
 
 import datetime; print(datetime.datetime.now())
@@ -28,9 +13,9 @@ import datetime; print(datetime.datetime.now())
 # 
 # This notebook shows the main sampling and reweighting algorithm for the non-residential sector.
 
-# ## Import libraries
+# ### Import libraries
 
-# In[12]:
+# In[2]:
 
 
 from urbanmetabolism.population.model import run_calibrated_model
@@ -38,13 +23,13 @@ from urbanmetabolism.population.model import plot_data_projection
 from urbanmetabolism.population.model import TableModel
 
 
-# In[13]:
+# In[3]:
 
 
 #from urbanmetabolism._scripts.material_btyp import get_den
 
 
-# In[14]:
+# In[4]:
 
 
 #year = 2030
@@ -53,9 +38,9 @@ from urbanmetabolism.population.model import TableModel
 #d = get_den(year, construction, sqm)
 
 
-# ## Global variables
+# ### Global variables
 
-# In[15]:
+# In[5]:
 
 
 iterations = 10000
@@ -68,64 +53,61 @@ drop_col_survey = ['h_BuildingHeat', 'c_BuldingCool', 'e_BuildingElec',
                    'h_BuildingSqm', 'c_BuildingSqm']
 
 
-# ## Define model
+# ### Define model
 
-# In[16]:
+# In[6]:
 
 
 tm = TableModel(census_file = census_file, verbose=verbose)
 table_model_name = 'data/table_elec_nr_{}.csv'
 
 
-# ### Electricity
+# #### Electricity
 
-# In[17]:
+# In[7]:
 
 
-estimate_var = 'elec'
-tm.add_model(table_model_name.format('e'), estimate_var, static = True)
-estimate_var = 'heat'
-tm.add_model(table_model_name.format('h'), estimate_var, static = True)
-estimate_var = 'cool'
-tm.add_model(table_model_name.format('c'), estimate_var, static = True)
+tm.add_model(table_model_name.format('e'), 'elec', static = True)
+tm.add_model(table_model_name.format('h'), 'heat', static = True)
+tm.add_model(table_model_name.format('c'), 'cool', static = True)
 #tm.update_dynamic_model(estimate_var, specific_col = 'BuildingKwh', static=True)
 
 
-# In[18]:
+# In[8]:
 
 
 tm.models['cool'].loc[2020]
 
 
-# In[19]:
+# In[9]:
 
 
 formula_nrb = "c_e_BuildingElec * e_BuildingElec * c_e_BuildingSqm * e_BuildingSqm"
 tm.add_formula(formula_nrb, 'elec')
 
 
-# In[20]:
+# In[10]:
 
 
 formula_nrb = "c_h_BuildingHeat * h_BuildingHeat * c_e_BuildingSqm * e_BuildingSqm"
 tm.add_formula(formula_nrb, 'heat')
 
 
-# In[21]:
+# In[11]:
 
 
 formula_nrb = "c_c_BuildingCool * c_BuildingCool * c_e_BuildingSqm * e_BuildingSqm"
 tm.add_formula(formula_nrb, 'cool')
 
 
-# In[22]:
+# In[12]:
 
 
 table_model = tm.make_model()
 tm.to_excel()
 
 
-# ## Run model
+# ### Run model
 
 # In[ ]:
 
@@ -144,36 +126,19 @@ fw = run_calibrated_model(
 )
 
 
-# ## Plot results
+# ### Plot results
 
-# In[24]:
+# In[14]:
 
 
 reweighted_survey = 'data/survey_{}_{}'.format(model_name, iterations)
 
 
-# In[28]:
+# In[22]:
 
 
 data = plot_data_projection(
-    reweighted_survey, [estimate_var], "{}, {}".format(iterations, typ),
-    start_year = 2016, end_year = 2025, aspect_ratio = 2,
-    benchmark_year = benchmark_year, unit = "building")
+    reweighted_survey, ['elec','heat','cool'], "{}, {}".format(iterations, typ),
+    start_year = 2016, end_year = 2025, aspect_ratio = 4,
+    benchmark_year = False, unit = "building")
 
-
-# <div class="image123">
-#     <div class="imgContainer">
-#         <img src="./logos/UNEnvironment.png" alt="UNEP logo" style="width:200px">
-#     </div>
-#     <div class="imgContainer">
-#         <img src="./logos/GI-REC.png" alt="GI_REC logo" style="width:200px">
-#     </div>
-# </div>
-# 
-# # 2.b Non-Residential Model
-# 
-# [UN Environment](http://www.unep.org/)
-# 
-# [Home](Welcome.ipynb)
-# 
-# [Next](Bc_GREGWT_validation_wbias.ipynb) (2.c) Model Internal Validation

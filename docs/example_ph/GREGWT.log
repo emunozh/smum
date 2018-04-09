@@ -5179,3 +5179,291 @@ prepare output
 	|--> dim(survey)          =  1000 4Loading required package: MASS
 | dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.3e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.3e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04Loading required package: MASS
 | dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.3e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.3e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.6e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.3e+04 | PSAE: 1.9e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.6e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.3e+04 | PSAE: 1.9e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.6e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.4e+04 | PSAE: 1.9e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.7e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.4e+04 | PSAE: 1.9e+04| dTx |  2.6e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.3e+04 | PSAE: 1.9e+04| dTx |  2.7e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.4e+04 | PSAE: 1.9e+04| dTx |  2.6e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.3e+04 | PSAE: 1.9e+04| dTx |  2.8e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.5e+04 | PSAE: 1.9e+04| dTx |  2.6e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.4e+04 | PSAE: 1.9e+04| dTx |  2.9e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.6e+04 | PSAE: 1.9e+04| dTx |  2.7e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.4e+04 | PSAE: 1.9e+04| dTx |    3e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.6e+04 | PSAE: 1.9e+04| dTx |  2.7e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.4e+04 | PSAE: 1.9e+04| dTx |    3e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.7e+04 | PSAE: 1.9e+04| dTx |  2.8e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.5e+04 | PSAE: 1.9e+04| dTx |  3.1e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.8e+04 | PSAE: 1.9e+04| dTx |  2.9e+04 <  1e-03 -> FALSE  | dAm |  7.8e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.6e+04 | PSAE: 1.9e+04| dTx |  3.2e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.9e+04 | PSAE: 1.9e+04| dTx |    3e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.6e+04 | PSAE: 1.9e+04| dTx |  3.4e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE:   3e+04 | PSAE: 1.9e+04| dTx |    3e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.7e+04 | PSAE: 1.9e+04| dTx |  3.1e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.8e+04 | PSAE: 1.9e+04| dTx |  3.2e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.9e+04 | PSAE: 1.9e+04| dTx |  3.4e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE:   3e+04 | PSAE: 1.9e+04
+start GREGWT, read variables
+using data_in ... ok
+get area benchmarks
+	get Tx (for single area): index  1
+	X_complete:  972 37
+	Tx:  27
+	total_pop:  1 4
+	dx:  972 ... ok
+get area population
+using total population by area_id:  1
+population: 35959 ... ok ... ok
+arrange data and data formats ... ok
+convert NA to 0
+dim(Tx) -->  28 1 
+
+ndim 2 TX 
+
+ area_numbers --> 1 
+
+ loop -->  1 
+
+divide initial weights by area population
+length(dx) 972
+pop:  35959 
+ length(dx) 972 ... ok ... ok
+GREGWT...
+	group...ok
+	get first lambda
+	dim(X) 972 28
+	length(dx) 972
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv Loading required package: MASS
+okok
+		Lambda:-0.07456995 0.2057432 0.4829408 -0.1656187 -0.5709188 -0.6125651 -0.7614965 1.219644 -0.1319634 -0.06706235 0.05207283 0.003899417 0.0178122 0.08507281 0.05680809 -0.05753704 1.12936 0.8727316 0.7558844 0.3042811 0.3609316 0.08825409 1.366729 1.023977 1.93706 -0.06662929 0.02174014 -0.3709748ok
+	main loop
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-0.00178141 0.001142036 0.001657735 0.001136206 0.0003873582 8.4985e-05 -0.01257722 0.001647161 -0.01154659 -0.001520559 0.0002484775 0.0001754483 1.255945e-05 0.001413362 -0.0004532837 -0.0005237478 0.006630799 0.0067539 0.006541828 0.006442693 0.00622613 0.002836293 0.006665989 0.006782062 0.008071655 -0.0005694098 0.0003429217 -0.006304954
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-0.0002101242 0.000143757 0.0002091898 0.0001414685 -1.323602e-05 -9.708208e-06 -0.001939146 0.0001873084 -0.001930982 -0.0001943488 7.052393e-05 9.434848e-05 5.22026e-05 0.0001805012 -7.357421e-05 8.915553e-06 0.000747023 0.0007805306 0.0007371119 0.0007299881 0.0006883084 -3.453797e-05 0.0007632928 0.000781709 0.000964695 -7.962142e-05 -1.068206e-05 -0.0007162535
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-3.052981e-05 2.072116e-05 3.048673e-05 2.073988e-05 -3.209984e-06 -5.225397e-06 -0.0003034992 2.503641e-05 -0.0003376048 -3.231785e-05 9.154358e-06 1.44468e-05 7.66902e-06 2.573062e-05 -1.083772e-05 4.092937e-06 9.790334e-05 0.0001048784 9.713205e-05 9.639256e-05 8.927176e-05 -3.418551e-05 0.000102972 0.0001037367 0.000131927 -1.163162e-05 -4.843122e-06 -9.049198e-05
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-4.760847e-06 3.127542e-06 4.677984e-06 3.207869e-06 -5.791877e-07 -1.255179e-06 -4.740019e-05 3.595094e-06 -5.861119e-05 -5.527355e-06 1.108695e-06 2.096956e-06 9.980866e-07 3.620999e-06 -1.712108e-06 7.567033e-07 1.382984e-05 1.510991e-05 1.374304e-05 1.369706e-05 1.249022e-05 -8.012214e-06 1.489563e-05 1.471788e-05 1.914813e-05 -1.807339e-06 -1.033348e-06 -1.184572e-05
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-7.662935e-07 4.839253e-07 7.366098e-07 5.083998e-07 -1.063774e-07 -2.51891e-07 -7.407635e-06 5.392895e-07 -1.008737e-05 -9.345573e-07 1.361926e-07 3.118825e-07 1.304694e-07 5.080767e-07 -2.786341e-07 1.222334e-07 2.047178e-06 2.26948e-06 2.030702e-06 2.035539e-06 1.83142e-06 -1.550693e-06 2.243517e-06 2.176105e-06 2.878233e-06 -2.926245e-07 -1.924886e-07 -1.592568e-06
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-1.251189e-07 7.604708e-08 1.176601e-07 8.161866e-08 -1.948035e-08 -4.705118e-08 -1.16138e-06 8.299312e-08 -1.723402e-06 -1.566844e-07 1.689017e-08 4.738364e-08 1.722959e-08 7.17945e-08 -4.58772e-08 1.886074e-08 3.11654e-07 3.49307e-07 3.080138e-07 3.106691e-07 2.762615e-07 -2.805409e-07 3.459535e-07 3.298822e-07 4.418011e-07 -4.829262e-08 -3.410219e-08 -2.180856e-07
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-2.056114e-08 1.207124e-08 1.895176e-08 1.319953e-08 -3.517051e-09 -8.47365e-09 -1.829022e-07 1.297243e-08 -2.926726e-07 -2.61413e-08 2.086104e-09 7.307778e-09 2.286685e-09 1.022551e-08 -7.586912e-09 2.862022e-09 4.827337e-08 5.457728e-08 4.74966e-08 4.820228e-08 4.242137e-08 -4.920662e-08 5.412431e-08 5.081041e-08 6.873491e-08 -8.029984e-09 -5.901667e-09 -3.021564e-08| dTx |  4.2e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 ok| OK | AC:  1
+population alignment
+bind index ... ok
+ compute error
+###############################################
+                                 Tx        hTx
+G.AC_no                       26734 26733.9998
+G.AC_yes                       9225  9225.0002
+G.age_19_25                     517   518.0000
+G.age_26_35                    3799  3799.0000
+G.age_36_45                   11923 11922.9999
+G.age_46_55                   10929 10928.9999
+G.age_56_65                    5150  5150.0001
+G.age_66_75                    2610  2610.0001
+G.age_76_85                     518   518.0002
+G.age_86_100                    512   512.0000
+G.Cooking_no                  35446 35445.9998
+G.Cooking_yes                   513   513.0002
+G.Education_College            7355  7353.0000
+G.Education_Elementary_School 10065 10065.0002
+G.Education_High_School        8892  8891.9999
+G.Education_Post_Graduate      1561  1561.0000
+G.Education_Post_Secondary     8088  8087.9999
+G.Lighting_no                  1941  1941.0001
+G.Lighting_yes                34018 34017.9999
+G.Refrigeration_no            14308 14307.9999
+G.Refrigeration_yes           21651 21651.0001
+G.sex_female                   8099  8099.0000
+G.sex_male                    27860 27860.0000
+G.Size_1                       1108  1108.0001
+G.Size_10                       514   514.0000
+G.Size_2                       6532  6531.9999
+G.Size_3                       8412  8411.9999
+G.Size_4                       6299  6298.9999
+G.Size_5                       5470  5469.9999
+G.Size_6                       1929  1929.0003
+G.Size_7                       3174  3174.0000
+G.Size_8                       1880  1880.0000
+G.Size_9                        641   641.0000
+G.TV_no                        1261  1261.0000
+G.TV_yes                      34698 34698.0000
+G.Urbanity_Rural              15652 15651.9999
+G.Urbanity_Urban              20307 20307.0001
+pop                           35959 35959.0000
+
+###############################################
+ | TAE:   3e+00
+ using total population:  35959 | PSAE: 8.4e-03 |
+
+prepare output
+	|--> dim(X)               =  972 28
+	|--> dim(X_complete)      =  972 38
+	|--> dim(Tx)              =  28 1
+	|--> dim(Tx_complete)     =  1 38
+	|--> length(constrains)   =  28
+	|--> length(constrains_c) =  38
+	|--> dim(pop)             = 
+	|--> dim(survey)          =  972 12
+start GREGWT, read variables
+using data_in ... ok
+get area benchmarks
+	get Tx (for single area): index  1
+	X_complete:  972 37
+	Tx:  27
+	total_pop:  1 4
+	dx:  972 ... ok
+get area population
+using total population by area_id:  1
+population: 35959 ... ok ... ok
+arrange data and data formats ... ok
+convert NA to 0
+dim(Tx) -->  28 1 
+
+ndim 2 TX 
+
+ area_numbers --> 1 
+
+ loop -->  1 
+
+divide initial weights by area population
+length(dx) 972
+pop:  35959 
+ length(dx) 972 ... ok ... ok
+GREGWT...
+	group...ok
+	get first lambda
+	dim(X) 972 28
+	length(dx) 972
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-0.07469361 0.2054324 0.4826175 -0.1659154 -0.5711912 -0.612885 -0.7616916 1.219376 -0.1319809 -0.06703649 0.05206684 0.003918793 0.01781603 0.08508062 0.05679481 -0.057496 1.129368 0.8727186 0.7558623 0.3042664 0.3609117 0.08853994 1.36671 1.023957 1.933609 -0.06662762 0.02175024 -0.3706771ok
+	main loop
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-0.001781087 0.001141184 0.001656679 0.001135479 0.0003876411 8.616775e-05 -0.01254597 0.001647181 -0.01152253 -0.001518008 0.0002480592 0.000174145 1.163975e-05 0.001410767 -0.0004530695 -0.0005260022 0.006631628 0.006753474 0.006541911 0.006443051 0.00622703 0.002850194 0.006665356 0.006781503 0.008068915 -0.0005694428 0.000344581 -0.006303337
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-0.0002101035 0.0001436458 0.000209061 0.0001413571 -1.3419e-05 -9.42519e-06 -0.001934469 0.0001874535 -0.001926401 -0.0001935535 7.083191e-05 9.454754e-05 5.239019e-05 0.000180017 -7.354793e-05 8.67974e-06 0.0007477427 0.0007809992 0.0007376617 0.0007305887 0.000688978 -3.203717e-05 0.0007636549 0.0007822179 0.0009648596 -7.971957e-05 -1.04351e-05 -0.0007167182
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-3.04955e-05 2.069658e-05 3.044888e-05 2.071215e-05 -3.211499e-06 -5.189816e-06 -0.0003028434 2.502412e-05 -0.0003368175 -3.222677e-05 9.165053e-06 1.443844e-05 7.670814e-06 2.570327e-05 -1.08239e-05 4.065455e-06 9.787331e-05 0.0001048186 9.709048e-05 9.635303e-05 8.924787e-05 -3.392011e-05 0.0001029063 0.0001036842 0.0001318201 -1.162463e-05 -4.813903e-06 -9.048821e-05
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-4.752889e-06 3.122594e-06 4.670224e-06 3.202353e-06 -5.783352e-07 -1.250307e-06 -4.730319e-05 3.590789e-06 -5.847552e-05 -5.513624e-06 1.108998e-06 2.094427e-06 9.976667e-07 3.616713e-06 -1.709053e-06 7.538726e-07 1.381505e-05 1.509121e-05 1.372758e-05 1.368154e-05 1.247741e-05 -7.979374e-06 1.487659e-05 1.47007e-05 1.912217e-05 -1.804717e-06 -1.029604e-06 -1.183808e-05
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-7.648105e-07 4.830522e-07 7.352273e-07 5.074263e-07 -1.061497e-07 -2.511335e-07 -7.392806e-06 5.384334e-07 -1.006424e-05 -9.32385e-07 1.361543e-07 3.113987e-07 1.303631e-07 5.073878e-07 -2.780752e-07 1.219085e-07 2.044103e-06 2.265835e-06 2.027617e-06 2.032408e-06 1.828746e-06 -1.546e-06 2.239863e-06 2.172759e-06 2.873475e-06 -2.920785e-07 -1.919434e-07 -1.590924e-06
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-1.248615e-07 7.590076e-08 1.174262e-07 8.145438e-08 -1.943451e-08 -4.692625e-08 -1.159067e-06 8.284401e-08 -1.719486e-06 -1.563322e-07 1.688003e-08 4.730084e-08 1.721149e-08 7.16885e-08 -4.578081e-08 1.881934e-08 3.111122e-07 3.486768e-07 3.074791e-07 3.101229e-07 2.75792e-07 -2.798087e-07 3.453249e-07 3.293078e-07 4.409993e-07 -4.819336e-08 -3.401648e-08 -2.178105e-07
+		New Lambda
+		get A... ok
+		length(Tx):  28		length(hTx):  28
+			using ginv okok
+		Lambda:-2.051769e-08 1.20472e-08 1.891297e-08 1.317228e-08 -3.508642e-09 -8.452595e-09 -1.825368e-07 1.294764e-08 -2.920132e-07 -2.608353e-08 2.084557e-09 7.294187e-09 2.283996e-09 1.020961e-08 -7.570663e-09 2.856328e-09 4.818322e-08 5.447294e-08 4.740845e-08 4.811171e-08 4.234362e-08 -4.90873e-08 5.402041e-08 5.071614e-08 6.86039e-08 -8.012832e-09 -5.887687e-09 -3.017353e-08| dTx |  4.1e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 ok| OK | AC:  1
+population alignment
+bind index ... ok
+ compute error
+###############################################
+                                 Tx        hTx
+G.AC_no                       26735 26734.9998
+G.AC_yes                       9224  9224.0002
+G.age_19_25                     517   518.0000
+G.age_26_35                    3799  3799.0000
+G.age_36_45                   11923 11922.9999
+G.age_46_55                   10929 10928.9999
+G.age_56_65                    5150  5150.0001
+G.age_66_75                    2610  2610.0001
+G.age_76_85                     518   518.0002
+G.age_86_100                    512   512.0000
+G.Cooking_no                  35446 35445.9998
+G.Cooking_yes                   513   513.0002
+G.Education_College            7355  7353.0000
+G.Education_Elementary_School 10065 10065.0002
+G.Education_High_School        8892  8891.9999
+G.Education_Post_Graduate      1561  1561.0000
+G.Education_Post_Secondary     8088  8087.9999
+G.Lighting_no                  1941  1941.0001
+G.Lighting_yes                34018 34017.9999
+G.Refrigeration_no            14308 14307.9999
+G.Refrigeration_yes           21651 21651.0001
+G.sex_female                   8099  8099.0000
+G.sex_male                    27860 27860.0000
+G.Size_1                       1108  1108.0001
+G.Size_10                       514   514.0000
+G.Size_2                       6532  6531.9999
+G.Size_3                       8412  8411.9999
+G.Size_4                       6299  6298.9999
+G.Size_5                       5470  5469.9999
+G.Size_6                       1930  1930.0003
+G.Size_7                       3174  3174.0000
+G.Size_8                       1880  1880.0000
+G.Size_9                        640   640.0000
+G.TV_no                        1261  1261.0000
+G.TV_yes                      34698 34698.0000
+G.Urbanity_Rural              15652 15651.9999
+G.Urbanity_Urban              20307 20307.0001
+pop                           35959 35959.0000
+
+###############################################
+ | TAE:   3e+00
+ using total population:  35959 | PSAE: 8.4e-03 |
+
+prepare output
+	|--> dim(X)               =  972 28
+	|--> dim(X_complete)      =  972 38
+	|--> dim(Tx)              =  28 1
+	|--> dim(Tx_complete)     =  1 38
+	|--> length(constrains)   =  28
+	|--> length(constrains_c) =  38
+	|--> dim(pop)             = 
+	|--> dim(survey)          =  972 12Loading required package: MASS
+| dTx |  4.2e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.4e-03 |
+| dTx |  4.2e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.4e-03 |
+| dTx |  4.2e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.4e-03 |
+| dTx |  4.1e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.4e-03 |
+| dTx |  9.9e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:    47 | OK | AC:  1 | TAE: 5.3e-03 | PSAE: 1.6e-05 |
+Loading required package: MASS
+| dTx |  4.2e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.4e-03 |
+| dTx |  4.2e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.4e-03 |
+| dTx |  4.2e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.4e-03 |
+| dTx |  4.2e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.4e-03 |
+| dTx |  9.9e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:    47 | OK | AC:  1 | TAE: 5.3e-03 | PSAE: 1.6e-05 |
+| dTx |  3.1e-04 <  1e-03 ->  TRUE  | dAm |  9.8e-01 <= 1e-03 -> FALSE  | itr:    10 | OK | AC:  1 | TAE:   2e+00 | PSAE:   6e-03 |
+| dTx |    1e+00 <  1e-03 -> FALSE  | dAm |  4.7e+00 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 9.8e+00 | PSAE: 2.9e-02 |
+| dTx |  8.5e-04 <  1e-03 ->  TRUE  | dAm |  2.8e+00 <= 1e-03 -> FALSE  | itr:     9 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.8e-03 |
+| dTx |  4.5e-04 <  1e-03 ->  TRUE  | dAm |  1.1e+01 <= 1e-03 -> FALSE  | itr:    12 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.6e-03 |
+| dTx |  4.7e-04 <  1e-03 ->  TRUE  | dAm |  1.4e+00 <= 1e-03 -> FALSE  | itr:     9 | OK | AC:  1 | TAE:   2e+00 | PSAE: 5.7e-03 |
+| dTx |  4.2e-04 <  1e-03 ->  TRUE  | dAm |  1.9e+00 <= 1e-03 -> FALSE  | itr:     7 | OK | AC:  1 | TAE:   3e+00 | PSAE: 8.4e-03 |
+| dTx |    2e+00 <  1e-03 -> FALSE  | dAm |  9.4e+00 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 1.3e+01 | PSAE: 3.5e-02 |
+| dTx |    8e-04 <  1e-03 ->  TRUE  | dAm |  4.2e+00 <= 1e-03 -> FALSE  | itr:    24 | OK | AC:  1 | TAE: 5.8e-03 | PSAE: 1.6e-05 |
+| dTx |  6.4e-04 <  1e-03 ->  TRUE  | dAm |  4.6e+00 <= 1e-03 -> FALSE  | itr:    12 | OK | AC:  1 | TAE:   2e+00 | PSAE: 5.3e-03 |
+| dTx |  9.1e-04 <  1e-03 ->  TRUE  | dAm |  2.5e+00 <= 1e-03 -> FALSE  | itr:    21 | OK | AC:  1 | TAE:   3e+00 | PSAE: 7.8e-03 |
+| dTx |  9.2e-04 <  1e-03 ->  TRUE  | dAm |  2.7e+00 <= 1e-03 -> FALSE  | itr:    24 | OK | AC:  1 | TAE:   3e+00 | PSAE: 7.7e-03 |
+| dTx |  8.5e-04 <  1e-03 ->  TRUE  | dAm |  1.1e+01 <= 1e-03 -> FALSE  | itr:    29 | OK | AC:  1 | TAE:   1e+00 | PSAE: 2.5e-03 |
+| dTx |  8.3e-04 <  1e-03 ->  TRUE  | dAm |    1e+01 <= 1e-03 -> FALSE  | itr:    59 | OK | AC:  1 | TAE: 1.4e+03 | PSAE: 3.6e+00 |
+| dTx |  7.8e-04 <  1e-03 ->  TRUE  | dAm |  2.7e+00 <= 1e-03 -> FALSE  | itr:    41 | OK | AC:  1 | TAE:   4e+02 | PSAE: 9.7e-01 |
+| dTx |    8e-04 <  1e-03 ->  TRUE  | dAm |  3.7e+01 <= 1e-03 -> FALSE  | itr:    57 | OK | AC:  1 | TAE: 1.4e+03 | PSAE: 3.4e+00 |
+| dTx |    2e+00 <  1e-03 -> FALSE  | dAm |  1.4e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 1.1e+01 | PSAE: 2.6e-02 |
+| dTx |  7.3e-04 <  1e-03 ->  TRUE  | dAm |  2.8e+00 <= 1e-03 -> FALSE  | itr:    37 | OK | AC:  1 | TAE: 3.3e+02 | PSAE: 7.8e-01 |
+| dTx |  9.4e-04 <  1e-03 ->  TRUE  | dAm |  1.3e+01 <= 1e-03 -> FALSE  | itr:    51 | OK | AC:  1 | TAE: 1.7e+03 | PSAE: 3.8e+00 |
+| dTx |  7.9e-04 <  1e-03 ->  TRUE  | dAm |  7.7e+00 <= 1e-03 -> FALSE  | itr:    40 | OK | AC:  1 | TAE: 3.1e+02 | PSAE:   7e-01 |
+| dTx |  9.6e-04 <  1e-03 ->  TRUE  | dAm |  3.4e+00 <= 1e-03 -> FALSE  | itr:    70 | OK | AC:  1 | TAE: 2.9e+02 | PSAE: 6.4e-01 |
+Loading required package: MASS
+| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.9e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.8e+04| dTx |  2.4e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.8e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.8e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.8e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.1e+04 | PSAE: 1.8e+04| dTx |  2.5e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.6e+04 <  1e-03 -> FALSE  | dAm |  7.6e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.9e+04| dTx |  2.6e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.2e+04 | PSAE: 1.8e+04| dTx |  2.6e+04 <  1e-03 -> FALSE  | dAm |  7.6e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.3e+04 | PSAE: 1.9e+04| dTx |  2.7e+04 <  1e-03 -> FALSE  | dAm |  7.6e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.3e+04 | PSAE: 1.9e+04| dTx |  2.7e+04 <  1e-03 -> FALSE  | dAm |  7.6e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.3e+04 | PSAE: 1.9e+04| dTx |  2.8e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.4e+04 | PSAE: 1.8e+04| dTx |  2.8e+04 <  1e-03 -> FALSE  | dAm |  7.6e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.4e+04 | PSAE: 1.9e+04| dTx |  2.9e+04 <  1e-03 -> FALSE  | dAm |  7.6e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.5e+04 | PSAE: 1.9e+04| dTx |    3e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.5e+04 | PSAE: 1.8e+04| dTx |    3e+04 <  1e-03 -> FALSE  | dAm |  7.6e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.6e+04 | PSAE: 1.9e+04| dTx |  3.1e+04 <  1e-03 -> FALSE  | dAm |  7.6e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.7e+04 | PSAE: 1.9e+04| dTx |  3.2e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.8e+04 | PSAE: 1.9e+04| dTx |  3.3e+04 <  1e-03 -> FALSE  | dAm |  7.7e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE: 2.8e+04 | PSAE: 1.8e+04| dTx |  3.5e+04 <  1e-03 -> FALSE  | dAm |  7.6e+01 <= 1e-03 -> FALSE  | itr:   100 | NC | AC:  1 | TAE:   3e+04 | PSAE: 1.9e+04

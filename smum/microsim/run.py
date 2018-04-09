@@ -10,10 +10,9 @@ import json
 import pandas as pd
 import numpy as np
 import pymc3 as pm
-import matplotlib.pyplot as plt
 # internal
 from smum.microsim.population import PopModel
-from smum.microsim.util import _make_flat_model
+from smum.microsim.util import _make_flat_model, _delete_files
 
 
 def transition_rate(
@@ -355,18 +354,23 @@ def run_composite_model(
             print('k for {:<15}'.format(mod), end='\t')
         try:
             k[mod] = float(k[mod])
-        except TypeError:
+        except:
             k[mod] = 1.0
         if verbose:
             print(k[mod])
     if not all([isinstance(i, float) for i in k.values()]):
         raise TypeError('k values must be float values.')
 
+    if verbose:
+        print("Call population model")
+
     pop_mod = PopModel('{}_{}'.format(name, sufix), verbose=verbose)
+
     for mod in model:
+        print("Computing model: ", mod)
         try:
             formula = model[mod]['formula']
-        except IndexError:
+        except:
             if verbose:
                 print('no defined formula for: ', mod)
             formula = False

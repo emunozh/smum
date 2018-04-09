@@ -1,20 +1,9 @@
 
 # coding: utf-8
 
-# <div class="image123">
-#     <div class="imgContainer">
-#         <img src="./logos/UNEnvironment.png" alt="UNEP logo" style="width:200px">
-#     </div>
-#     <div class="imgContainer">
-#         <img src="./logos/GI-REC.png" alt="GI_REC logo" style="width:200px">
-#     </div>
-# </div>
-# 
-# # (2.a) Dynamic Sampling Model  and GREGWT
-# 
-# [UN Environment](http://www.unep.org/)
+# ## Sorsogon. Step 2.a Dynamic Sampling Model  and GREGWT
 
-# In[2]:
+# In[ ]:
 
 
 import datetime; print(datetime.datetime.now())
@@ -24,18 +13,18 @@ import datetime; print(datetime.datetime.now())
 # 
 # This notebook shows the main sampling and reweighting algorithm.
 
-# ## Import libraries
+# ### Import libraries
 
-# In[3]:
-
-
-from urbanmetabolism.population.model import run_calibrated_model, _project_survey_resample
-from urbanmetabolism.population.model import TableModel
+# In[ ]:
 
 
-# ## Global variables
+from smum.microsim.run import run_calibrated_model
+from smum.microsim.table import TableModel
 
-# In[4]:
+
+# ### Global variables
+
+# In[ ]:
 
 
 iterations = 1000
@@ -45,20 +34,20 @@ typ = 'resampled'
 model_name = 'Sorsogon_Electricity_Water_wbias_projected_dynamic_{}'.format(typ)
 verbose = False
 #The number of chains to run in parallel. 
-njobs = 1
+njobs = 4
 
 
-# ## Define Table model
+# ### Define Table model
 
-# In[5]:
+# In[ ]:
 
 
 tm = TableModel(census_file = census_file, verbose=verbose)
 
 
-# ### Income model
+# #### Income model
 
-# In[22]:
+# In[ ]:
 
 
 tm.add_model('data/table_inc.csv',   'Income')
@@ -72,28 +61,43 @@ tm.update_dynamic_model('Income',
                         val = 'mu', compute_average =  0)
 
 
-# In[23]:
+# In[ ]:
 
 
 tm.models['Income'].loc[2020]
 
 
-# ### Electricity model
+# In[ ]:
 
-# In[8]:
+
+formula_inc = "i_Intercept+"+"+".join(
+    ["c_{0} * {0}".format(e) for e in tm.models['Income'][benchmark_year].index if\
+        (e != 'i_Intercept')])
+tm.add_formula(formula_inc, 'Income')
+
+
+# In[ ]:
+
+
+tm.print_formula('Income')
+
+
+# #### Electricity model
+
+# In[ ]:
 
 
 tm.add_model('data/table_elec.csv',  'Electricity', reference_cat = ['yes'])
 tm.update_dynamic_model('Electricity', specific_col = 'Income', val = 'mu', compute_average = False)
 
 
-# In[9]:
+# In[ ]:
 
 
 tm.models['Electricity'].loc[2016]
 
 
-# In[35]:
+# In[ ]:
 
 
 formula_elec = "e_Intercept+"+"+".join(
@@ -106,21 +110,21 @@ formula_elec += '+c_e_Urban * i_Urbanity'
 formula_elec += '+c_e_{0} * {0}'.format('Income')
 
 
-# In[36]:
+# In[ ]:
 
 
 tm.add_formula(formula_elec, 'Electricity')
 
 
-# In[37]:
+# In[ ]:
 
 
 tm.print_formula('Electricity')
 
 
-# ### Water model
+# #### Water model
 
-# In[10]:
+# In[ ]:
 
 
 tm.add_model('data/table_water.csv', 'Water')
@@ -134,13 +138,13 @@ tm.update_dynamic_model('Water',
                         val = 'mu', compute_average =  0)
 
 
-# In[11]:
+# In[ ]:
 
 
 tm.models['Water'].loc[2020]
 
 
-# In[38]:
+# In[ ]:
 
 
 formula_water = "w_Intercept+"+"+".join(
@@ -154,35 +158,35 @@ formula_water += '+c_w_Total_Family_Income*Income'
 formula_water += '+c_w_Education*i_Education'
 
 
-# In[39]:
+# In[ ]:
 
 
 tm.add_formula(formula_water, 'Water')
 
 
-# In[40]:
+# In[ ]:
 
 
 tm.print_formula('Water')
 
 
-# ### Make model and save it to excel
+# #### Make model and save it to excel
 
-# In[18]:
+# In[ ]:
 
 
 table_model = tm.make_model()
 
 
-# In[19]:
+# In[ ]:
 
 
 tm.to_excel()
 
 
-# ## Define model variables
+# ### Define model variables
 
-# In[19]:
+# In[ ]:
 
 
 labels = ['age_0_18', 'age_19_25', 'age_26_35',
@@ -193,7 +197,7 @@ to_cat = {'i_Age':[cut, labels]}
 drop_col_survey = ['e_Income', 'e_Urban', 'w_Total_Family_Income', 'w_Education']
 
 
-# In[20]:
+# In[ ]:
 
 
 fw = run_calibrated_model(
@@ -211,20 +215,3 @@ fw = run_calibrated_model(
     verbose = verbose,
     drop_col_survey = drop_col_survey)
 
-
-# <div class="image123">
-#     <div class="imgContainer">
-#         <img src="./logos/UNEnvironment.png" alt="UNEP logo" style="width:200px">
-#     </div>
-#     <div class="imgContainer">
-#         <img src="./logos/GI-REC.png" alt="GI_REC logo" style="width:200px">
-#     </div>
-# </div>
-# 
-# # 2.a Micro-level Electricity demand model
-# 
-# [UN Environment](http://www.unep.org/)
-# 
-# [Home](Welcome.ipynb)
-# 
-# [Next](Bb_GREGWT_NonResidential.ipynb) (2.b) Non-Residential Model

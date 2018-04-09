@@ -59,6 +59,7 @@ def plot_data_projection(reweighted_survey, var, iterations='n.a.',
     """
     reweighted_survey_in = reweighted_survey
     inx = [str(i) for i in range(start_year, end_year+1)]
+    inx_years = [int(i) for i in range(end_year - start_year + 1)]
     if not isinstance(var, list):
         raise TypeError('expected type {} for variable var, got {}'.format(
             type(list), type(var)))
@@ -118,8 +119,11 @@ def plot_data_projection(reweighted_survey, var, iterations='n.a.',
                 groupby=groupby, verbose=verbose)
         _plot_data_projection_single(
             ax, data, v, cap, benchmark_year, iterations, groupby,
+            verbose=verbose,
             unit=unit, cut_data=cut_data,
             data_pr=data_pr, scenario_name=scenario_name)
+        ax.set_xticks(inx_years)
+    ax.set_xticklabels(inx, rotation=90)
     var_names = "-".join(var)
     plt.tight_layout()
     plt.savefig('FIGURES/projected_{}_{}.png'.format(
@@ -130,6 +134,7 @@ def plot_data_projection(reweighted_survey, var, iterations='n.a.',
 
 def _plot_data_projection_single(ax1, data, var, cap, benchmark_year,
                                  iterations, groupby,
+                                 verbose=False,
                                  data_pr=False, scenario_name='scenario 1',
                                  cut_data=False,
                                  unit='household'):
@@ -142,10 +147,14 @@ def _plot_data_projection_single(ax1, data, var, cap, benchmark_year,
         alpha = 1
     if isinstance(data_pr, bool):
         data.plot(ax=ax1, kind=kind, alpha=alpha, label=var)
+        if verbose:
+            print(data.head())
     else:
         if not groupby:
             data.plot(ax=ax1, kind=kind, alpha=alpha, label='baseline')
         data_pr.plot(ax=ax1, kind=kind, alpha=alpha, label=scenario_name)
+        if verbose:
+            print(data_pr.head())
     ax1.set_xlabel('simulation year')
     ax1.set_ylabel('Total {}'.format(var))
     if benchmark_year:
@@ -242,6 +251,7 @@ def plot_error(trace_in, census_in, iterations,
                add_cols=False,
                verbose=False,
                plot_name=False,
+               force_fit = True,
                is_categorical=True,
                wbins=50, wspace=0.2, hspace=0.9, top=0.91,
                year=2010, save_all=False):
@@ -267,13 +277,22 @@ def plot_error(trace_in, census_in, iterations,
         raise TypeError(
             'census must either be a valid file on disc or a pandas DataFrame')
 
+    skip_cols = ['w', 'wf', 'level_0', 'index']
+    skip_cols.extend(skip)
+
+    if force_fit:
+        for g in [sc.split('_')[-1] for sc in trace.columns]:
+            if g not in [s.split('_')[-1] for s in skip_cols]:
+                sel = [col for col in census.columns if g in col]
+                if len(sel) > 0:
+                    sum_cal = census.loc[2016, sel].sum()
+                    census.loc[2016, sel] = (census.loc[2016, sel] / sum_cal) * pop
+
+    skip_cols.append(year)
+
     if isinstance(add_cols, pd.DataFrame) or isinstance(add_cols, pd.Series):
         for inx in add_cols.index:
             census.loc[year, inx] = add_cols.loc[inx]
-
-    skip_cols = ['w', 'wf', 'level_0', 'index']
-    skip_cols.extend(skip)
-    skip_cols.append(year)
 
     # Colors
     sn_blue = sns.color_palette()[0]      # blue
@@ -290,6 +309,21 @@ def plot_error(trace_in, census_in, iterations,
         pop = census.loc[year, 'pop']
 
     plot_variables = _get_plot_var(trace, census, skip_cols, fit_cols)
+    if verbose:
+        print("#"*30)
+        print("skip_cols:")
+        print(skip_cols)
+        print("#"*30)
+        print("fit_cols:")
+        print(fit_cols)
+        print("#"*30)
+        print("trace cols:")
+        print(trace.columns)
+        print("#"*30)
+        print("census cols:")
+        print(census.columns)
+        print("#"*30)
+        print(plot_variables)
     Diff = list()
     Diff_0 = list()
     for pv in plot_variables:
@@ -521,7 +555,7 @@ def plot_projected_weights(trace_out, iterations):
                 ax.scatter(
                     trace_out.loc[:, c], trace_out.wf,
                     label=c, s=sc, zorder=zo)
-        except TypeError:
+        except:
             pass
     ax.scatter(trace_out.w, trace_out.wf, label='w', s=150, zorder=3)
     lgd = ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=6)

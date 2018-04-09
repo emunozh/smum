@@ -13,3 +13,5 @@ docs/_build/
 env/
 docs/example_be/RST/
 docs/example_be/makeRST.sh
+.idea/
+*.log
