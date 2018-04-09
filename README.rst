@@ -3,7 +3,7 @@ Spatial Microsimulation Urban Metabolism Model (SMUM)
 
 |docker| |travis| |docs|
 
-.. image:: ./docs/_static/images/um_logo.png
+.. image:: ./docs/_static/images/smum_logo.png
    :scale: 100 %
    :alt: SMUM
    :align: center
