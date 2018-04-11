@@ -356,8 +356,11 @@ a value of 1.83e-4% (0.000183%).
 GI-REC Pilot Cities
 -------------------
 
+Advanced Example 1: Sorsogon
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .. toctree::
-  :maxdepth: 1
+  :maxdepth: 0
 
   example_ph/Welcome.ipynb
   example_ph/Aa_ProjectionAggregates.ipynb
@@ -370,6 +373,13 @@ GI-REC Pilot Cities
   example_ph/Bc_GREGWT_validation_wbias.ipynb
   example_ph/Ca_DefineTransitions.ipynb
   example_ph/Cb_VisualizeTransitions.ipynb
+
+Advanced Example 2: Brussels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. toctree::
+  :maxdepth: 0
+
   example_be/Welcome.ipynb
   example_be/Aa_ProjectionAggregates.ipynb
   example_be/Ac_MCMC_electricity.ipynb
@@ -382,4 +392,3 @@ GI-REC Pilot Cities
   example_be/Cb_VisualizeTransitions.ipynb
   example_be/Ca_DefineTransitions_NR.ipynb
   example_be/Cb_VisualizeTransitions_NR.ipynb
-

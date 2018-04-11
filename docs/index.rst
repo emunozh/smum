@@ -83,6 +83,7 @@ well as some specific python an R libraries.
    1-um.rst
    2-sm.rst
    3-examples.rst
+   4-api.rst
    x-authors
    x-contributing
    x-history

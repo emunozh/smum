@@ -11,10 +11,10 @@ metabolism approach.
 The quantification of resources flow at an aggregate level is not enough for
 cities to take knowledge-based decisions on future infrastructure investment and policies
 targeting a sustainable urban development. In order to understand the impact of
-city level policies and investment strategies cities need to understand: 
+city level policies and investment strategies cities need to understand:
 
-a) the drivers of consumption and 
-b) the plausible impact of these policies on their citizens. 
+a) The drivers of consumption and
+b) The plausible impact of these policies on their citizens.
 
 In order to get this level of understanding we propose the simulation
 of consumption intensities at a micro-level. By describing the consumption
@@ -37,7 +37,7 @@ The python library is composed of two main components:
   1. An Urban Metabolism section, see :ref:`um` that aims to balance all resource flows of
      city systems at an aggregated level (i.e. city-level) and;
 
-  2. A Spatial Microsimulation section, see :ref:`sm`. which constructs a synthetic city and 
+  2. A Spatial Microsimulation section, see :ref:`sm`. which constructs a synthetic city and
      allocates consumption values to micro-level agents
 
 For a complete implementation example of the Spatial Microsimulation Urban Metabolism Model (SMUM), please
@@ -50,9 +50,9 @@ examples on how to use the provided functions.
 
 The main library function documentation can be found at:
 
-  - :ref:`um-api` for the Urban Metabolism functions and at
+  - :ref:`apium` for the Urban Metabolism functions and at
     :ref:`um` for a general description of the UM module; and
-  - :ref:`sm-api` for the Spatial Microsimulation functions and at
+  - :ref:`apism` for the Spatial Microsimulation functions and at
     :ref:`sm` for a general description of the SM module.
 
 A complete list of examples can be found at:

@@ -7,6 +7,9 @@ The presented simulation framework on this report implements a simple model for
 the description of urban resource flows and their projection into the future
 under predefined scenarios.
 
+The description of the individual functions of this module can be found below
+under: :ref:`apism`.
+
 The simulation framework is constructed as a hybrid model. The Model balance
 input-output tables at an aggregated level, its contra-part module
 computes consumption levels at a micro-level. In order to describe the
@@ -94,55 +97,3 @@ distribution (output of GREGWT).
    :scale: 100%
 
    Internal simulation error
-
-.. _sm-api:
-
-Bottom-Up: API (Spatial Microsimulation)
-==========================================================
-
-.. autofunction:: microsim.run.run_calibrated_model
-
-.. autofunction:: microsim.run.run_composite_model
-
-.. autofunction:: microsim.run.transition_rate
-
-.. autofunction:: microsim.run.reduce_consumption
-
-.. autofunction:: microsim.util_plot.cross_tab
-
-.. autofunction:: microsim.util_plot.plot_data_projection
-
-.. autofunction:: microsim.util_plot.plot_error
-
-.. autofunction:: microsim.util_plot.plot_projected_weights
-
-.. autofunction:: microsim.util_plot.plot_transition_rate
-
-.. figure:: ./_static/images/classes_M_aggregates.png
-   :align: center
-   :scale: 50%
-
-   Aggregates class diagram.
-
-.. autoclass:: microsim.aggregates.Aggregates
-   :members:
-
-
-.. figure:: ./_static/images/classes_M_population.png
-   :align: center
-   :scale: 50%
-
-   Population class diagram.
-
-.. autoclass:: microsim.population.PopModel
-   :members:
-
-
-.. figure:: ./_static/images/classes_M_table.png
-   :align: center
-   :scale: 50%
-
-   Table class diagram.
-
-.. autoclass:: microsim.table.TableModel
-   :members:
