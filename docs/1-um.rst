@@ -21,17 +21,21 @@ The library is structured as two types of functions:
   1. A function dedicated to the description of a city and city-data, see :ref:`city`.
   2. Resource flow specific classes:
 
-     - :ref:`materials`
-     - :ref:`water`
-     - :ref:`energy`
-     - :ref:`food`
-     - :ref:`waste`
+     - :ref:`materials` & api: :ref:`materials_api`
+     - :ref:`water` & api: :ref:`water_api`
+     - :ref:`energy` & api: :ref:`energy_api`
+     - :ref:`food` & api: :ref:`food_api`
+     - :ref:`waste` & api: :ref:`waste_api`
 
 For each of these classes a Unified Modeling Language (UML_) class diagram has
 been generated.
 
 The description of the individual functions of this module can be found below
 under: :ref:`apium`.
+
+.. _UML: https://en.wikipedia.org/wiki/Unified_Modeling_Language
+
+.. _energy:
 
 Energy
 -------
@@ -122,6 +126,8 @@ stored under the `/results` folder.
 
 The Energy Stock is computed as follows:
 
+.. _water:
+
 Water
 ------
 
@@ -148,12 +154,7 @@ The household demand model is computed as function of:
 
 .. math::
 
-    Q^{hh}_{W,D} =
-    \\beta_0 +
-    \\beta_1 HH_{1} + \dots + \\beta_n HH_n +
-    \\beta_y Y +
-    \\beta_p P +
-    \\epsilon
+    Q^{hh}_{W,D} = \beta_0 + \beta_1 HH_{1} + \dots + \beta_n HH_n + \beta_y Y + \beta_p P + \epsilon
 
 Where:
 
@@ -161,7 +162,7 @@ Where:
     - :math:`HH` Household characteristic.
     - :math:`Y` Household income.
     - :math:`P` Water price.
-    - :math:`\\epsilon` Random error term.
+    - :math:`\epsilon` Random error term.
 
 Depending on the water tariff in place the variable :math:`P` can't be
 modeled as an dependent variable. If the water tariff is computes as
@@ -182,10 +183,10 @@ technology.
 .. math::
 
     Q_{W,D}^{base}(SP_{W,D}, SR_{W,D}) =
-    \\begin{cases}
-      Q_{W,D}^{hh} \\times (1-SR_{W,D}) & \\quad \\text{if } rand < SP_{W,D}\\\\
-      Q_{W,D}^{hh} & \\quad \\text{ else}\\\\
-    \\end{cases}
+    \begin{cases}
+      Q_{W,D}^{hh} \times (1-SR_{W,D}) & \quad \text{if } rand < SP_{W,D}\\
+      Q_{W,D}^{hh} & \quad \text{ else}\\
+    \end{cases}
 
 Where:
 
@@ -202,21 +203,17 @@ The non-residential water demand model is defined as the sum of (source: DGNB):
 
 .. math::
 
-    Q^{nr}_{W,D} =
-    Q^{nr}_{W,DU} +
-    Q^{nr}_{W,DC} +
-    Q^{nr}_{W,DS} +
-    Q^{nr}_{W,DL}
+    Q^{nr}_{W,D} = Q^{nr}_{W,DU} + Q^{nr}_{W,DC} + Q^{nr}_{W,DS} + Q^{nr}_{W,DL}
 
 Where:
 
 .. math::
 
-    Q^{nr}_{W,DU} = \\sum_{i=1}^{n} wb_I
+    Q^{nr}_{W,DU} = \sum_{i=1}^{n} wb_I
 
 .. math::
 
-    wb_I = \\left(n_{NU} \\times f_{I} \\times as_{I} \\times d/a \\right) / 1000
+    wb_I = \left(n_{NU} \times f_{I} \times as_{I} \times d/a \right) / 1000
 
 Where:
 
@@ -298,7 +295,7 @@ Where:
 
 .. math::
 
-    Q^{nr}_{W,DC} = \sum_{i = 1}^n \\left(A_{R,i} \\times wb_{R/A} \\right) / 1000
+    Q^{nr}_{W,DC} = \sum_{i = 1}^n \left(A_{R,i} \times wb_{R/A} \right) / 1000
 
 .. math::
 
@@ -306,11 +303,11 @@ Where:
 
 .. math::
 
-    wb_I = \\left( n_{SPA} \\times f_I \\times as_I \\times 360 d/a \\right) / 1000
+    wb_I = \left( n_{SPA} \times f_I \times as_I \times 360 d/a \right) / 1000
 
 .. math::
 
-    n_{SPA} = n_{NU} \\times 0.25
+    n_{SPA} = n_{NU} \times 0.25
 
 .. math::
 
@@ -319,7 +316,7 @@ Where:
 Where:
 
     - :math:`A_R` Cleaning floor space :math:`[m^3/a]`
-    - :math:`wb_R` Water demand per cleaning area (see :ref:`Tab. W3 <wbR>`) :math:`[l/(m^2 \\times a)]`
+    - :math:`wb_R` Water demand per cleaning area (see :ref:`Tab. W3 <wbR>`) :math:`[l/(m^2 \times a)]`
     - :math:`wb_I` Specific water demand of spa/laundry installations (see :ref:`Tab. W1 <fi>` and :ref:`Tab. W2 <asi>`) :math:`[m^3/a]`
 
 .. _wbR:
@@ -391,7 +388,7 @@ Where:
 
 .. math::
 
-    Q_{W,D} = \\sum_{hh} Q^{base}_{W,D,hh} + CDD * i^{cooling}_W
+    Q_{W,D} = \sum_{hh} Q^{base}_{W,D,hh} + CDD * i^{cooling}_W
 
 Where:
 
@@ -463,6 +460,7 @@ Where:
 Stock
 ~~~~~
 
+.. _materials:
 
 Materials
 ----------
@@ -510,6 +508,7 @@ Where:
     - :math:`i^{ti}_{M,m}` Material intensity per kilometer of urban infrastructure.
 
 
+.. _waste:
 
 Waste
 -----
@@ -519,6 +518,8 @@ Flow
 
 Stock
 ~~~~~
+
+.. _food:
 
 Food
 -----

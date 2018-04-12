@@ -3,7 +3,7 @@
 API: Top-Down (Urban Metabolism)
 =========================================
 
-.. _city:
+.. _city_api:
 
 City
 ------------
@@ -20,7 +20,7 @@ City
    :special-members:
    :private-members:
 
-.. _materials:
+.. _materials_api:
 
 Materials
 ------------
@@ -42,7 +42,7 @@ Materials
    :special-members:
    :private-members:
 
-.. _water:
+.. _water_api:
 
 Water
 ------------
@@ -70,7 +70,7 @@ Water
    :private-members:
 
 
-.. _energy:
+.. _energy_api:
 
 Energy
 ------------
@@ -93,7 +93,7 @@ Energy
    :private-members:
 
 
-.. _food:
+.. _food_api:
 
 Food
 ------------
@@ -116,7 +116,7 @@ Food
    :private-members:
 
 
-.. _waste:
+.. _waste_api:
 
 Waste
 ------------
@@ -137,8 +137,6 @@ Waste
    :members:
    :special-members:
    :private-members:
-
-.. _UML: https://en.wikipedia.org/wiki/Unified_Modeling_Language
 
 
 .. _apism:

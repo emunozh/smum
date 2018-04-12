@@ -75,7 +75,7 @@ for each variable:
 
 1. Mean value of variable coefficient `[co_mu]`
 
-   This is the `mu` value (µ value) used to define a sampling probability distribution
+   This is the `mu` value (:math:`\mu` value) used to define a sampling probability distribution
    (normal distributed) for the variable coefficient.
 
    This coefficient indicates the effect that the variable has on income.
@@ -116,7 +116,7 @@ for each variable:
 
 4. Mean value of distribution `[mu]`
 
-   This is the `mu` value (µ value) used to define a sampling probability distribution for
+   This is the `mu` value (:math:`\mu` value) used to define a sampling probability distribution for
    the variable value.
 
    This parameter has to be defined for either continuous variables (normal
@@ -374,6 +374,7 @@ Advanced Example 1: Sorsogon
   example_ph/Ca_DefineTransitions.ipynb
   example_ph/Cb_VisualizeTransitions.ipynb
 
+
 Advanced Example 2: Brussels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -392,3 +393,4 @@ Advanced Example 2: Brussels
   example_be/Cb_VisualizeTransitions.ipynb
   example_be/Ca_DefineTransitions_NR.ipynb
   example_be/Cb_VisualizeTransitions_NR.ipynb
+
