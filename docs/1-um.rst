@@ -524,6 +524,12 @@ Stock
 Food
 -----
 
+Demand
+~~~~~~
+
+Computed as the sum of Fod demand.
+
+
 Flow
 ~~~~~
 
