@@ -30,7 +30,7 @@ To install the python library only via pip.
 
 .. code-block:: bash
 
-  pip install -e git+https://github.com/emunozh/um.git#egg=urbanmetabolism
+  pip install -e git+https://github.com/emunozh/smum.git#egg=smum
 
 Using the Docker image
 ----------------------
@@ -59,10 +59,10 @@ Linux
 
    # Pull docker image
    # Be patient the image is big
-   docker pull emunozh/urbanmetabolism
+   docker pull emunozh/smum
 
    # Run the model
-   docker run -it -p 8080:8080 emunozh/urbanmetabolism
+   docker run -it -p 8080:8080 emunozh/smum
 
    # Lunch jupyterhub within docker container
    jupyterhub --ip=0.0.0.0
@@ -73,16 +73,16 @@ You can build the docker image locally for testing and debugging.
 
    # Build the docker image on your computer
    # Clone github repository
-   git clone git@github.com:emunozh/um.git
+   git clone git@github.com:emunozh/smum.git
 
    # Move to um folder
    cd um
 
    # Build docker image
-   docker build . -t um_test
+   docker build . -t smum
 
    # Run docker image
-   docker run -it um_test
+   docker run -it smum
 
    # Lunch jupyterhub
    jupyterhub --ip=0.0.0.0
@@ -97,9 +97,9 @@ The installation process should be simple:
 
 1. Install `Docker for Windows <https://www.docker.com/docker-windows>`_
 
-2. Pull the docker image :code:`docker pull emunozh/urbanmetabolism`
+2. Pull the docker image :code:`docker pull emunozh/smum`
 
-3. Run the docker container :code:`docker run -it -p 8080:8080 emunozh/urbanmetabolism`
+3. Run the docker container :code:`docker run -it -p 8080:8080 emunozh/smum`
 
 4. Lunch the Jupyterhub server :code:`jupyterhub --ip=0.0.0.0`
 
@@ -108,8 +108,8 @@ The installation process should be simple:
 Contribute
 ----------
 
-- Issue Tracker: github.com/emunozh/um/issues
-- Source Code: github.com/emunozh/um
+- Issue Tracker: github.com/emunozh/smum/issues
+- Source Code: github.com/emunozh/smum
 
 Support
 -------
@@ -124,12 +124,12 @@ The project is licensed under the GPL-3.0 license.
 .. |docker| image:: https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg
     :alt: Docker cloud
     :scale: 100%
-    :target: https://cloud.docker.com/app/emunozh/repository/docker/emunozh/urbanmetabolism/general
+    :target: https://cloud.docker.com/app/emunozh/repository/docker/emunozh/smum/general
 
-.. |travis| image:: https://travis-ci.org/emunozh/um.svg
+.. |travis| image:: https://travis-ci.org/emunozh/smum.svg
     :alt: build status
     :scale: 100%
-    :target: http://travis-ci.org/emunozh/um
+    :target: http://travis-ci.org/emunozh/smum
 
 .. |docs| image:: https://readthedocs.org/projects/smum/badge/?version=latest
     :alt: Documentation Status
