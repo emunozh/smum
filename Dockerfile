@@ -1,11 +1,11 @@
 FROM dock0/arch
 MAINTAINER emunozh <emunozh@gmail.com>
-RUN pacman -S --needed --noconfirm base
 
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
 RUN pacman -Syu --noconfirm
+#RUN pacman -S --needed --noconfirm base
 RUN pacman -S --needed --noconfirm python python-setuptools
 RUN pacman -S --needed --noconfirm python python-pip
 RUN pacman -S --needed --noconfirm gcc
