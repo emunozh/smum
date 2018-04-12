@@ -1,15 +1,18 @@
 #!/bin/sh
 
 USERNAME="$1"
+GROUP="$1"
 
-useradd -m --shell /bin/bash $USERNAME
+groupadd $GROUP
+
+useradd -m -g $GROUP --shell /bin/bash $USERNAME
 echo $USERNAME:$USERNAME | chpasswd
 
 cp -r /usr/src/app/docs/example_ph/ /home/$USERNAME/examples/
-chown -R $USERNAME:users /home/$USERNAME/examples/
+chown -R $USERNAME:$GROUP /home/$USERNAME/examples/
 
 cp -r /usr/src/app/.ipython/ /home/$USERNAME/.ipython/
-chown -R $USERNAME:users /home/$USERNAME/.ipython
+chown -R $USERNAME:$GROUP /home/$USERNAME/.ipython
 
 cp -r /usr/src/app/.jupyter/ /home/$USERNAME/.jupyter/
-chown -R $USERNAME:users /home/$USERNAME/.jupyter
+chown -R $USERNAME:$GROUP /home/$USERNAME/.jupyter

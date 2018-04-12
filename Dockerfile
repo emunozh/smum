@@ -41,5 +41,3 @@ RUN makenewuser esteban
 RUN makenewuser test
 
 ENV MKL_THREADING_LAYER=GNU
-
-RUN jupyterhub --ip=*
