@@ -3,7 +3,7 @@
 Top-Down: City-Systems (Urban Metabolism)
 =========================================
 
-The Urban Metabolism module aims to describe the resource flows of
+The Urban Metabolism  (UM) module aims to describe the resource flows of
 a city-system at an aggregated level with the use of input-output tables.
 
 This module aims to provide:
@@ -12,7 +12,7 @@ This module aims to provide:
   2. A description of macro-level drivers for the changes of these flows; and
   3. A description of linkages between different resource flows.
 
-The main idea of this library module--and of this python library-- is that each
+The advantgage of this library module--and of this python library-- is that each
 module can be used independently. The UM module can be run independently from
 the rest of the library.
 
@@ -37,11 +37,16 @@ under: :ref:`apium`.
 
 .. _energy:
 
-Energy
+Consumption model: Energy
 -------
 
-Flow
+Energy Class: Energy Flow
 ~~~~~
+"Energy flow is the ultimate of the urban metabolism. The magnitude of energy flows
+from heating and cooling are typically related to climate, but other components
+of urban energy use can be linked back to the shape and form of a city, reflected
+by its infrastructure systems and hence material stocks. (Kennedy.2012)"
+
 
 .. math::
 
@@ -49,9 +54,12 @@ Flow
            I_{E,construction} + I_{E,water pumping} + I_{E,waste}
 
 The total energy demand of a city is expressed as the total sum of all
-energy sectors.
+energy demands for the different energy sectors.
+Each energy sector energy demand is calculated, based on different components
+that are the cause of energy consumed.
 
-The total energy consumption of the building sector is computed based on
+**Buildings:**
+For the building sector the total energy consumption is computed based on
 climatic conditions of the city (:math:`HDD` and :math:`CDD`) and energy
 consumption intensities based on building type.
 
@@ -74,17 +82,20 @@ Where:
     - :math:`i_{E,cooling}` heating intensity.
     - :math:`i_{E,heating}` cooling intensity.
     - :math:`P` Population of the urban agglomeration.
-    - :math:`f` Floor space are per capita.
+    - :math:`f` Floor space area per capita.
     - :math:`cp`
 
-The total energy demand for the transport sector is computed as follows:
+**Transport:**
+The total energy demand for the transport sector is computed based on the
+different types of transportation observed within the analyzed system:
 
 .. math::
 
     I_{E,transport} = I_{E,passenger} + I_{E,freight} + I_{E,aviation} + I_{E,marine}
 
-The computation of energy demand for the passenger transportation can be
-computed as follows:
+When anaylzing a city the first xx (Summand) surface passenger transport will be
+the most relevant. For this transportation category the energy demand is
+calculated based on the different types of passenger transport found in the city:
 
 .. math::
 
@@ -92,14 +103,20 @@ computed as follows:
 
 Where:
 
+    - :math:`mode`
     - :math:`P_p` Average population density :math:`[km^{-2}]`.
     - :math:`\rho_i` Density of transportation infrastructure :math:`[km * km^{-2}]`.
     - :math:`h` utilization intensity of infrastructure :math:`[\text{veh-}km * km^{-2}]`.
     - :math:`\varepsilon` Fuel efficiency :math:`[J*\text{veh-}km^{-1}]`.
 
-The sum of the first four terms within the summation is equivalent to the vehicle-kilometers traveled (VKT) city indicator.
+The product of the first four terms within the summation is equivalent to the vehicle-kilometers traveled (VKT):
 
-Energy surface balance (not implemented):
+.. math::
+    VKT = \frac{1}{P_p} * P * \rho_i * h
+
+A widely used city indicator when analyzing sustainability in urban environments.
+
+Energy surface balance (NOT IMPLEMENTED):
 
 .. math::
 
@@ -114,14 +131,14 @@ Where:
     - :math:`O_{E,G}` Rate of loss of heat by conduction to soil, buildings, roads, etc.
     - :math:`O_{E,E}` Rate of loss of heat by radiation.
 
-Stock
+Energy class: Stock
 ~~~~~
 
 This class defines the existing energy stock by sector.
 
 All energy streams are aggregated by sector.
 
-A data-set will the detail energy stream is generated as a `csv` file and
+A data-set with the detail energy stream is generated as a `csv` file and
 stored under the `/results` folder.
 
 The Energy Stock is computed as follows:
@@ -131,10 +148,13 @@ The Energy Stock is computed as follows:
 Water
 ------
 
-Demand
+Water class: Water Demand
 ~~~~~~
 
-Computed as the sum of residential and non-residential water demand.
+Similar to Energy Flow, Water Demand is computed as the sum of different water
+consumers. In a city most water is consumed at the building level. Therefore
+total Water Demand (:math:`Q_W) is determined based on residential and
+non-residential water demand.
 
 .. math::
 
@@ -144,7 +164,8 @@ Where:
     - :math:`Q^{hh}_{W,D}` Household water consumption.
     - :math:`Q^{nr}_{W,D}` Non-Residential water consumption.
 
-The household demand model is computed as function of:
+** Residential Water Demand:**
+The residential water demand or household demand model is computed as function of the following indicators:
 
     - Demographic characteristics of the household.
     - Disposable income of the household.
@@ -154,30 +175,30 @@ The household demand model is computed as function of:
 
 .. math::
 
-    Q^{hh}_{W,D} = \beta_0 + \beta_1 HH_{1} + \dots + \beta_n HH_n + \beta_y Y + \beta_p P + \epsilon
+    Q^{hh}_{W,D} = \beta_0 + \sum^{n}_{i} \beta_i HH_{i} + \beta_y Y_{hh,$} + \beta_p P_{$} + \epsilon
 
 Where:
 
     - :math:`Q^{hh}_{W,D}` Household water consumption.
     - :math:`HH` Household characteristic.
-    - :math:`Y` Household income.
-    - :math:`P` Water price.
-    - :math:`\epsilon` Random error term.
+    - :math:`Y_{hh,$}` Household income.
+    - :math:`P_{W,$}` Water price.
+    - :math:`\beta_i`
+    - :math:`\epsilon_{err}` Random error term.
 
-Depending on the water tariff in place the variable :math:`P` can't be
-modeled as an dependent variable. If the water tariff is computes as
-function of consumed volume we cannot assume the error term.
+Depending on the water tariff in place the variable :math:`P_{W,$}` cannot be
+modeled as a dependent variable. If the water tariff is computed as a
+function of consumed volume, the error term cannot be assumed.
 
-Household characteristics:
-
-Based on data availability and water consumption model definition.
+The Household characteristics (:math:`HH) are
+based on data availability and the definitions made within the water consumption.
 
 Efficiency rate:
 
-The water saving penetration and water saving rate are computed at each
+The water saving penetration (:math:`SP) and water saving rate (:math:`SR`) are computed at each
 simulation step. The water saving rate is an indicator for governmental
 actions to reduce water consumption. And the penetration rate is the
-likelihood of household to have adopted the water saving behaviour or
+likelihood that a household has adopted the respective the water saving behaviour or
 technology.
 
 .. math::
@@ -194,6 +215,7 @@ Where:
     - :math:`SP_{W,D}` Water saving penetration rate.
     - :math:`SR_{W,D}` Water saving rate.
 
+**Non-residential Water Demand:**
 The non-residential water demand model is defined as the sum of (source: DGNB):
 
     - Water consumption by buildings occupants. :math:`Q^{nr}_{DU}`
@@ -550,6 +572,3 @@ Where:
 
 Stock
 ~~~~~
-
-
-
