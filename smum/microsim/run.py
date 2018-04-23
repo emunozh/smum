@@ -10,9 +10,11 @@ import json
 import pandas as pd
 import numpy as np
 import pymc3 as pm
+import logging
 # internal
 from smum.microsim.population import PopModel
-from smum.microsim.util import _make_flat_model, _delete_files
+from smum.microsim.util import _make_flat_model, _delete_files, _replace
+from smum.microsim.util import _delete_prefix, _gregwt
 
 
 def transition_rate(
@@ -61,7 +63,7 @@ def transition_rate(
 
 def run_calibrated_model(
         model_in,
-        log_level=0,
+        log_level=50,
         err='wf',
         project='reweight',
         resample_years=list(),
@@ -108,6 +110,8 @@ def run_calibrated_model(
 
     """
 
+    logging.basicConfig()
+    logging.getLogger().setLevel(log_level)
     pm._log.setLevel(log_level)
     if 'name' in kwargs:
         model_name = kwargs['name']
@@ -138,9 +142,11 @@ def run_calibrated_model(
     if any([isinstance(model_in[i]['table_model'], pd.Panel)
             for i in model_in]):
         if verbose:
-            print("Model define as dynamic.")
+            print("Model defined as dynamic.")
         model = _make_flat_model(model_in, year_in)
     else:
+        if verbose:
+            print("Model defined as static.")
         model = model_in
 
     if verbose:
@@ -178,7 +184,7 @@ def run_calibrated_model(
     for md in k_out:
         print('\t{1:0.4E}  {0:}'.format(md, 1 - k_out[md]))
 
-    with open('temp/kfactors.json', 'w') as kfile:
+    with open('temp/kfactors_{}.json'.format(model_name), 'w') as kfile:
         kfile.write(json.dumps(k_iter))
 
     census_file = kwargs['census_file']
@@ -269,7 +275,8 @@ def _project_survey_reweight(
     fw = _gregwt(
         survey_in, census,
         save_path='./temp/calibrated_benchmarks_proj_{}.csv',
-        complete=True, area_code='internal',
+        complete=True,
+        area_code='internal',
         align_census=align_census,
         max_iter=max_iter, verbose=verbose)
 
@@ -286,7 +293,7 @@ def run_composite_model(
         model, sufix,
         population_size=False,
         err='wf',
-        iterations=100,
+        iterations=1000,
         align_census=True,
         name='noname',
         census_file='data/benchmarks.csv',
@@ -300,7 +307,8 @@ def run_composite_model(
         njobs=2,
         to_cat=False,
         to_cat_census=False,
-        reweight=True):
+        reweight=True,
+        **kwargs):
     """Run and calibrate a single composite model.
 
     Args:
@@ -367,7 +375,8 @@ def run_composite_model(
     pop_mod = PopModel('{}_{}'.format(name, sufix), verbose=verbose)
 
     for mod in model:
-        print("Computing model: ", mod)
+        if verbose:
+            print("Computing model: ", mod)
         try:
             formula = model[mod]['formula']
         except:
@@ -396,7 +405,8 @@ def run_composite_model(
     pop_mod.run_model(
         iterations=iterations,
         population=population_size_census,
-        njobs=njobs)
+        njobs=njobs,
+        **kwargs)
     # define survey for reweight from MCMC
     if verbose:
         print("columns of df_trace:")
@@ -433,21 +443,32 @@ def run_composite_model(
 
 
 def reduce_consumption(
-        file_name, year, penetration_rate, sampling_rules, reduction,
+        file_name, penetration_rate, sampling_rules, reduction,
+        sim_years=[y for y in range(2010, 2031)],
+        method="reweight",
         atol=10, verbose=False, scenario_name="scenario 1"):
     r"""
     Reduce consumption levels given a penetration rate and sampling rules.
 
     Args:
-        file_name (str):
-        year (int):
-        penetration_rate (dict):
-        sampling_rules (dict):
-        reduction (int):
-        atol (:obj:`int`, optional): Toleration level.
+        file_name (str): Sample file name or file name pattern.
+        penetration_rate (float): Penetration rate.
+        sampling_rules (dict): Sampling rules.
+        reduction (dict): Consumption reduction values for specific consumption variable.
+        atol (:obj:`int`, optional): Toleration level. Defaults to: 10.
         verbose (:obj:`bool`, optional): Be verbose.
         scenario_name (:obj:`str`, optional): Name of the scenario. Default to:
             'scenario 1'.
+        method (:obj:`str`, optional): Defines the implemented simulation method.
+            If `resample`, the function will read individual files based on
+            `file_name` pattern.
+            Requires a list of years to loop
+            through, passes through variable `sim_years`.
+            If `reweight`, the function will read the single file `file_name`
+            and retrieve specific columns of this file for each simulation year.
+            Default to: 'reweight'.
+        sim_years (:obj:`list`): List of simulation years to compute
+            consumption reduction. Defaults to: `[y for y in range(2010, 2031)]`
 
     Returns:
         Pandas Data Frame with the reduced consumption levels based on
@@ -465,37 +486,47 @@ def reduce_consumption(
         >>>     0, 0.2, default_start=2016, default_end=2025)
         >>> pr = transition_rate(
         >>>     0, 0.3, default_start=2016, default_end=2025)
-        >>> for y, p, elec, water in zip(range(2016, 2026), pr, Elec, Water):
-        >>>     reduce_consumption(
-        >>>         file_name,
-        >>>         y, p, sampling_rules,
-        >>>         {'Electricity':elec, 'Water':water},
-        >>>         scenario_name = "scenario 1")
+        >>> reduce_consumption(
+        >>>     file_name,
+        >>>     pr, sampling_rules,
+        >>>     {'Electricity':Elec, 'Water':Water},
+        >>>     method = 'resample',
+        >>>     scenario_name = "scenario 1")
 
     """
-    # read data
-    data = pd.read_csv(file_name.format(year), index_col=0)
-    data = data.loc[data.wf > 0]
+    if method == 'reweight':
+        if verbose:
+            print("method: reweight")
+        _reduce_consumption_reweight(
+            file_name, penetration_rate, sampling_rules, reduction,
+            sim_years=sim_years,
+            atol=atol, verbose=verbose, scenario_name=scenario_name)
+    elif method == 'resample':
+        if verbose:
+            print("method: resample")
+        for e, year in enumerate(sim_years):
+            red = {key:items[e] for key, items in reduction.items()}
+            _reduce_consumption_resample(
+                file_name,
+                year, pr[e], sampling_rules,
+                red,
+                atol=atol, verbose=verbose,
+                scenario_name=scenario_name)
 
-    # run only is some reduction
-    if all([i == 0 for i in reduction.values()]):
-        print("{:05.2f}% {:^15} reduction; efficiency rate {:05.2f}%;\
-              year {:04.0f} and penetration rate {:05.2f}".format(
-                  0, 'both', 0, year, penetration_rate))
 
-        year_sample = str(year) + "_{}_{:0.2f}".format(
-            scenario_name, penetration_rate)
-        data.to_csv(file_name.format(year_sample))
-
-        return data
-
+def _resample(data, verbose):
     if verbose:
         print("\tfile with {:0.0f} households".format(data.wf.sum()))
     data.loc[:, 'w'] = 1
     data.loc[:, 'sw'] = 1
-    del data['index']
+    if 'index' in data.columns:
+        del data['index']
     data.insert(0, 'real_index', data.index)
 
+    return data
+
+
+def _get_sample_w(data, sampling_rules, verbose):
     # Compute sampling probability weights
     max_value = 1
     old_rule = 'unnamed'
@@ -507,16 +538,20 @@ def reduce_consumption(
         data.loc[inx, 'sw'] += value
 
     if verbose:
-        if data.sw.max() == max_value:
+        if data.sw.max() <= max_value:
             print('weights: OK')
         else:
             print('weights: max design p = {}, max real p = {}'.format(
                 max_value, data.sw.max()))
 
+    return data
+
+
+def _expand_sample(data, verbose, w='wf'):
     # Expand data
     temp_row = list()
     for i, row in data.iterrows():
-        n_weight = int(np.round(row['wf']))
+        n_weight = int(np.round(row[w]))
         for _ in range(n_weight):
             temp_row.append(row)
     temp_exp = pd.DataFrame(temp_row)
@@ -524,11 +559,15 @@ def reduce_consumption(
         print("\tfile with {} households".format(temp_exp.w.sum()))
 
     if verbose:
-        if temp_exp.w.sum() == np.round(data.wf).sum():
+        if temp_exp.w.sum() == np.round(data.loc[:, w]).sum():
             print('expand: OK')
         else:
             print('expand: Fail')
 
+    return temp_exp
+
+
+def _select_tech_pen(data, temp_exp, penetration_rate, atol, verbose):
     # get sample
     data_sample = temp_exp.sample(
         frac=penetration_rate, replace=False, weights=temp_exp.sw)
@@ -540,17 +579,12 @@ def reduce_consumption(
                 atol=atol):
             print('sampling: OK, with absolute tolerance = {}'.format(atol))
         else:
-            print('sampling: Fail, with abolute tolerance = {}'.format(atol))
+            print('sampling: Fail, with absolute tolerance = {}'.format(atol))
 
-    # reduce consumption values
-    for variable, reduction_factor in reduction.items():
-        temp_old = data_sample.loc[:, variable].sum()
-        data_sample.loc[:, variable] = data_sample.loc[
-            :, variable].mul(1 - reduction_factor)
-        temp_new = data_sample.loc[:, variable].sum()
-        if verbose:
-            print("{} = {:0.2f}".format(variable, 1 - (temp_new / temp_old)))
+    return data_sample
 
+
+def _get_new_weights(data_sample):
     # sample reduction
     col_group = [i for i in data_sample.columns if i not in ['w', 'sw', 'wf']]
     del data_sample['sw']
@@ -564,6 +598,27 @@ def reduce_consumption(
             new_index = new_index.droplevel(1)
     new_weights.index = new_index
 
+    return new_weights
+
+
+def _reduce_consumption(data, temp_exp, penetration_rate, reduction, atol, verbose, year):
+    # get sample
+    data_sample = _select_tech_pen(data, temp_exp, penetration_rate, atol, verbose)
+    # reduce consumption values
+    for variable, reduction_factor in reduction.items():
+        temp_old = data_sample.loc[:, variable].sum()
+        if data_sample.shape[0] > 0:
+            data_sample.loc[:, variable] = data_sample.loc[
+                :, variable].mul(1 - reduction_factor)
+        temp_new = data_sample.loc[:, variable].sum()
+        if verbose:
+            reduction_factor = (temp_new / temp_old)
+            if np.isnan(reduction_factor):
+                reduction_factor = 1
+            print("{} = {:0.2f}".format(variable, 1 - reduction_factor))
+
+    new_weights = _get_new_weights(data_sample)
+
     if verbose:
         if np.allclose(
                 new_weights.w.sum(),
@@ -572,8 +627,6 @@ def reduce_consumption(
             print('reduction: OK, with absolute tolerance = {}'.format(atol))
         else:
             print('reduction: Fail')
-
-    if verbose:
         print("\tfile with {:0.0f} selected households".format(
             new_weights.w.sum()))
 
@@ -592,28 +645,103 @@ def reduce_consumption(
     for variable, reduction_factor in reduction.items():
         old_val = old_values[variable]
         new_val = data_out.loc[:, variable].mul(data_out.wf).sum()
-        print("{:05.2f}% {:^15} reduction; efficiency rate {:05.2f}%;\
-              year {:04.0f} and penetration rate {:05.2f}".format(
+        print("{:05.2f}% {:^15} reduction; efficiency {:05.2f}%; penetration {:05.2f}; year {:0.0f}".format(
                   (1 - (new_val / old_val)) * 100,
-                  variable, reduction_factor * 100, year, penetration_rate))
+                  variable, reduction_factor * 100, penetration_rate, year))
 
     if verbose:
         print("\tfile with {:0.0f} households".format(
             data_out.wf.sum()))
 
-    year_sample = str(year) + "_{}_{:0.2f}".format(
-        scenario_name, penetration_rate)
-    data_out.to_csv(file_name.format(year_sample))
-
     return data_out
 
 
-def main():
-    """ main test function."""
-    pass
+def _reduce_consumption_reweight(
+        file_name, penetration_rate, sampling_rules, reduction,
+        sim_years=[y for y in range(2010, 2031)],
+        atol=10, verbose=False, scenario_name="scenario 1"):
+
+    # read data
+    data = pd.read_csv(file_name, index_col=0)
+    data = data.loc[data.loc[:, [str(i) for i in sim_years]].sum(axis=1) > 0]
+
+    # run only is some reduction
+    if all([all([j==0 for j in i]) for i in reduction.values()]):
+        print("{:05.2f}% {:^15} reduction; efficiency rate {:05.2f}%;\
+              year {:04.0f} and penetration rate {:05.2f}".format(
+                  0, 'both', 0, year, penetration_rate))
+        year_sample = file_name.split('.')[0] + "_{}.csv".format(scenario_name)
+        data.to_csv(file_name.format(year_sample))
+        return data
+
+    data = _resample(data, verbose)
+    data = _get_sample_w(data, sampling_rules, verbose)
+
+    skip = ['w', 'sw', 'wf']
+    skip.extend(reduction.keys())
+
+    use_cols = ['wf']
+    use_cols.extend(reduction.keys())
+
+    for e, y in enumerate(sim_years):
+        if verbose:
+            print("Computing reduction for simulation year: {}; iteration {}".format(y, e))
+            print("\tExpand...")
+        temp_exp = _expand_sample(data, verbose, w=str(y))
+
+        temp_exp.loc[:, 'wf'] = temp_exp.loc[:, str(y)]
+        temp_exp = temp_exp.loc[
+            :, [col for col in temp_exp.columns if col not in [str(y) for y in sim_years]]]
+
+        temp_data = data.copy()
+        temp_data.loc[:, 'wf'] = temp_data.loc[:, str(y)]
+        temp_data = temp_data.loc[
+            :, [col for col in temp_data.columns if col not in [str(y) for y in sim_years]]]
+
+        red = {key:items[e] for key, items in reduction.items()}
+        temp_data_out = _reduce_consumption(temp_data, temp_exp, penetration_rate[e], red, atol, verbose, y)
+
+        # if e == 0:
+            # data_all = temp_data_out.loc[:, [col for col in temp_data_out.columns if col not in skip]]
+
+        data_add = temp_data_out.loc[:, use_cols]
+        # data_add.columns = [str(y) + '_' + dc for dc in data_add.columns]
+
+        # data_all = data_all.join(data_add)
+        # if verbose:
+            # print("shape of data: ", data_all.shape)
+
+        year_sample = str(y) + "_{}_{:0.2f}".format(
+            scenario_name, penetration_rate[e])
+        data_add.to_csv(file_name.split('.')[0] + "_" + year_sample + ".csv")
 
 
-if __name__ == "__main__":
-    main()
-    # import doctest
-    # doctest.testmod()
+def _reduce_consumption_resample(
+        file_name, year, penetration_rate, sampling_rules, reduction,
+        atol=10, verbose=False, scenario_name="scenario 1"):
+
+    # read data
+    data = pd.read_csv(file_name.format(year), index_col=0)
+    data = data.loc[data.wf > 0]
+
+    # run only is some reduction
+    if all([i == 0 for i in reduction.values()]):
+        print("{:05.2f}% {:^15} reduction; efficiency rate {:05.2f}%;\
+              year {:04.0f} and penetration rate {:05.2f}".format(
+                  0, 'both', 0, year, penetration_rate))
+
+        year_sample = str(year) + "_{}_{:0.2f}".format(
+            scenario_name, penetration_rate)
+        data.to_csv(file_name.format(year_sample))
+
+        return data
+
+    data = _resample(data, verbose)
+    data = _get_sample_w(data, sampling_rules, verbose)
+    temp_exp = _expand_sample(data, verbose)
+
+    data_out = _reduce_consumption(data, temp_exp, penetration_rate, reduction, atol, verbose, year)
+
+    year_sample = str(year) + "_{}_{:0.2f}".format(
+        scenario_name, penetration_rate)
+    data_out.to_csv(file_name.format(year_sample))

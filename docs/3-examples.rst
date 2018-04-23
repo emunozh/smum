@@ -356,6 +356,15 @@ a value of 1.83e-4% (0.000183%).
 GI-REC Pilot Cities
 -------------------
 
+Simple Example 1: Recife
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. toctree::
+  :maxdepth: 0
+
+  example_br/Ba_GREGWT_Dynamic.ipynb
+
+
 Advanced Example 1: Sorsogon
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -15,6 +15,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 # internal
 from smum.microsim.util import _merge_data, _clean_census
+# import sys
+# sys.path.append("/home/esteban/workspace/python/urbanmetabolism_repo/smum")
+# from microsim.util import _merge_data, _clean_census
 
 sns.set_context('notebook')
 warnings.filterwarnings('ignore')
@@ -38,8 +41,8 @@ def plot_data_projection(reweighted_survey, var, iterations='n.a.',
             this variable is only used in the title of the plot.
             Default to `'n.a.'`.
         groupby (:obj:`str`, :obj:`list`, optional):
-        pr (:obj:`str`, optional):
-        scenario_name (:obj:`str`, optional):
+        pr (:obj:`str`, optional): Penetration rates.
+        scenario_name (:obj:`str`, optional): Name of scenario.
         verbose (:obj:`bool`, optional): Be verbose, Default to `False`.
         cut_data (:obj:`bool`, optional): Make quintiles, Default to `False`.
         col_num (:obj:`int`, optional): Number of columns to plot.
@@ -55,10 +58,9 @@ def plot_data_projection(reweighted_survey, var, iterations='n.a.',
             Default to `2030`.
         bechmark_year (:obj:`int`): Defined benchmark year,
             plots a red dotted line on benchmark year. Default to `False`.
-
     """
     reweighted_survey_in = reweighted_survey
-    inx = [str(i) for i in range(start_year, end_year+1)]
+    inx = [str(i) for i in range(start_year, end_year + 1)]
     inx_years = [int(i) for i in range(end_year - start_year + 1)]
     if not isinstance(var, list):
         raise TypeError('expected type {} for variable var, got {}'.format(
@@ -80,48 +82,20 @@ def plot_data_projection(reweighted_survey, var, iterations='n.a.',
         AX = [ax]
     for v, ax in zip(var, AX):
         if verbose:
-            print(v)
-        if isinstance(pr, list):
-            data_pr, _ = _merge_data(
-                reweighted_survey_in, inx_pr, v,
-                groupby=groupby, verbose=verbose)
-        else:
-            data_pr = False
-        if isinstance(reweighted_survey, str):
-            if verbose:
-                print('\t| is str')
-            if os.path.isfile(reweighted_survey+".csv"):
-                if verbose:
-                    print('\t| opening *.csv: ', reweighted_survey)
-                reweighted_survey += ".csv"
-                reweighted_survey = pd.read_csv(reweighted_survey, index_col=0)
-            elif os.path.isfile(reweighted_survey):
-                if verbose:
-                    print('\t| opening: ', reweighted_survey)
-                reweighted_survey = pd.read_csv(reweighted_survey, index_col=0)
-        if isinstance(reweighted_survey, pd.DataFrame):
-            if verbose:
-                print('\t| as data frame')
-            if groupby:
-                data = reweighted_survey.loc[:, inx].mul(
-                    reweighted_survey.loc[:, v], axis=0)
-                data = data.join(reweighted_survey.loc[:, groupby])
-                data = data.groupby(groupby).sum().T
-            else:
-                data = reweighted_survey.loc[:, inx].mul(
-                    reweighted_survey.loc[:, v], axis=0).sum()
-            cap = reweighted_survey.loc[:, inx].sum()
-        else:
-            if verbose:
-                print('\t| merging data')
-            data, cap = _merge_data(
-                reweighted_survey, inx, v,
-                groupby=groupby, verbose=verbose)
+            print("working on: ", v)
+
+        data, data_pr, cap = _get_plot_data(
+            pr, reweighted_survey, inx, inx_pr, v, groupby, verbose)
+
+        if verbose:
+            print("Plotting data...")
+
         _plot_data_projection_single(
             ax, data, v, cap, benchmark_year, iterations, groupby,
             verbose=verbose,
             unit=unit, cut_data=cut_data,
             data_pr=data_pr, scenario_name=scenario_name)
+
         ax.set_xticks(inx_years)
     ax.set_xticklabels(inx, rotation=90)
     var_names = "-".join(var)
@@ -129,7 +103,73 @@ def plot_data_projection(reweighted_survey, var, iterations='n.a.',
     plt.savefig('FIGURES/projected_{}_{}.png'.format(
         var_names,
         iterations), dpi=300)
-    return(data)
+
+    return(data, cap)
+
+
+def _mul_col(x, var, consumption_data):
+    year = x.name.split('_')[0]
+    col = consumption_data.loc[:, '{}_{}'.format(year, var)].mul(x)
+    return col
+
+
+def _get_plot_data(pr, reweighted_survey, inx, inx_pr, v, groupby, verbose):
+    "get dta to plot projections."
+    if isinstance(pr, list):
+        if verbose:
+            print('\t| merging pr data')
+        data_pr, _ = _merge_data(
+            reweighted_survey_in, inx_pr, v,
+            groupby=groupby, verbose=verbose)
+    else:
+        data_pr = False
+    if isinstance(reweighted_survey, str):
+        if verbose:
+            print('\t| is str')
+        if os.path.isfile(reweighted_survey+".csv"):
+            if verbose:
+                print('\t| opening *.csv: ', reweighted_survey, end="...")
+            reweighted_survey += ".csv"
+            reweighted_survey = pd.read_csv(reweighted_survey, index_col=0)
+        elif os.path.isfile(reweighted_survey):
+            if verbose:
+                print('\t| opening: ', reweighted_survey, end="... ")
+            reweighted_survey = pd.read_csv(reweighted_survey, index_col=0)
+        else:
+            reweighted_survey = False
+            if verbose:
+                print('\t| not a single file, will merge', end="... ")
+        if verbose:
+            print("OK")
+    else:
+        if verbose:
+            print('\t| not str')
+    if isinstance(reweighted_survey, pd.DataFrame):
+        if verbose:
+            print('\t| as data frame')
+        if groupby:
+            if verbose:
+                print("\t| grouped")
+            data = reweighted_survey.loc[:, inx].mul(
+                reweighted_survey.loc[:, v], axis=0)
+            data = data.join(reweighted_survey.loc[:, groupby])
+            data = data.groupby(groupby).sum().T
+        else:
+            if verbose:
+                print("\t| not grouped")
+            data = reweighted_survey.loc[:, inx].mul(
+                reweighted_survey.loc[:, v], axis=0).sum()
+        if verbose:
+            print("\t| get cap")
+        cap = reweighted_survey.loc[:, inx].sum()
+    else:
+        if verbose:
+            print('\t| merging data')
+        data, cap = _merge_data(
+            reweighted_survey, inx, v,
+            groupby=groupby, verbose=verbose)
+
+    return(data, data_pr, cap)
 
 
 def _plot_data_projection_single(ax1, data, var, cap, benchmark_year,
@@ -148,6 +188,7 @@ def _plot_data_projection_single(ax1, data, var, cap, benchmark_year,
     if isinstance(data_pr, bool):
         data.plot(ax=ax1, kind=kind, alpha=alpha, label=var)
         if verbose:
+            print("No PR Data")
             print(data.head())
     else:
         if not groupby:
@@ -193,8 +234,9 @@ def _plot_single_error(
         weight='wf',
         verbose=False,
         is_categorical=True,
+        force_fit=True,
         save_all=False, year=2010, raw=False):
-    """Plot error distrinution for single variable"""
+    """Plot error distribution for single variable"""
     if survey.loc[:, survey_var].dtype == 'float64':
         Rec_s = survey.loc[:, survey_var].mul(survey.loc[:, str(weight)]).sum()
         Rec_s = pd.DataFrame({survey_var: Rec_s}, index=[year])
@@ -202,11 +244,13 @@ def _plot_single_error(
     else:
         Rec_s = survey.loc[:, [survey_var, str(weight)]].groupby(
             survey_var).sum()
-    Rec_c = census.loc[[year], [c for c in census.columns if census_key in c]]
+    Rec_c = census.loc[[year], [c for c in census.columns if census_key in c.split("_")]]
     if is_categorical:
         Rec = pd.concat([Rec_c.T, Rec_s], axis=1)
     else:
         Rec = Rec_c.join(Rec_s)
+    if force_fit:
+        Rec.loc[:, year] = Rec.loc[:, year].div(Rec.loc[:, year].sum()).mul(Rec.loc[:, 'wf'].sum())
     if raw:
         return(Rec)
     if is_categorical:
@@ -230,15 +274,29 @@ def _plot_single_error(
     return(diff, diff_0)
 
 
-def _get_plot_var(trace, census, skip_cols, fit_cols):
+def _find_match(c, census, verbose=False):
+    for cc in census.columns:
+        for c_split in c.split('_')[1:]:
+            if c_split in cc or c_split.lower() in cc:
+                cc_split = cc.split('_')[0]
+                if verbose:
+                    print("adding: ", cc_split)
+                return(cc_split)
+    if verbose:
+        print("not found!")
+    return(False)
+
+
+def _get_plot_var(trace, census, skip_cols, fit_cols, verbose=False):
     """Get variables to plot"""
     plot_variables = dict()
     for c in trace.columns:
         if c not in skip_cols and c not in fit_cols:
-            for cc in census.columns:
-                for c_split in c.split('_')[1:]:
-                    if c_split in cc or c_split.lower() in cc:
-                        plot_variables[c] = cc.split('_')[0]
+            if verbose:
+                print("processing: ", c, end="\t")
+            cc_split = _find_match(c, census, verbose=verbose)
+            if cc_split:
+                plot_variables[c] = cc_split
     return(plot_variables)
 
 
@@ -251,7 +309,7 @@ def plot_error(trace_in, census_in, iterations,
                add_cols=False,
                verbose=False,
                plot_name=False,
-               force_fit = True,
+               force_fit=True,
                is_categorical=True,
                wbins=50, wspace=0.2, hspace=0.9, top=0.91,
                year=2010, save_all=False):
@@ -280,14 +338,14 @@ def plot_error(trace_in, census_in, iterations,
     skip_cols = ['w', 'wf', 'level_0', 'index']
     skip_cols.extend(skip)
 
-    if force_fit:
-        for g in [sc.split('_')[-1] for sc in trace.columns]:
-            if g not in [s.split('_')[-1] for s in skip_cols]:
-                sel = [col for col in census.columns if g in col]
-                if len(sel) > 0:
-                    sum_cal = census.loc[2016, sel].sum()
-                    census.loc[2016, sel] = (census.loc[2016, sel] / sum_cal) * pop
-
+#    if force_fit:
+#        for g in [sc.split('_')[-1] for sc in trace.columns]:
+#            if g not in [s.split('_')[-1] for s in skip_cols]:
+#                sel = [col for col in census.columns if g in col]
+#                if len(sel) > 0:
+#                    sum_cal = census.loc[2016, sel].sum()
+#                    census.loc[2016, sel] = (census.loc[2016, sel] / sum_cal) * pop
+#
     skip_cols.append(year)
 
     if isinstance(add_cols, pd.DataFrame) or isinstance(add_cols, pd.Series):
@@ -308,7 +366,7 @@ def plot_error(trace_in, census_in, iterations,
     if not pop:
         pop = census.loc[year, 'pop']
 
-    plot_variables = _get_plot_var(trace, census, skip_cols, fit_cols)
+    plot_variables = _get_plot_var(trace, census, skip_cols, fit_cols, verbose=verbose)
     if verbose:
         print("#"*30)
         print("skip_cols:")
@@ -323,6 +381,7 @@ def plot_error(trace_in, census_in, iterations,
         print("census cols:")
         print(census.columns)
         print("#"*30)
+        print("plot variables:")
         print(plot_variables)
     Diff = list()
     Diff_0 = list()
@@ -331,6 +390,7 @@ def plot_error(trace_in, census_in, iterations,
             pv, plot_variables[pv], trace, census, pop,
             verbose=verbose,
             is_categorical=is_categorical,
+            force_fit=force_fit,
             save_all=save_all, year=year, weight=weight)
         Diff.append(Rec)
         Diff_0.append(Rec_0)
@@ -420,6 +480,7 @@ def plot_error(trace_in, census_in, iterations,
             _plot_single_error(pv, plot_variables[pv],
                                trace, census, pop, raw=True, year=year,
                                is_categorical=is_categorical,
+                               force_fit=force_fit,
                                verbose=verbose,
                                weight=weight))
     if is_categorical:

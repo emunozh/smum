@@ -247,6 +247,8 @@ def _merge_data(
         group=False, groupby=False, verbose=False):
     values = dict()
     cap = dict()
+    if verbose:
+        print("\t\t| merging...")
     for i in inx:
         file_survey = reweighted_survey + "_{}.csv".format(i)
         survey_temp = pd.read_csv(file_survey, index_col=0)
@@ -336,7 +338,9 @@ def _index_model(inx, co_mu_list):
     return res
 
 
-def _to_str(x):
+def _to_str(x, raw=False):
+    if raw:
+        return x
     if isinstance(x, str):
         y = x.split(",")
         y = [np.round(float(i), 2) for i in y]
@@ -350,7 +354,7 @@ def _to_str(x):
         return np.nan
 
 
-def _format_table_model(tm, year, var, verbose=False):
+def _format_table_model(tm, year, var, verbose=False, raw=False):
     df = tm.models[var].loc[[year], :, :].to_frame().unstack()
     df.columns = df.columns.droplevel(0)
     df.columns.name = ''
@@ -366,7 +370,7 @@ def _format_table_model(tm, year, var, verbose=False):
     c = df.loc[:, ['dis']]
 
     for i in b.index:
-        g = b.loc[i].apply(lambda x: _to_str(x))
+        g = b.loc[i].apply(lambda x: _to_str(x, raw=raw))
         a = a.append(g)
 
     if a.shape[1] < 5:

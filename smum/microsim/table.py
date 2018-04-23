@@ -201,6 +201,24 @@ class TableModel(object):
 
         self.models[name] = pd.Panel(panel_dic)
 
+    def from_excel(self, file_name, name):
+        """read table from excel file."""
+        if not os.path.isfile(file_name):
+            print("can't find file: ", file_name)
+            return False
+        else:
+            pan_table = self._read_excel(file_name)
+            self.models[name] = pan_table
+            return pan_table
+
+    def _read_excel(self, file_name):
+        excel_table = pd.read_excel(file_name, sheet_name = None)
+        keys = [k for k in excel_table.keys()]
+        for tab_key in keys:
+            excel_table[int(tab_key)] = excel_table.pop(tab_key)
+        pan_table = pd.Panel(excel_table)
+        return pan_table
+
     def _update_table(self, this_df, year, v_cols, val,
                       name, specific_col,
                       specific_col_as,
