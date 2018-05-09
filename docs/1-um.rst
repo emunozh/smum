@@ -153,7 +153,7 @@ Water class: Water Demand
 
 Similar to Energy Flow, Water Demand is computed as the sum of different water
 consumers. In a city most water is consumed at the building level. Therefore
-total Water Demand (:math:`Q_W) is determined based on residential and
+total Water Demand (:math:`Q_W`) is determined based on residential and
 non-residential water demand.
 
 .. math::
@@ -190,12 +190,12 @@ Depending on the water tariff in place the variable :math:`P_{W,$}` cannot be
 modeled as a dependent variable. If the water tariff is computed as a
 function of consumed volume, the error term cannot be assumed.
 
-The Household characteristics (:math:`HH) are
+The Household characteristics (:math:`HH`) are
 based on data availability and the definitions made within the water consumption.
 
 Efficiency rate:
 
-The water saving penetration (:math:`SP) and water saving rate (:math:`SR`) are computed at each
+The water saving penetration (:math:`SP`) and water saving rate (:math:`SR`) are computed at each
 simulation step. The water saving rate is an indicator for governmental
 actions to reduce water consumption. And the penetration rate is the
 likelihood that a household has adopted the respective the water saving behaviour or
@@ -549,7 +549,27 @@ Food
 Demand
 ~~~~~~
 
-Computed as the sum of Fod demand.
+** Residential Food  Demand:**
+The residential food demand or household demand model is computed as function of the following indicators:
+
+    - Demographic characteristics of the household.
+    - Disposable income of the household.
+
+.. math::
+
+    Q^{hh}_{F,D} = \beta_0 + \sum^{n}_{i} \beta_i HH_{i} + \beta_y Y_{hh,$} + \epsilon
+
+Where:
+
+    - :math:`Q^{hh}_{F,D}` Household food consumption.
+    - :math:`HH` Household characteristic.
+    - :math:`Y_{hh,$}` Household income.
+    - :math:`\beta_i`
+    - :math:`\epsilon_{err}` Random error term.
+
+
+The Household characteristics (:math:`HH`) are
+based on data availability and the definitions made within the food consumption.
 
 
 Flow
